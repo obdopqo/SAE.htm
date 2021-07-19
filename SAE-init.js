@@ -1,4 +1,4 @@
-var SAE = SAE || {};
+SAE = SAE || {};
 
 SAE.init = function(){
 	SAE.data = {

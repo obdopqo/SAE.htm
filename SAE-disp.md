@@ -11,15 +11,16 @@ SAE 通过积木显示表来显示积木代码(opcode)所对应的积木
 怎么使用
 ========
 
-SAE.disp.data 转换后的文本（一项一行）  
+`SAE.disp.data`  
+转换后的文本（一项一行）  
 
-SAE.disp.proj(编号)  
+`SAE.disp.proj(编号)`  
 获得整个作品的文本  
 
-SAE.disp.spri(编号)  
+`SAE.disp.spri(编号)`  
 获得整个角色的文本  
 
-SAE.disp.block(编号,目标编号)  
+`SAE.disp.block(编号,目标编号)`  
 获得积木组的文本  
 （编号是开头积木的编号）  
 （目标编号是指需要获得所在行数的积木的编号。  
