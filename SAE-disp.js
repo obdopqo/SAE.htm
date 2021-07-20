@@ -7,7 +7,7 @@ SAE.disp = SAE.disp || {};
 "use strict";
 
 var tnode,tdata,table,dispdata;
-var dispid,displine;
+var dispid,dispfor;
 /*{{{*/
 function dispinit(){
 	dispid=-1;
@@ -112,11 +112,11 @@ function blocklist(id,indent){
 SAE.disp.block = function blockdisp(id,spid){
 	dispinit();
 	dispid=spid;
-	displine=-1;
+	dispfor=-1;
 	tnode.push(tdata.length);
 	block(id,"",0,"@");
 	tnode.pop();
-	return displine;
+	return dispfor;
 }
 
 // id: 积木tnode位置
@@ -130,7 +130,7 @@ function block(id,indent,level,type){
 	}else{
 		// 记录特定积木所在的行号
 		if(id===dispid){
-			displine=dispdata.length;
+			dispfor=dispdata.length-1;
 		}
 		// 积木类型
 		var blocktype=tdata[tnode[id]];
