@@ -1,8 +1,15 @@
 var fs=require("fs");
 
 var SAE;
+
+var FAST=true;
+
 include("SAE-init.js");
-include("SAE-json.js");
+if(FAST){
+	include("SAE-json-fast.js");
+}else{
+	include("SAE-json.js");
+}
 include("SAE-disp.js");
 include("SAE-disp-table.js");
 //include("SAE-check.js");
