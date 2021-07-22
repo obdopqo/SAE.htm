@@ -127,18 +127,18 @@ function spri(){
 	}
 
 	// 变量列表 #1 variables
-	spripos[3]=datalist('},"lists":{','":["');
+	spripos[3]=datalist('},"lists":{');
 	// 列表列表 #2 lists
-	spripos[4]=datalist('},"broadcasts":{','":["');
+	spripos[4]=datalist('},"broadcasts":{');
 	// 积木和定义，spripos的第5个和第6个数字都在这里设定.
 	block(spripos);
 	// 造型
 	//console.log(t,"t");
 	//console.log(spriend,"spriend");
 	t=findtext(',"costumes":[',t,spriend,false);
-	spripos[1]=datalist('],"sounds":[',',"name":"');
+	spripos[1]=datalist2('],"sounds":[',);
 	// 声音
-	spripos[2]=datalist('],"volume":',',"name":"');
+	spripos[2]=datalist2('],"volume":',',"name":"');
 
 	tnode.push(tdata.length);
 	for(i=0;i<spripos.length;i++){
@@ -148,24 +148,48 @@ function spri(){
 	//console.log(t);
 }
 
-//datalist(获取列表)用于在处理json时获得名字列表，用法:
+//datalist(获取列表)用于在处理json时获得变量/列表名字列表，用法:
 //  datalist(文本)
 //    文本:变量/列表列表结束文本
-//    文本2:名字判断文本
-function datalist(str,str2){
+function datalist(str){
 	var vlend=findtext(str,t,spriend,false);
 	//查找名字
-	t=findtext(str2,t,vlend,true);
+	t=findtext('":["',t,vlend,true);
 	//console.log("START");
 	tnode.push(tdata.length);
 	while(t!==-1){
 		//check()用来防止误判
-		if(str2 !== '":["' || check()>-1){
+		if(check()>-1){
 			t--;
 			tdata.push(getval());
 		}
 		//console.log(t);
-		t=findtext(str2,t,vlend,true);
+		t=findtext('":["',t,vlend,true);
+	}
+	//console.log("OK");
+	t=vlend;
+	return tnode.length-1;
+}
+
+//datalist2(获取列表2)用于在处理json时获得造型/声音名字和文件名列表，用法:
+//  datalist2(文本)
+//    文本:造型/声音列表结束文本
+//    奇数项是造型名字，偶数项是文件名
+//    -6: 如果需要比对那么可以提取偶数项后比对。
+function datalist2(str){
+	var vlend=findtext(str,t,spriend,false);
+	//查找名字
+	t=findtext(',"name":"',t,vlend,true);
+	//console.log("START");
+	tnode.push(tdata.length);
+	while(t!==-1){
+		t--;
+		tdata.push(getval());
+		//console.log(t);
+		t=findtext(',"md5ext":"',t,vlend,false);
+		t--;
+		tdata.push(getval());
+		t=findtext(',"name":"',t,vlend,true);
 	}
 	//console.log("OK");
 	t=vlend;

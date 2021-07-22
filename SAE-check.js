@@ -42,8 +42,9 @@ SAE.check.proj = function proj(id){
 function spri(id){
 	fromspri = id;
 
-	costlist = load(tdata[tnode[id]+1]);
-	soundlist = load(tdata[tnode[id]+2]);
+	// -6: 这里同理
+	costlist = load2(tdata[tnode[id]+1]);
+	soundlist = load2(tdata[tnode[id]+2]);
 	if(isstage){
 		stagevarilist = load(tdata[tnode[id]+3]);
 		stagelistlist = load(tdata[tnode[id]+4]);
@@ -68,6 +69,15 @@ function spri(id){
 function load(id){
 	var ret=[];
 	for(var i=tnode[id];i<tnode[id+1];i++){
+		ret.push(tdata[i]);
+	}
+	return ret;
+}
+
+//load2，用于获取造型，声音列表中的名称
+function load2(id){
+	var ret=[];
+	for(var i=tnode[id];i<tnode[id+1];i+=2){
 		ret.push(tdata[i]);
 	}
 	return ret;
