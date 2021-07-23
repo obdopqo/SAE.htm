@@ -15,7 +15,7 @@ var text,t,tnode,tdata;
 var i,j,m;
 // 各个角色的列表，角色信息终止位置
 var projpos,spriend;
-// 角色幸喜列表
+// 角色信息列表
 var spripos,isstage;
 var blockpos,blockend;
 var defspos;
