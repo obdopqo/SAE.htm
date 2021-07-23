@@ -82,6 +82,23 @@ SAE.disp.table = [
 	"&looks_costumenumbername:name",	"名称",
 	"&looks_backdropnumbername:name",	"名称",
 
+	//声音
+	"#sound_playuntildone",			"播放声音 %1 等待播完",			0,
+	"#sound_sounds_menu",			"播放声音 %1",				0,
+	"#sound_play",				"(%1)",					99,
+	"#sound_stopallsounds",			"停止所有声音",				0,
+	"#sound_changeeffectby",		"将 &2 音效增加 %1",			0,
+	"#sound_seteffectto",			"将 &2 音效设为 %1",			0,
+	"#sound_cleareffects",			"清除音效",				0,
+	"#sound_changevolumeby",		"将音量增加 %1",			0,
+	"#sound_setvolumeto",			"将音量设为 %1 ^%",			0,
+	"#sound_volume",			"(音量)",				99,
+
+	"&sound_changeeffectby:PITCH",		"音调",
+	"&sound_seteffectto:PITCH",		"音调",
+	"&sound_changeeffectby:PAN",		"左右平衡",
+	"&sound_seteffectto:PAN",		"左右平衡",
+
 	//事件
 	"#event_whenflagclicked",		"当 绿旗 被点击",			0,
 	"#event_whenkeypressed",		"当按下 &1 键",				0,
