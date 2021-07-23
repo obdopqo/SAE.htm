@@ -10,8 +10,9 @@ SAE.check = SAE.check || {};
 
 var tnode,tdata,checkdata,isstage;
 var fromhead,fromproj,fromspri;
-var costlist,soundlist,stagevarilist,stagelistlist,varilist,listlist,defslist;
-var                    stagevariused,stagelistused,variused,listused,defsused;
+var costlist,soundlist,stagevarilist,stagelistlist,varilist,listlist,defslist,argslist,argblist;
+var costfile,soundfile,                                              defsposi;
+var                    stagevariused,stagelistused,variused,listused,defsused,argsused,argbused;
 
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
@@ -34,7 +35,18 @@ SAE.check.proj = function proj(id){
 		isstage=0;
 	}
 
-	//
+	for(var i=0;i<stagevariused.length;i++){
+		if(stagevariused[i] === 0){
+			warn(112,"未使用的全局变量: " + stagevarilist[i],id);
+		}
+	}
+
+	// TODO: example
+	for(var i=0;i<stagelistused.length;i++){
+		if(stagelistused[i] === 0){
+			warn(122,"未使用的全局列表: " + stagelistlist[i],id);
+		}
+	}
 
 	tnode.pop();
 }
@@ -47,22 +59,42 @@ function spri(id){
 	if(isstage){
 		stagevarilist = load(tdata[tnode[id]+3]);
 		stagelistlist = load(tdata[tnode[id]+4]);
-	stagevariused = Array(stagevarilist.length);
-	stagelistused = Array(stagelistlist.length);
+		stagevariused = zeroarray(stagevarilist.length);
+		stagelistused = zeroarray(stagelistlist.length);
 		varilist = [];
 		listlist = [];
 	}else{
 		varilist = load(tdata[tnode[id]+3]);
 		listlist = load(tdata[tnode[id]+4]);
 	}
-	defslist = load(tdata[tnode[id]+5]);
+	defslist = load(tdata[tnode[id]+5],defsposi);
 
-	variused = Array(varilist.length);
-	listused = Array(listlist.length);
-	defsused = Array(defslist.length);
+	variused = zeroarray(varilist.length);
+	listused = zeroarray(listlist.length);
+	defsused = zeroarray(defslist.length);
 
 	blocklist(tdata[tnode[id]+6]);
 
+	for(var i=0;i<variused.length;i++){
+		if(variused[i] === 0){
+			warn(111,"未使用的变量: " + varilist[i],id);
+		}
+	}
+
+	// TODO: example
+	for(var i=0;i<listused.length;i++){
+		if(listused[i] === 0){
+			warn(121,"未使用的列表: " + listlist[i],id);
+		}
+	}
+
+	//由于定义积木列表奇数项是积木名，偶数项是积木的位置，所以这里需要+2
+	// TODO
+	for(var i=0;i<defsused.length;i+=2){
+		if(defsused[i] === 0){
+			warn(141,"未使用的自定义积木: " + defslist[i],id);
+		}
+	}
 }
 
 function load(id){
@@ -86,10 +118,31 @@ function blockstart(id){
 	fromhead = id;
 	warn(1,"blockstart",id);
 	//console.log("blockstart",id);
+
+	argslist=[];
+	argsused=[];
+	argblist=[];
+	argbused=[];
+
 	var blocktype=tdata[tnode[id]];
 	switch(blocktype){
 		case 'procedures_definition':
 			//记录使用的参数
+			for(var i=tnode[id]+2;i<tnode[id+1]-1;i++){
+				var aid=tnode[tdata[i]];
+				switch(tdata[aid]){
+					case '[参数]':
+						argslist.push(tdata[aid+1]);
+						argsused.push(0);
+						break;
+					case '[布尔参数]':
+						argblist.push(tdata[aid+1]);
+						argbused.push(0);
+						break;
+					default:
+						warn(134,"未知参数类型: " + tnode[aid],fromhead);
+				}
+			}
 			break;
 		default:
 			//判断是不是开头积木
@@ -106,10 +159,22 @@ function blockstart(id){
 			break;
 	}
 	block(id);
+
+	for(var i=0;i<argsused.length;i++){
+		if(argsused[i] === 0){
+			warn(131,"未使用的参数: " + argslist[i],id);
+		}
+	}
+
+	for(var i=0;i<argbused.length;i++){
+		if(argbused[i] === 0){
+			warn(133,"未使用的布尔参数: " + argblist[i],id);
+		}
+	}
 }
 
 function block(id){
-	console.log("block st",id);
+	//console.log("block st",id);
 	var blocktype=tdata[tnode[id]];
 	warn(2,"block: " + blocktype,id);
 	var j=0;
@@ -117,38 +182,81 @@ function block(id){
 		case 'procedures_definition':
 			j=1;
 			break;
+
+			//下面的重复内容主要是考虑到特殊情况下不同的内容可能会区别对待
 		case 'procedures_call':
 			j=1;
-			var i=defslist.indexOf(tdata[tnode[i]]);
+			var i=defslist.indexOf(tdata[tnode[id]+1]);
 			if(i===-1){
-				warn(130,"积木未定义",i);
+				warn(140,"积木未定义",id);
 			}else{
 				defsused[i]=1;
 			}
 			break;
 
 		case '[变量]':
-			var i=varilist.indexOf(tdata[tnode[i]]);
+			// TODO: 公用变量，列表
+			var i=varilist.indexOf(tdata[tnode[id]+1]);
 			if(i===-1){
-				warn(110,"变量不在变量列表中",i);
+				var i=stagevarilist.indexOf(tdata[tnode[id]+1]);
+				if(i===-1){
+					warn(110,"变量不在变量列表中",id);
+				}else{
+					stagevariused[i]=1;
+				}
 			}else{
 				variused[i]=1;
 			}
 			break;
+
+		case '[列表]':
+			var i=listlist.indexOf(tdata[tnode[id]+1]);
+			if(i===-1){
+				var i=stagelistlist.indexOf(tdata[tnode[id]+1]);
+				if(i===-1){
+					warn(120,"列表不在列表列表中",id);
+				}else{
+					stagelistused[i]=1;
+				}
+			}else{
+				listused[i]=1;
+			}
+			break;
+
+		case '[参数]':
+			var i=argslist.indexOf(tdata[tnode[id]+1]);
+			if(i===-1){
+				warn(130,"参数没在积木定义中出现",id);
+			}else{
+				argsused[i]=1;
+			}
+			break;
+
+		case '[布尔参数]':
+			var i=argblist.indexOf(tdata[tnode[id]+1]);
+			if(i===-1){
+				warn(132,"布尔参数没在积木定义中出现",id);
+			}else{
+				argbused[i]=1;
+			}
+			break;
+
 		default:
 			break;
 	}
-	console.log("bl",id);
-	console.log("block",id,blocktype[0]);
+
+	//console.log("bl",id);
+	//console.log("block",id,blocktype[0]);
+
 	if(blocktype[0] !== '['){
 		for(var i=tnode[id]+2;i<tnode[id+1]-j;i++){
 			if(tdata[i]!==-1){
-				console.log("block1",tdata[i]);
+				//console.log("block1",tdata[i]);
 				block(tdata[i]);
 			}
 		}
 		if(tdata[tnode[id]+1]!==-1){
-			console.log("check next",id,tnode[id],tdata[tnode[id]+1]);
+			//console.log("check next",id,tnode[id],tdata[tnode[id]+1]);
 			block(tdata[tnode[id]+1]);
 		}
 	}
@@ -165,7 +273,7 @@ function warn(errid,errtext,fromblock){
 
 SAE.check.debug = function debug(){
 	checkdata = SAE.check.data;
-	console.log(checkdata);
+	//console.log(checkdata);
 	for(var i=0;i<checkdata.length;i+=6){
 		if(checkdata[i]>100){
 			console.log("问题 "+checkdata[i]+": "+checkdata[i+1]);
@@ -1595,6 +1703,10 @@ function jcks(){
 		"data_insertatlist",
 		"data_replaceitemoflist"
 	];
+}
+
+function zeroarray(n){
+	return Array(n).fill(0);
 }
 /*}}}*/
 })();
