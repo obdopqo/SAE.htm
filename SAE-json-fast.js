@@ -156,8 +156,10 @@ function datalist2(json){
 	tnode.push(tdata.length);
 	for(var i=0;i<json.length;i++){
 		tdata.push(json[i].name);
+		tdata.push(json[i].md5ext);
 		// TODO -6: 按理来说这里应该记录文件名，你应该是忘了吧
 	}
+	return tnode.length-1;
 }
 /*}}}*/
 
