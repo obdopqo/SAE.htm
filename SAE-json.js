@@ -378,8 +378,7 @@ function blockop(){
 			tdata.pop();
 			tdata.pop();
 			tdata.push('[参数]');
-			t=findtext('},"fields":{"VALUE":["',t,spriend,false);
-			t--;
+			t=findtext('},"fields":{"VALUE":["',t,spriend,false)-1;
 			tdata.push(getval());
 			break;
 
@@ -388,8 +387,7 @@ function blockop(){
 			tdata.pop();
 			tdata.pop();
 			tdata.push('[布尔参数]');
-			t=findtext('},"fields":{"VALUE":["',t,spriend,false);
-			t--;
+			t=findtext('},"fields":{"VALUE":["',t,spriend,false)-1;
 			tdata.push(getval());
 			break;
 		default:
@@ -564,8 +562,7 @@ function blockfield(){
 }
 
 function blockproc(){
-	t=findtext('],"proccode":"',t,spriend,true);
-	t--;
+	t=findtext('],"proccode":"',t,spriend,true)-1;
 	var proc=getval();
 	t=findtext('","warp":"',t,spriend,true);
 	if(text[t]==='t'){
