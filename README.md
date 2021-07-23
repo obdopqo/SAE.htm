@@ -9,7 +9,8 @@
 | SAE.js               | SAE 网页版脚本                                                    |
 | SAE-.js              | SAE Node.js 测试脚本                                              |
 | SAE-init.js          | SAE结构初始化脚本                                                 |
-| SAE-json.md          | SAE JSON 分析器说明                                               |
+| SAE-data.md          | SAE JSON 分析器产生的SAE.data中数组的格式说明                                               |
+| SAE-json.md          | 对 Scratch JSON 结构的猜想
 | SAE-json.js          | SAE JSON 分析器                                                   |
 | SAE-disp.md          | SAE 结构转文本显示说明                                            |
 | SAE-disp.js          | SAE 结构转文本显示                                                |
