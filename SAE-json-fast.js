@@ -142,14 +142,18 @@ function spri(json){
 //    文本:变量/列表列表结束文本
 //    文本2:名字判断文本
 function datalist(json){
+	tnode.push(tdata.length);
 	for(var i in json){
+		//console.log(i,json[i][0]);
 		tdata.push(json[i][0]);
 	}
+	//console.log("-------");
 	return tnode.length-1;
 }
 
 // -6: datalist和datalist2应该要分开
 function datalist2(json){
+	tnode.push(tdata.length);
 	for(var i=0;i<json.length;i++){
 		tdata.push(json[i].name);
 		// TODO -6: 按理来说这里应该记录文件名，你应该是忘了吧
