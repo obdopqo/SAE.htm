@@ -45,18 +45,13 @@ blockspecs=[
 ];
 
 SAE.json.load = function sb3load(str){
-	// 先检查开头对不对，不对就可以跳过了
-	// TODO: 更严格的检测
-	if(str.slice(0,43)!=='{"targets":[{"isStage":true,"name":"Stage",'){
-		throw "sb3 文件错误 : json开头不正确";
-	}
 
 	//读入原有数据
 	tnode=SAE.data.tnode;
 	tdata=SAE.data.tdata;
 
-	text=str;
-	var pos=proj();
+	text=JSON.parse(str);
+	var pos=proj(text);
 
 	//保存数据
 	SAE.data.tnode=tnode;
@@ -65,7 +60,7 @@ SAE.json.load = function sb3load(str){
 	return pos;
 };
 
-function proj(){
+function proj(json){
 	//记录角色节点位置用的列表
 	projpos=[];
 
@@ -81,12 +76,10 @@ function proj(){
 	//查找monitors，从文本开始到这里就是文件的关键部分
 	//注: monitors后面有舞台变量显示相关代码，不过目前还不想做处理这类的功能
 	//保存角色结束位置
-	spriend=findtext('],"monitors":[',0,text.length,false);
-	t=findtext('{"isStage":',0,spriend,true);
-	while(t!==-1){
+	spriend=json.targets;
+	for(var i=0;i<spriend.length;i++){
 		//处理角色的函数，t的值随着处理的进行而改变。
-		projpos.push(spri());
-		t=findtext('{"isStage":',t,spriend,true);
+		projpos.push(spri(spriend[i]));
 	}
 	//增加作品节点
 	tnode.push(tdata.length);
@@ -96,7 +89,7 @@ function proj(){
 	return tnode.length-1;
 }
 	
-function spri(){
+function spri(json){
 	//角色节点数据
 	spripos=[];
 	for(i=0;i<7;i++){
@@ -114,95 +107,63 @@ function spri(){
 
 	//检查是否是舞台("isStage":true)
 	//判断名字和是否为背景
-	if(text[t]==="t"){
+	if(json.isStage){
 		spripos[0]="(舞台)";
 		isstage=1;
 	}else{
 		//查看名字("name":"...")
-		//                ^
-		t+=13;
-		//获得下一字符串/数字
-		spripos[0]=getval();
+		spripos[0]=json.name;
 		isstage=0;
 	}
 
 	// 变量列表 #1 variables
-	spripos[3]=datalist('},"lists":{');
+	spripos[3]=datalist(json.variables);
 	// 列表列表 #2 lists
-	spripos[4]=datalist('},"broadcasts":{');
+	spripos[4]=datalist(json.lists);
 	// 积木和定义，spripos的第5个和第6个数字都在这里设定.
-	block(spripos);
+	block(json.blocks,spripos);
 	// 造型
-	DEBUG(t,"t");
-	DEBUG(spriend,"spriend");
-	t=findtext(',"costumes":[',t,spriend,false);
-	spripos[1]=datalist2('],"sounds":[',);
+	//console.log(t,"t");
+	//console.log(spriend,"spriend");
+	spripos[1]=datalist2(json.costumes);
 	// 声音
-	spripos[2]=datalist2('],"volume":',',"name":"');
+	spripos[2]=datalist2(json.sounds);
 
 	tnode.push(tdata.length);
 	for(i=0;i<spripos.length;i++){
 		tdata.push(spripos[i]);
 	}
 	return tnode.length-1;
-	DEBUG(t);
+	//console.log(t);
 }
 
-//datalist(获取列表)用于在处理json时获得变量/列表名字列表，用法:
+//datalist(获取列表)用于在处理json时获得名字列表，用法:
 //  datalist(文本)
 //    文本:变量/列表列表结束文本
-function datalist(str){
-	var vlend=findtext(str,t,spriend,false);
-	//查找名字
-	t=findtext('":["',t,vlend,true);
-	DEBUG("START");
+//    文本2:名字判断文本
+function datalist(json){
 	tnode.push(tdata.length);
-	while(t!==-1){
-		//check()用来防止误判
-		if(check()>-1){
-			t--;
-			tdata.push(getval());
-		}
-		DEBUG(t);
-		t=findtext('":["',t,vlend,true);
+	for(var i in json){
+		//console.log(i,json[i][0]);
+		tdata.push(json[i][0]);
 	}
-	DEBUG("OK");
-	t=vlend;
+	//console.log("-------");
 	return tnode.length-1;
 }
 
-//datalist2(获取列表2)用于在处理json时获得造型/声音名字和文件名列表，用法:
-//  datalist2(文本)
-//    文本:造型/声音列表结束文本
-//    奇数项是造型名字，偶数项是文件名
-//    -6: 如果需要比对那么可以提取偶数项后比对。
-function datalist2(str){
-	var vlend=findtext(str,t,spriend,false);
-	//查找名字
-	t=findtext(',"name":"',t,vlend,true);
-	//console.log("START");
+// -6: datalist和datalist2应该要分开
+function datalist2(json){
 	tnode.push(tdata.length);
-	while(t!==-1){
-		t--;
-		tdata.push(getval());
-		//console.log(t);
+	for(var i=0;i<json.length;i++){
+		tdata.push(json[i].name);
 		//来自网易卡搭的部分作品可能没有md5ext。
-		var end=findtext(',"name":"',t,vlend,true);
-		if(end===-1){
-			t=findtext(',"md5ext":"',t,vlend,true);
-		}else{
-			t=findtext(',"md5ext":"',t,end,true);
-		}
-		if(t!==-1){
-			t--;
-			tdata.push(getval());
+		if("md5ext" in json[i]){
+			tdata.push(json[i].md5ext);
 		}else{
 			tdata.push("<无数据>");
 		}
-		t=end;
+		// TODO -6: 按理来说这里应该记录文件名，你应该是忘了吧
 	}
-	DEBUG("OK");
-	t=vlend;
 	return tnode.length-1;
 }
 /*}}}*/
@@ -243,7 +204,8 @@ function sb3debugir(into,indent,p){
 			break;
 		case "string":
 		default:
-			console.log(indent+'-"'+into+'"'+(p!==undefined?' ['+p+']':""));
+			console.log(indent+'-'+JSON.stringify(into)+(p!==undefined?' ['+p+']':""));
+			//因为这里是使用JSON.parse所以读出的文本的字符已经被转义。为了对比相同需要重新转回
 			break;
 	}
 }
@@ -252,10 +214,11 @@ function sb3debugir(into,indent,p){
 // 处理积木
 /*{{{*/
 
-function block(spripos){
+function block(json,spripos){
 	//上面是积木的位置表。表示每一个开头积木。
 	blockpos=[];
 
+	// -6: TODO 这里可以用{}来做会更快
 	//这里要注意的是因为sc中积木也是通过id连接的(详见SAE-json.md)，所以会出现临时需要用id对应的情况。
 	//积木的id号。
 	blockid=[];
@@ -268,69 +231,40 @@ function block(spripos){
 	//定义积木位置列表，奇数项是名称，偶数项是位置。
 	defspos=[];
 
-	//积木开始位置
-	t=findtext('},"blocks":{',t,spriend,false);
-	//积木结束位置
-	blockend=findtext('},"comments":{',t,spriend,false);
+	for(var t in json){
+		//当前积木编号
+		blockidc=t;
+		var jt=json[t];
 
-	//如果有积木才开始记录
-	if(blockend!==t+14){
-		while(t!==-1){
-			//当前积木编号
-			DEBUG("start",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-			blockidc=getval();
+		//当前积木tnode位置
+		blockid.push(blockidc);
+		blockidx.push(tnode.length);
 
-			//当前积木tnode位置
-			blockid.push(blockidc);
-			blockidx.push(tnode.length);
-
-			tnode.push(tdata.length);
-			t+=2;
-			DEBUG("switch",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-			switch(text[t]){
-				case '{':
-					if(textcheck('"opcode":"',t+1)){
-						blockop();
-						blockends='},"';
-					}else{
-						DEBUGPOS();
-						throw new Error("处理积木时出错");
+		tnode.push(tdata.length);
+		switch(typeof jt){
+			case 'object':
+				if(!Array.isArray(jt)){
+					if(!blockop(jt,json)){
+						// -6: 这里最好给个说明不然不知道的人会被坑
+						//这里是为了跳过procedures_prototype(已经绑定在procedures_call中)。
+						//如果blockop返回false就是被跳过了
+						tnode.pop();
 					}
-					break;
-				case '[':
-					t++;
-					if("123456789".includes(text[t])){
-						i=getval();
-						if(i<14&&i>0){
-							blockval(i);
-							blockends='],"';
-						}else{
-							DEBUGPOS();
-							throw new Error("处理积木时出错");
-						}
-					}
-					break;
-				default:
-					DEBUGPOS();
-					throw new Error("处理积木时出错");
-			}
-			t=findtext(blockends,t,blockend,true);
-			while(t!==-1&&text[t+20]!=='"'){
-				t=findtext(blockends,t,blockend,true);
-			}
-			if(t!==-1){
-				t--;
-			}
-			//console.log("loop",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+				}else{
+					blockval(jt,jt[0]);
+				}
+				break;
+			default:
+				throw new Error("处理积木时出错");
 		}
+	}
 
-		//现在把积木的原始id转换为tnode位置。
-		for(var i=0;i<blockidp.length;i++){
-			j=blockidp[i];
-			//console.log('['+j+']',tdata[j]);
-			tdata[j]=blockidx[blockid.indexOf(tdata[j])];
-			//console.log("=>",tdata[j]);
-		}
+	//现在把积木的原始id转换为tnode位置。
+	for(var i=0;i<blockidp.length;i++){
+		j=blockidp[i];
+		//console.log('['+j+']',tdata[j]);
+		tdata[j]=blockidx[blockid.indexOf(tdata[j])];
+		//console.log("=>",tdata[j]);
 	}
 	t=blockend;
 
@@ -347,27 +281,21 @@ function block(spripos){
 	spripos[5]=tnode.length-1;
 }
 
-function blockop(){
+function blockop(json,jsonParent){
 	//积木类型(opcode)
-	t+=10;
-	blocktype=getval();
-	DEBUG("block "+blocktype+' ('+(tnode.length-1)+')');
+	blocktype=json.opcode;
+	//console.log("block "+blocktype+' ('+(tnode.length-1)+')');
 	tdata.push(blocktype);
 	//"next",下一个积木的编号
-	t+=9;
-	if(text[t]==="n"){
+	if(json.next === null){
 		//没有下一个积木
 		tdata.push(-1);
 	}else{
 		//获得下一个积木编号
 		blockidp.push(tdata.length);
-		tdata.push(getval());
-		//if(tdata[tdata.length-1]==="undefined"){
-		//	DEBUG("error",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-		//	throw err;
-		//}
+		tdata.push(json.next);
 	}
-	DEBUG("next "+' '+tdata[tdata.length-1]);
+	//console.log("next "+' '+tdata[tdata.length-1]);
 
 	//初始化特殊积木数据列表
 	blockdata=[];
@@ -376,12 +304,14 @@ function blockop(){
 		case "procedures_definition":
 			//自定义积木的定义积木
 			//下一个积木就是prototype，直接跳过来省事
-			t=findtext('":{"opcode":"procedures_prototype","next":',t,spriend,false);
+			// -6: 最好给个说明不然真的有点坑
 
+			//jsonParent代表 "blocks":{...}
+			json = jsonParent[json.inputs.custom_block[1]];
 			//读取参数输入
-			blockargs();
+			blockargs(json);
 			//读取积木定义
-			blockproc();
+			blockproc(json);
 
 			defspos.push(tdata[tdata.length-1]);
 			defspos.push(tnode.length-1);
@@ -389,14 +319,18 @@ function blockop(){
 			//定义积木一定是头部积木
 			blockpos.push(tnode.length-1);
 			break;
+		case "procedures_prototype":
+			tdata.pop();
+			tdata.pop();
+			return false;
 		case "procedures_call":
 			//自定义积木的调用积木
 
 			//读取参数输入
-			blockargs();
+			blockargs(json);
 
 			//读取积木定义
-			blockproc();
+			blockproc(json);
 
 			//调用积木一定不是头部积木
 			break;
@@ -407,8 +341,7 @@ function blockop(){
 			tdata.pop();
 			tdata.pop();
 			tdata.push('[参数]');
-			t=findtext('},"fields":{"VALUE":["',t,spriend,false)-1;
-			tdata.push(getval());
+			tdata.push(String(json.fields.VALUE[0]));
 			break;
 
 		case "argument_reporter_boolean":
@@ -416,19 +349,17 @@ function blockop(){
 			tdata.pop();
 			tdata.pop();
 			tdata.push('[布尔参数]');
-			t=findtext('},"fields":{"VALUE":["',t,spriend,false)-1;
-			tdata.push(getval());
+			tdata.push(String(json.fields.VALUE[0]));
 			break;
 		default:
 			//处理input输入
-			blockinput();
+			blockinput(json);
 
 			//处理field
-			blockfield();
+			blockfield(json);
 
 			//检查是否是头部积木
-			t=findtext('e,"topLevel":',t,spriend,false);
-			if(text[t]==="t"){
+			if(json.topLevel){
 				blockpos.push(tnode.length-1);
 			}
 			break;
@@ -439,11 +370,13 @@ function blockop(){
 		tnode.push(tdata.length);
 		tdata.push(blockdata[i+0]);
 		tdata.push(blockdata[i+1]);
-		DEBUG('insert','('+(tnode.length-1)+')',blockdata[i+0],blockdata[i+1]);
+		//console.log('insert','('+(tnode.length-1)+')',blockdata[i+0],blockdata[i+1]);
 	}
+
+	return true;
 }
 
-function blockval(i){
+function blockval(json,i){
 	// 获得单独的变量积木
 	if(SAE.options._OrigInputType){
 		blockdata.push('['+i+']');
@@ -460,17 +393,16 @@ function blockval(i){
 				break;
 		}
 	}
-	t++;
-	blockdata.push(getval());
+	blockdata.push(String(json[1]));
 }
 
-function blockinput(){
+function blockinput(json){
 	//检查特殊积木输入值顺序
 	var blockspec;
 	i=blockspecs.indexOf("#"+blocktype);
 	if(i>-1){
 		blockspec=blockspecs[i+1];
-		DEBUG("blockspec",blocktype,blockspec);
+		//console.log("blockspec",blocktype,blockspec);
 		//预先为输入保留空间
 		for(j=0;j<blockspec.length;j++){
 			tdata.push(-1);
@@ -478,64 +410,56 @@ function blockinput(){
 	}else{
 		blockspec="";
 	}
-	t=findtext(',"inputs":{',t,spriend,false);
-	var inputend=findtext('},"fields":{',t,spriend,false);
 
 	//处理input输入
-	findtext('":[',t,inputend,true);
-	while(t!==-1){
+	for(var x in json.inputs){
 		//获得顺序标记(其实就是参数名的最后一个字母)
-		var blockspecc=text[t-4];
+		var blockspecc=x.slice(-1);
 		// !!! 防止误判
+		// -6: TODO ???
+		var jix=json.inputs[x];
 		if(true){
 			//'":1~3,'
-			if("123".includes(text[t])&&text[t+1]===','){
-				t+=2;
+			if(jix[0]>0 && jix[0]<4){
 				//接下来i表示填入的数值，isblocid表示是否为积木id。
 				var isblocid=0;
 				//是不是空的？
-				if(text[t]==="n"){
+				if(jix[1] === null){
 					//是空的积木
-					if(text[t-2]==="3"){
+					if(jix[0] === 3){
 						//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
 						i=99999999;
 					}else{
 						i=-1;
 					}
 				}else{
-					if(text[t]==='"'){
+					if(typeof jix[1] === "string"){
 						//这是一个积木
 						isblocid=1;
-						i=getval();
+						i=jix[1];
 					}else{
 						// 这里是特殊的调试模式。
 						if(SAE.options._OrigInputType){
-							t++;
-							i=getval();
+							i=jix[1][0];
 							blockdata.push('['+i+']');
-							t++;
 						}else{
-							if(text[t+1]==="1"){
-								//可能是变量
-								i=text[t+2];
-								t+=4;
-								if(i==="2"){
+							switch(jix[1][0]){
+								case 12:
 									blockdata.push("[变量]"); // 12
-								}else if(i==="3"){
+									break;
+								case 13:
 									blockdata.push("[列表]"); // 13
-								}else{
+									break;
+								default:
 									blockdata.push("[文本]"); // 1x
-								}
-							}else{
-								t+=3;
-								blockdata.push("[文本]"); // x
+									break;
 							}
 						}
 						//放入数值
-						blockdata.push(getval());
+						blockdata.push(String(jix[1][1]));
 						//这里预先计算好在后面积木数据增加的时候到达的位置
 						i=tnode.length+blockdata.length/2-1;
-						DEBUG('preload ('+i+')');
+						//console.log('preload ('+i+')');
 					}
 				}
 				//到达这里时变量i表示要放入的数据，节点序号或者积木id
@@ -546,7 +470,7 @@ function blockinput(){
 						while(j<blockspec.length&&blockspec[j]!==blockspecc){
 							j++;
 						}
-						DEBUG("blockspec",blocktype,blockspecc,blockspec,j);
+						//console.log("blockspec",blocktype,blockspecc,blockspec,j);
 						if(j!==blockspec.length){
 							j=tdata.length-blockspec.length+j;
 							tdata[j]=i;
@@ -564,11 +488,10 @@ function blockinput(){
 				}
 			}
 		}
-		t=findtext('":[',t,inputend,true);
 	}
-	t=inputend;
 }
 
+/* TODO ob: 新增的函数
 function blockargs(){
 	var inputstart=findtext(',"inputs":{',t,spriend,false);
 	var inputend=findtext('},"fields":{',inputstart,spriend,false);
@@ -662,178 +585,30 @@ function blockargs(){
 	}
 	t=inputend;
 }
+*/
 
-function blockfield(){
-	var inputend=findtext('},"shadow":',t,spriend,false);
+function blockfield(json){
 	//处理field
-	t=findtext('":[',t,inputend,true);
-	while(t!==-1){
-		m=text[t-4];
-		if(!",:{\\".includes(m)){//防止误判
-			if(text[t]==="n"){
-				tdata.push(-1);
-			}else{
-				blockdata.push("[选项]");
-				blockdata.push(getval());
-				i=tnode.length+blockdata.length/2-1;
-				tdata.push(i);
-			}
+	for(var x in json.fields){
+		var jfx=json.fields[x];
+		if(jfx[0] === null){
+			tdata.push(-1);
+		}else{
+			blockdata.push("[选项]");
+			blockdata.push(jfx[0]);
+			i=tnode.length+blockdata.length/2-1;
+			tdata.push(i);
 		}
-		t=findtext('":[',t,inputend,true);
 	}
-	t=inputend;
 }
 
-function blockproc(){
-	t=findtext('],"proccode":"',t,spriend,true)-1;
-	var proc=getval();
-	t=findtext('","warp":"',t,spriend,true);
-	if(text[t]==='t'){
+function blockproc(json){
+	var proc=json.mutation.proccode;
+	if(json.mutation.warp==="true"){
 		proc+='%';
 	}
 	tdata.push(proc);
 }
 
-function check(){
-	j=t-5;
-	while(j>0&&text[j]!=='"'){// !!! sc2
-		if(text[j]==='\\'){
-			return false;
-		}
-		j--;
-	}
-	if(j>t-5-20){
-		return false;
-	}else{
-		return true;
-	}
-}
-/*}}}*/
-
-// 处理文本
-/*{{{*/
-
-//findtext(文本查找)的用法:
-//  findtext(要找的文本,起始位置,结束位置,是否不报错)
-//    要找的文本:你要在 text 里边找的文本
-//    起始位置:查找开始的位置
-//    结束位置:查找结束的位置
-//    是否不报错:查找失败是否不报错(true:不报错,false:报错)
-//  查找到的位置(要找的文本右边的位置)会被保存在变量ret中. -1:找不到
-//  例如，在
-//    abcdefghi
-//  里找
-//    cdef
-//  那么位置就是6，因为
-//    abcdefghi
-//      ~~~^
-//         (第六个)
-//  在scratch中会加一，变成7
-function findtext(str,start,end,noerror){
-	var next=[],ftpos=0,ret=0;
-	while(ret<str.length){
-		if(ret>ftpos&&str[ret]===str[ftpos]){
-			ftpos++;
-			ret++;
-			next.push(ftpos);
-		}else{
-			if(ftpos===0){
-				next.push(ftpos);
-				ret++;
-			}else{
-				ftpos=next[ftpos-1];
-			}
-		}
-	}
-	ret=start;ftpos=0;
-	while(ret<end){
-		if(ftpos===str.length){
-			return ret;
-		}else{
-			if(text[ret]===str[ftpos]){
-				ftpos++;
-				ret++;
-			}else{
-				if(ftpos===0){
-					ret++;
-				}else{
-					ftpos=next[ftpos-1];
-				}
-			}
-		}
-	}
-	if(!noerror){
-		throw new Error("无法找到"+str);
-	}else{
-		return -1;
-	}
-}
-
-//获得文本或者数字
-function getval(){
-	var ret="";
-	//判断是否是字符串
-	if(text[t]==='"'){
-		t++;
-		while(t<text.length&&text[t]!=='"'){
-			ret+=text[t];
-			if(text[t]==="\\"){
-				ret+=text[t+1];
-				t++;
-			}
-			t++;
-		}
-	}else{
-		if(!"-1234567890".includes(text[t])){
-			DEBUGPOS();
-			throw new Error("错误getval: "+t);
-		}
-		//否则，当作数字
-		while(t<text.length&&!",]}".includes(text[t])){
-			ret+=text[t];
-			t++;
-		}
-	}
-	return ret;
-}
-
-//获得 argumentids 中的参数名
-function getval2(){
-	var ret="";
-	//判断是否是字符串
-	if(text[t]==='\\' && text[t+1]==='"'){
-		t+=2;
-		while(t<text.length&&text[t]!=='"'){
-			if(text[t]!=="\\"){
-				ret+=text[t];
-			}
-			t++;
-		}
-	}else{
-		DEBUGPOS();
-		throw new Error("错误getval2: "+t);
-	}
-	return ret;
-}
-
-//比较文本从位置x开始的字符是否和字符str相同。
-function textcheck(str,x){
-	var i=0;
-	while(i<str.length){
-		if(text[x+i]!==str[i]){
-			return false;
-		}
-		i++;
-	}
-	return true;
-}
-
-function DEBUG(){
-	//console.log.apply(console,arguments);
-}
-
-function DEBUGPOS(){
-	DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-}
 /*}}}*/
 })();

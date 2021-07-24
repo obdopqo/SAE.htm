@@ -8,9 +8,12 @@
 | SAE.css              | SAE 网页版样式表文件                                              |
 | SAE.js               | SAE 网页版脚本                                                    |
 | SAE-.js              | SAE Node.js 测试脚本                                              |
+| SAE-0.js             | SAE Node.js 原版测试脚本                                          |
 | SAE-init.js          | SAE结构初始化脚本                                                 |
-| SAE-json.md          | SAE JSON 分析器说明                                               |
+| SAE-data.md          | SAE JSON 分析器产生的SAE.data中数组的格式说明                     |
+| SAE-json.md          | 对 Scratch JSON 结构的猜想                                        |
 | SAE-json.js          | SAE JSON 分析器                                                   |
+| SAE-json-fast.js     | SAE JSON 新版分析器 JSON.parse                                    |
 | SAE-disp.md          | SAE 结构转文本显示说明                                            |
 | SAE-disp.js          | SAE 结构转文本显示                                                |
 | SAE-disp-table.js    | SAE 结构转文本对应表                                              |
@@ -18,6 +21,8 @@
 | SAE-check.js         | SAE 文件检查器                                                    |
 | SAE-check-table.js   | SAE 文件检查器对应表                                              |
 | test.cmd             | Node.js 测试脚本                                                  |
+| test0.cmd            | Node.js 与原版比对测试脚本                                        |
+| testhelp.js          | 用于去除调试结果中的[xx]和(xx)标记                                |
 | test\extension.sb3   | Scratch拓展(不含硬件)                                             |
 | test\extension-a.sb3 | 稽木世界拓展                                                      |
 | test\extension-c.sb3 | 共创世界拓展                                                      |

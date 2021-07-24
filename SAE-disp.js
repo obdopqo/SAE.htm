@@ -72,8 +72,9 @@ SAE.disp.spri = function spridisp(id){
 function spri(id,indent){
 	var i=tnode[id];
 	displine(indent+tdata[i]);
-	list(tdata[i+1],"造型",indent+"  ");
-	list(tdata[i+2],"声音",indent+"  ");
+	//-6: 同时这里也要改
+	list2(tdata[i+1],"造型",indent+"  ");
+	list2(tdata[i+2],"声音",indent+"  ");
 	list(tdata[i+3],"变量",indent+"  ");
 	list(tdata[i+4],"列表",indent+"  ");
 	defs(tdata[i+5],indent+"  ");
@@ -84,6 +85,15 @@ function list(id,title,indent){
 	displine(indent+title+":");
 	for(var i=tnode[id];i<tnode[id+1];i++){
 		displine(indent+"  * "+tdata[i]);
+	}
+}
+
+//list2，用于显示造型，声音列表中的名称和文件名
+function list2(id,title,indent){
+	displine(indent+title+":");
+	for(var i=tnode[id];i<tnode[id+1];i+=2){
+		displine(indent+"  * "+tdata[i]);
+		displine(indent+"    文件名: "+tdata[i+1]);
 	}
 }
 
@@ -290,7 +300,7 @@ function blockdefs(id,title,indent){
 }
 
 function DEBUG(){
-	console.log.apply(console,arguments);
+	//console.log.apply(console,arguments);
 }
 /*}}}*/
 })();
