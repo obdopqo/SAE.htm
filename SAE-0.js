@@ -2,7 +2,7 @@ var fs=require("fs");
 
 var SAE;
 
-var FAST=true;
+var FAST=false;
 
 include("SAE-init.js");
 if(FAST){
