@@ -263,69 +263,67 @@ function block(spripos){
 	//积木结束位置
 	blockend=findtext('},"comments":{',t,spriend,false);
 
-	//如果没有积木，则什么都不做
-	if(blockend===t+14){
-		return;
-	}
+	//如果有积木才开始记录
+	if(blockend!==t+14){
+		while(t!==-1){
+			//当前积木编号
+			//console.log("start",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+			blockidc=getval();
 
-	while(t!==-1){
-		//当前积木编号
-		//console.log("start",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-		blockidc=getval();
+			//当前积木tnode位置
+			blockid.push(blockidc);
+			blockidx.push(tnode.length);
 
-		//当前积木tnode位置
-		blockid.push(blockidc);
-		blockidx.push(tnode.length);
-
-		tnode.push(tdata.length);
-		t+=2;
-		//console.log("switch",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-		switch(text[t]){
-			case '{':
-				if(textcheck('"opcode":"',t+1)){
-					blockop();
-					blockends='},"';
-				}else{
-					//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-					throw new Error("处理积木时出错");
-				}
-				break;
-			case '[':
-				t++;
-				if("123456789".includes(text[t])){
-					i=getval();
-					if(i<14&&i>0){
-						blockval(i);
-						blockends='],"';
+			tnode.push(tdata.length);
+			t+=2;
+			//console.log("switch",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+			switch(text[t]){
+				case '{':
+					if(textcheck('"opcode":"',t+1)){
+						blockop();
+						blockends='},"';
 					}else{
 						//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 						throw new Error("处理积木时出错");
 					}
-				}else{
+					break;
+				case '[':
+					t++;
+					if("123456789".includes(text[t])){
+						i=getval();
+						if(i<14&&i>0){
+							blockval(i);
+							blockends='],"';
+						}else{
+							//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+							throw new Error("处理积木时出错");
+						}
+					}else{
+						//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+						throw new Error("处理积木时出错");
+					}
+					break;
+				default:
 					//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 					throw new Error("处理积木时出错");
-				}
-				break;
-			default:
-				//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-				throw new Error("处理积木时出错");
-		}
-		t=findtext(blockends,t,blockend,true);
-		while(t!==-1&&text[t+20]!=='"'){
+			}
 			t=findtext(blockends,t,blockend,true);
+			while(t!==-1&&text[t+20]!=='"'){
+				t=findtext(blockends,t,blockend,true);
+			}
+			if(t!==-1){
+				t--;
+			}
+			//console.log("loop",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 		}
-		if(t!==-1){
-			t--;
-		}
-		//console.log("loop",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
-	}
 
-	//现在把积木的原始id转换为tnode位置。
-	for(var i=0;i<blockidp.length;i++){
-		j=blockidp[i];
-		//console.log('['+j+']',tdata[j]);
-		tdata[j]=blockidx[blockid.indexOf(tdata[j])];
-		//console.log("=>",tdata[j]);
+		//现在把积木的原始id转换为tnode位置。
+		for(var i=0;i<blockidp.length;i++){
+			j=blockidp[i];
+			//console.log('['+j+']',tdata[j]);
+			tdata[j]=blockidx[blockid.indexOf(tdata[j])];
+			//console.log("=>",tdata[j]);
+		}
 	}
 	t=blockend;
 
