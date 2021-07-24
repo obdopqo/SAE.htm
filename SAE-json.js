@@ -262,7 +262,7 @@ function block(spripos){
 					blockop();
 					blockends='},"';
 				}else{
-					DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+					DEBUGPOS();
 					throw new Error("处理积木时出错");
 				}
 				break;
@@ -274,16 +274,16 @@ function block(spripos){
 						blockval(i);
 						blockends='],"';
 					}else{
-						DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+						DEBUGPOS();
 						throw new Error("处理积木时出错");
 					}
 				}else{
-					DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+					DEBUGPOS();
 					throw new Error("处理积木时出错");
 				}
 				break;
 			default:
-				DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+				DEBUGPOS();
 				throw new Error("处理积木时出错");
 		}
 		t=findtext(blockends,t,blockend,true);
@@ -662,7 +662,7 @@ function getval(){
 		}
 	}else{
 		if(!"-1234567890".includes(text[t])){
-			console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+			DEBUGPOS();
 			throw new Error("错误getval: "+t);
 		}
 		//否则，当作数字
@@ -688,6 +688,10 @@ function textcheck(str,x){
 
 function DEBUG(){
 	//console.log.apply(console,arguments);
+}
+
+function DEBUGPOS(){
+	DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 }
 /*}}}*/
 })();
