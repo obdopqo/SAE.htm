@@ -10,9 +10,31 @@ SAE.check = SAE.check || {};
 
 var tnode,tdata,checkdata,isstage;
 var fromhead,fromproj,fromspri;
-var costlist,soundlist,stagevarilist,stagelistlist,varilist,listlist,defslist,argslist,argblist;
-var costfile,soundfile,                                              defsposi;
-var                    stagevariused,stagelistused,variused,listused,defsused,argsused,argbused;
+var sprilist,     costlist,soundlist,     varilist,     listlist,defslist,argslist;
+var          stagecostlist,          stagevarilist,stagelistlist,         argblist;
+var               costfile,soundfile,     variused,     listused,defsused,argsused;
+var                                  stagevariused,stagelistused,defsposi,argbused;
+
+var spriblocklist = [
+	"motion_goto_menu",
+	"motion_glideto_menu",
+	"motion_pointtowards_menu",
+	"looks_costume",
+	"looks_backdrops",
+	"control_create_clone_of_menu",
+	"sensing_touchingobjectmenu",
+	"sensing_distancetomenu",
+	"sensing_of_object_menu",
+	"motion_goto_menu",
+	"motion_glideto_menu",
+	"motion_pointtowards_menu",
+	"looks_costume",
+	"looks_backdrops",
+	"control_create_clone_of_menu",
+	"sensing_touchingobjectmenu",
+	"sensing_distancetomenu",
+	"sensing_of_object_menu",
+];
 
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
@@ -26,6 +48,19 @@ SAE.check.proj = function proj(id){
 	tnode.push(tdata.length);
 
 	//
+
+	sprilist=[
+		'_stage_',
+		'_myself_',
+		'_mouse_',
+		'_random_',
+		'_edge_'
+	];
+	
+	// 这里假设第一个就是舞台，把它跳过
+	for(var i=tnode[id]+1;i<tnode[id+1];i++){
+		sprilist.push(tdata[tnode[tdata[i]]]);
+	}
 
 	isstage=1;
 	DEBUG(tnode[id],tnode[id+1]);
@@ -54,9 +89,9 @@ SAE.check.proj = function proj(id){
 function spri(id){
 	fromspri = id;
 
-	costlist = load(tdata[tnode[id]+1]);
 	soundlist = load(tdata[tnode[id]+2]);
 	if(isstage){
+		stagecostlist = load(tdata[tnode[id]+1]);
 		stagevarilist = load(tdata[tnode[id]+3]);
 		stagelistlist = load(tdata[tnode[id]+4]);
 		stagevariused = zeroarray(stagevarilist.length);
@@ -64,6 +99,7 @@ function spri(id){
 		varilist = [];
 		listlist = [];
 	}else{
+		costlist = load(tdata[tnode[id]+1]);
 		varilist = load(tdata[tnode[id]+3]);
 		listlist = load(tdata[tnode[id]+4]);
 	}
@@ -240,8 +276,52 @@ function block(id){
 				argbused[i]=1;
 			}
 			break;
+			//下面的内容相似度过高
+		case 'looks_costume':
+			var check=tdata[tnode[id]+2];
+			if(tdata[tnode[check]]!=='[选项]'){
+				warn(999,"未预料到的情况",check);
+			}else{
+				if(!sprilist.includes(tdata[tnode[check]+1])){
+					warn(160,"造型不存在",id);
+				}
+			}
+			break;
+
+		case 'looks_backdrops':
+			var check=tdata[tnode[id]+2];
+			if(tdata[tnode[check]]!=='[选项]'){
+				warn(999,"未预料到的情况",check);
+			}else{
+				if(!stagecostlist.includes(tdata[tnode[check]+1])){
+					warn(170,"背景不存在",id);
+				}
+			}
+			break;
+
+		case 'sound_play':
+			var check=tdata[tnode[id]+2];
+			if(tdata[tnode[check]]!=='[选项]'){
+				warn(999,"未预料到的情况",check);
+			}else{
+				if(!soundlist.includes(tdata[tnode[check]+1])){
+					warn(180,"声音不存在",id);
+				}
+			}
+			break;
 
 		default:
+			if(spriblocklist.includes(blocktype)){
+				var check=tdata[tnode[id]+2];
+				if(tdata[tnode[check]]!=='[选项]'){
+					warn(999,"未预料到的情况",check);
+				}else{
+					if(!sprilist.includes(tdata[tnode[check]+1])){
+						console.log(sprilist,tdata[tnode[check]+1]);
+						warn(150,"角色不存在",id);
+					}
+				}
+			}
 			break;
 	}
 
