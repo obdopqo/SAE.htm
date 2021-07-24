@@ -186,10 +186,20 @@ function datalist2(str){
 		t--;
 		tdata.push(getval());
 		//console.log(t);
-		t=findtext(',"md5ext":"',t,vlend,false);
-		t--;
-		tdata.push(getval());
-		t=findtext(',"name":"',t,vlend,true);
+		//来自网易卡搭的部分作品可能没有md5ext。
+		var end=findtext(',"name":"',t,vlend,true);
+		if(end===-1){
+			t=findtext(',"md5ext":"',t,vlend,true);
+		}else{
+			t=findtext(',"md5ext":"',t,end,true);
+		}
+		if(t!==-1){
+			t--;
+			tdata.push(getval());
+		}else{
+			tdata.push("<无数据>");
+		}
+		t=end;
 	}
 	//console.log("OK");
 	t=vlend;

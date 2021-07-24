@@ -156,7 +156,12 @@ function datalist2(json){
 	tnode.push(tdata.length);
 	for(var i=0;i<json.length;i++){
 		tdata.push(json[i].name);
-		tdata.push(json[i].md5ext);
+		//来自网易卡搭的部分作品可能没有md5ext。
+		if("md5ext" in json[i]){
+			tdata.push(json[i].md5ext);
+		}else{
+			tdata.push("<无数据>");
+		}
 		// TODO -6: 按理来说这里应该记录文件名，你应该是忘了吧
 	}
 	return tnode.length-1;
@@ -199,7 +204,8 @@ function sb3debugir(into,indent,p){
 			break;
 		case "string":
 		default:
-			console.log(indent+'-"'+into+'"'+(p!==undefined?' ['+p+']':""));
+			console.log(indent+'-'+JSON.stringify(into)+(p!==undefined?' ['+p+']':""));
+			//因为这里是使用JSON.parse所以读出的文本的字符已经被转义。为了对比相同需要重新转回
 			break;
 	}
 }
@@ -314,6 +320,8 @@ function blockop(json,jsonParent){
 			blockpos.push(tnode.length-1);
 			break;
 		case "procedures_prototype":
+			tdata.pop();
+			tdata.pop();
 			return false;
 		case "procedures_call":
 			//自定义积木的调用积木
@@ -333,7 +341,7 @@ function blockop(json,jsonParent){
 			tdata.pop();
 			tdata.pop();
 			tdata.push('[参数]');
-			tdata.push(json.fields.VALUE);
+			tdata.push(String(json.fields.VALUE[0]));
 			break;
 
 		case "argument_reporter_boolean":
@@ -341,7 +349,7 @@ function blockop(json,jsonParent){
 			tdata.pop();
 			tdata.pop();
 			tdata.push('[布尔参数]');
-			tdata.push(json.fields.VALUE);
+			tdata.push(String(json.fields.VALUE[0]));
 			break;
 		default:
 			//处理input输入
@@ -385,7 +393,7 @@ function blockval(json,i){
 				break;
 		}
 	}
-	blockdata.push(json[1]);
+	blockdata.push(String(json[1]));
 }
 
 function blockinput(json){
@@ -448,7 +456,7 @@ function blockinput(json){
 							}
 						}
 						//放入数值
-						blockdata.push(jix[1][1]);
+						blockdata.push(String(jix[1][1]));
 						//这里预先计算好在后面积木数据增加的时候到达的位置
 						i=tnode.length+blockdata.length/2-1;
 						//console.log('preload ('+i+')');
@@ -500,7 +508,7 @@ function blockfield(json){
 
 function blockproc(json){
 	var proc=json.mutation.proccode;
-	if(json.mutation.warp){
+	if(json.mutation.warp==="true"){
 		proc+='%';
 	}
 	tdata.push(proc);
