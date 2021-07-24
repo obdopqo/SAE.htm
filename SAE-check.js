@@ -28,7 +28,7 @@ SAE.check.proj = function proj(id){
 	//
 
 	isstage=1;
-	//console.log(tnode[id],tnode[id+1]);
+	DEBUG(tnode[id],tnode[id+1]);
 	for(var i=tnode[id];i<tnode[id+1];i++){
 		// 这里假设第一个就是舞台
 		spri(tdata[i]);
@@ -107,7 +107,7 @@ function load(id){
 
 function blocklist(id){
 	for(var i=tnode[id];i<tnode[id+1];i++){
-		//console.log("blocklist",i,tdata[i]);
+		DEBUG("blocklist",i,tdata[i]);
 		blockstart(tdata[i]);
 	}
 }
@@ -117,7 +117,7 @@ function blockstart(id){
 	// 有一个例外，就是追踪引用的时候可能会跳转到积木定义中，这是积木定义就会变成头积木
 	fromhead = id;
 	warn(1,"blockstart",id);
-	//console.log("blockstart",id);
+	DEBUG("blockstart",id);
 
 	argslist=[];
 	argsused=[];
@@ -174,7 +174,7 @@ function blockstart(id){
 }
 
 function block(id){
-	//console.log("block st",id);
+	DEBUG("block st",id);
 	var blocktype=tdata[tnode[id]];
 	warn(2,"block: " + blocktype,id);
 	var j=0;
@@ -245,18 +245,18 @@ function block(id){
 			break;
 	}
 
-	//console.log("bl",id);
-	//console.log("block",id,blocktype[0]);
+	DEBUG("bl",id);
+	DEBUG("block",id,blocktype[0]);
 
 	if(blocktype[0] !== '['){
 		for(var i=tnode[id]+2;i<tnode[id+1]-j;i++){
 			if(tdata[i]!==-1){
-				//console.log("block1",tdata[i]);
+				DEBUG("block1",tdata[i]);
 				block(tdata[i]);
 			}
 		}
 		if(tdata[tnode[id]+1]!==-1){
-			//console.log("check next",id,tnode[id],tdata[tnode[id]+1]);
+			DEBUG("check next",id,tnode[id],tdata[tnode[id]+1]);
 			block(tdata[tnode[id]+1]);
 		}
 	}
@@ -273,7 +273,7 @@ function warn(errid,errtext,fromblock){
 
 SAE.check.debug = function debug(){
 	checkdata = SAE.check.data;
-	//console.log(checkdata);
+	DEBUG(checkdata);
 	for(var i=0;i<checkdata.length;i+=6){
 		if(checkdata[i]>100){
 			console.log("问题 "+checkdata[i]+": "+checkdata[i+1]);
@@ -287,7 +287,7 @@ SAE.check.debug = function debug(){
 					j=SAE.disp.data.length-5;
 				}
 				if(j<4){j=4;}
-				//console.log(cl,j,k,SAE.disp.data);
+				DEBUG(cl,j,k,SAE.disp.data);
 				for(var k=-4;k<5;k++){
 					if(j+k>=SAE.disp.data.length){
 						console.log("");
@@ -307,6 +307,10 @@ SAE.check.debug = function debug(){
 
 function zeroarray(n){
 	return Array(n).fill(0);
+}
+
+function DEBUG(){
+	//console.log.apply(console,arguments);
 }
 /*}}}*/
 })();

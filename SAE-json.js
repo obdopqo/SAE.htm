@@ -133,8 +133,8 @@ function spri(){
 	// 积木和定义，spripos的第5个和第6个数字都在这里设定.
 	block(spripos);
 	// 造型
-	//console.log(t,"t");
-	//console.log(spriend,"spriend");
+	DEBUG(t,"t");
+	DEBUG(spriend,"spriend");
 	t=findtext(',"costumes":[',t,spriend,false);
 	spripos[1]=datalist('],"sounds":[',',"name":"');
 	// 声音
@@ -145,7 +145,7 @@ function spri(){
 		tdata.push(spripos[i]);
 	}
 	return tnode.length-1;
-	//console.log(t);
+	DEBUG(t);
 }
 
 //datalist(获取列表)用于在处理json时获得名字列表，用法:
@@ -156,7 +156,7 @@ function datalist(str,str2){
 	var vlend=findtext(str,t,spriend,false);
 	//查找名字
 	t=findtext(str2,t,vlend,true);
-	//console.log("START");
+	DEBUG("START");
 	tnode.push(tdata.length);
 	while(t!==-1){
 		//check()用来防止误判
@@ -164,10 +164,10 @@ function datalist(str,str2){
 			t--;
 			tdata.push(getval());
 		}
-		//console.log(t);
+		DEBUG(t);
 		t=findtext(str2,t,vlend,true);
 	}
-	//console.log("OK");
+	DEBUG("OK");
 	t=vlend;
 	return tnode.length-1;
 }
@@ -246,7 +246,7 @@ function block(spripos){
 
 	while(t!==-1){
 		//当前积木编号
-		//console.log("start",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+		DEBUG("start",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 		blockidc=getval();
 
 		//当前积木tnode位置
@@ -255,14 +255,14 @@ function block(spripos){
 
 		tnode.push(tdata.length);
 		t+=2;
-		//console.log("switch",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+		DEBUG("switch",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 		switch(text[t]){
 			case '{':
 				if(textcheck('"opcode":"',t+1)){
 					blockop();
 					blockends='},"';
 				}else{
-					//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+					DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 					throw new Error("处理积木时出错");
 				}
 				break;
@@ -274,16 +274,16 @@ function block(spripos){
 						blockval(i);
 						blockends='],"';
 					}else{
-						//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+						DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 						throw new Error("处理积木时出错");
 					}
 				}else{
-					//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+					DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 					throw new Error("处理积木时出错");
 				}
 				break;
 			default:
-				//console.log(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+				DEBUG(t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 				throw new Error("处理积木时出错");
 		}
 		t=findtext(blockends,t,blockend,true);
@@ -293,15 +293,15 @@ function block(spripos){
 		if(t!==-1){
 			t--;
 		}
-		//console.log("loop",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+		DEBUG("loop",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 	}
 
 	//现在把积木的原始id转换为tnode位置。
 	for(var i=0;i<blockidp.length;i++){
 		j=blockidp[i];
-		//console.log('['+j+']',tdata[j]);
+		DEBUG('['+j+']',tdata[j]);
 		tdata[j]=blockidx[blockid.indexOf(tdata[j])];
-		//console.log("=>",tdata[j]);
+		DEBUG("=>",tdata[j]);
 	}
 	t=blockend;
 
@@ -322,7 +322,7 @@ function blockop(){
 	//积木类型(opcode)
 	t+=10;
 	blocktype=getval();
-	//console.log("block "+blocktype+' ('+(tnode.length-1)+')');
+	DEBUG("block "+blocktype+' ('+(tnode.length-1)+')');
 	tdata.push(blocktype);
 	//"next",下一个积木的编号
 	t+=9;
@@ -334,11 +334,11 @@ function blockop(){
 		blockidp.push(tdata.length);
 		tdata.push(getval());
 		//if(tdata[tdata.length-1]==="undefined"){
-		//	//console.log("error",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
+		//	DEBUG("error",t,text.slice(t-50,t)+" ## "+text.slice(t,t+50));
 		//	throw err;
 		//}
 	}
-	//console.log("next "+' '+tdata[tdata.length-1]);
+	DEBUG("next "+' '+tdata[tdata.length-1]);
 
 	//初始化特殊积木数据列表
 	blockdata=[];
@@ -410,7 +410,7 @@ function blockop(){
 		tnode.push(tdata.length);
 		tdata.push(blockdata[i+0]);
 		tdata.push(blockdata[i+1]);
-		//console.log('insert','('+(tnode.length-1)+')',blockdata[i+0],blockdata[i+1]);
+		DEBUG('insert','('+(tnode.length-1)+')',blockdata[i+0],blockdata[i+1]);
 	}
 }
 
@@ -441,7 +441,7 @@ function blockinput(){
 	i=blockspecs.indexOf("#"+blocktype);
 	if(i>-1){
 		blockspec=blockspecs[i+1];
-		//console.log("blockspec",blocktype,blockspec);
+		DEBUG("blockspec",blocktype,blockspec);
 		//预先为输入保留空间
 		for(j=0;j<blockspec.length;j++){
 			tdata.push(-1);
@@ -506,7 +506,7 @@ function blockinput(){
 						blockdata.push(getval());
 						//这里预先计算好在后面积木数据增加的时候到达的位置
 						i=tnode.length+blockdata.length/2-1;
-						//console.log('preload ('+i+')');
+						DEBUG('preload ('+i+')');
 					}
 				}
 				//到达这里时变量i表示要放入的数据，节点序号或者积木id
@@ -517,7 +517,7 @@ function blockinput(){
 						while(j<blockspec.length&&blockspec[j]!==blockspecc){
 							j++;
 						}
-						//console.log("blockspec",blocktype,blockspecc,blockspec,j);
+						DEBUG("blockspec",blocktype,blockspecc,blockspec,j);
 						if(j!==blockspec.length){
 							j=tdata.length-blockspec.length+j;
 							tdata[j]=i;
@@ -684,6 +684,10 @@ function textcheck(str,x){
 		i++;
 	}
 	return true;
+}
+
+function DEBUG(){
+	//console.log.apply(console,arguments);
 }
 /*}}}*/
 })();

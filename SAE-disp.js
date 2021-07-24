@@ -102,7 +102,7 @@ function blocklist(id,indent){
 	for(var i=tnode[id];i<tnode[id+1];i++){
 		displine(indent+"* 积木 ["+i+"]");
 		display(indent+"  ");
-		//console.log("list",i,tdata[i]);
+		DEBUG("list",i,tdata[i]);
 		block(tdata[i],indent+"  ",0,"@");
 		displine("");
 	}
@@ -150,7 +150,7 @@ function block(id,indent,level,type){
 				pattern+=" %"+i;
 			}
 			pattern+=")";
-			//console.log("mode",id,blocktype);
+			DEBUG("mode",id,blocktype);
 			if(blocktype[0]==='['){
 				levelcr=-99;
 				pattern="("+blocktype+' "%0")';
@@ -183,7 +183,7 @@ function block(id,indent,level,type){
 						case '&':
 							// % 正常引用 $ 角色引用 & 翻译引用
 							i++;
-							//console.log("ref",id,blocktype,c,pattern[i],type);
+							DEBUG("ref",id,blocktype,c,pattern[i],type);
 							var value=tdata[tnode[id]+1+Number(pattern[i])];
 							// 文本的计算顺序设为-99.
 							if(levelcr === -99){
@@ -216,7 +216,7 @@ function block(id,indent,level,type){
 										break;
 								}
 							}else{
-								//console.log("block2",value)
+								DEBUG("block2",value)
 								if(pattern[i]==='1'){
 									// 如果是第一个参数，因为计算顺序是从左到右，因此括号可以去掉。
 									if(c==='&'){
@@ -239,7 +239,7 @@ function block(id,indent,level,type){
 							var value=tdata[tnode[id]+1+Number(pattern[i])];
 							displine("");
 							display(indent+"| "); // ?C1
-							//console.log("block3",pattern[i],value);
+							DEBUG("block3",pattern[i],value);
 							block(value,indent+"| ",levelcr,'%');
 							displine("");
 							display(indent+"\\-------"); // ?C2
@@ -260,7 +260,7 @@ function block(id,indent,level,type){
 		if(levelcr!==-99&&i!==-1){
 			displine("");
 			display(indent);
-			//console.log("block5",i,id,tnode[id]);
+			DEBUG("block5",i,id,tnode[id]);
 			block(i,indent,level,type);
 		}
 	}
@@ -277,7 +277,7 @@ function blockdefs(id,title,indent){
 				if(pattern[i+1]==="%"){
 					display('%');
 				}else{
-					//console.log("block1",tdata[j],"j=",j);
+					DEBUG("block1",tdata[j],"j=",j);
 					block(tdata[j],indent,0,c);
 					i++;
 					j++;
@@ -287,6 +287,10 @@ function blockdefs(id,title,indent){
 			display(c);
 		}
 	}
+}
+
+function DEBUG(){
+	console.log.apply(console,arguments);
 }
 /*}}}*/
 })();
