@@ -212,14 +212,14 @@ function sb3debugir(into,indent,p){
 	switch(typeof into){
 		case "number":
 			if(into===-1){
-				console.log(indent+'-X'+(p?' ['+p+']':""));
+				console.log(indent+'-X'+(p!==undefined?' ['+p+']':""));
 			}else{
 				// 防止重复
 				if(debuglist[into]===1){
-					console.log(indent+'-C'+' ('+into+')'+(p?' ['+p+']':""));
+					console.log(indent+'-C'+' ('+into+')'+(p!==undefined?' ['+p+']':""));
 				}else{
 					debuglist[into]=1;
-					console.log(indent+'-*'+' ('+into+')'+(p?' ['+p+']':""));
+					console.log(indent+'-*'+' ('+into+')'+(p!==undefined?' ['+p+']':""));
 					if(indent[indent.length-1]==='\\'){
 						indent=indent.slice(0,-1)+' ';
 					}
@@ -233,7 +233,7 @@ function sb3debugir(into,indent,p){
 			break;
 		case "string":
 		default:
-			console.log(indent+'-"'+into+'"'+(p?' ['+p+']':""));
+			console.log(indent+'-"'+into+'"'+(p!==undefined?' ['+p+']':""));
 			break;
 	}
 }
