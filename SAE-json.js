@@ -350,7 +350,7 @@ function blockop(){
 			t=findtext('":{"opcode":"procedures_prototype","next":',t,spriend,false);
 
 			//读取参数输入
-			blockinput();
+			blockargs();
 			//读取积木定义
 			blockproc();
 
@@ -364,7 +364,7 @@ function blockop(){
 			//自定义积木的调用积木
 
 			//读取参数输入
-			blockinput();
+			blockargs();
 
 			//读取积木定义
 			blockproc();
@@ -540,6 +540,100 @@ function blockinput(){
 	t=inputend;
 }
 
+function blockargs(){
+	var inputstart=findtext(',"inputs":{',t,spriend,false);
+	var inputend=findtext('},"fields":{',inputstart,spriend,false);
+	var argstart=findtext(',"argumentids":"[',inputend,spriend,false);
+	var argend=findtext(']","',argstart,spriend,false);
+	var argids=[];
+	//这里的输入要考虑自定义积木的特性。
+	//1. 获取argumentids
+	if(argstart+4!==argend){
+		t=argstart;
+		while(text[t]!=='"'){
+			argids.push(getval2());
+			tdata.push(-1);
+			t+=2;
+		}
+	}
+	DEBUG("args",argids);
+	
+	//2. 处理input输入
+	t=findtext('":[',inputstart,inputend,true);
+	while(t!==-1){
+		//获得input位置
+		t-=24;
+		var inputid = argids.indexOf(getval());
+		DEBUGPOS();
+		t+=3;
+
+		// !!! 防止误判
+		if(inputid!==-1){
+			//'":1~3,'
+			if("123".includes(text[t])&&text[t+1]===','){
+				t+=2;
+				//接下来i表示填入的数值，isblocid表示是否为积木id。
+				var isblocid=0;
+				//是不是空的？
+				if(text[t]==="n"){
+					//是空的积木
+					if(text[t-2]==="3"){
+						//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
+						i=99999999;
+					}else{
+						i=-1;
+					}
+				}else{
+					if(text[t]==='"'){
+						//这是一个积木
+						isblocid=1;
+						i=getval();
+					}else{
+						// 这里是特殊的调试模式。
+						if(SAE.options._OrigInputType){
+							t++;
+							i=getval();
+							blockdata.push('['+i+']');
+							t++;
+						}else{
+							if(text[t+1]==="1"){
+								//可能是变量
+								i=text[t+2];
+								t+=4;
+								if(i==="2"){
+									blockdata.push("[变量]"); // 12
+								}else if(i==="3"){
+									blockdata.push("[列表]"); // 13
+								}else{
+									blockdata.push("[文本]"); // 1x
+								}
+							}else{
+								t+=3;
+								blockdata.push("[文本]"); // x
+							}
+						}
+						//放入数值
+						blockdata.push(getval());
+						//这里预先计算好在后面积木数据增加的时候到达的位置
+						i=tnode.length+blockdata.length/2-1;
+						DEBUG('preload ('+i+')');
+					}
+				}
+				//到达这里时变量i表示要放入的数据，节点序号或者积木id
+				if(i!==99999999){
+					j=tdata.length-argids.length+inputid;
+					tdata[j]=i;
+					if(isblocid===1){
+						blockidp.push(j);
+					}
+				}
+			}
+		}
+		t=findtext('":[',t,inputend,true);
+	}
+	t=inputend;
+}
+
 function blockfield(){
 	var inputend=findtext('},"shadow":',t,spriend,false);
 	//处理field
@@ -674,6 +768,25 @@ function getval(){
 	return ret;
 }
 
+//获得 argumentids 中的参数名
+function getval2(){
+	var ret="";
+	//判断是否是字符串
+	if(text[t]==='\\' && text[t+1]==='"'){
+		t+=2;
+		while(t<text.length&&text[t]!=='"'){
+			if(text[t]!=="\\"){
+				ret+=text[t];
+			}
+			t++;
+		}
+	}else{
+		DEBUGPOS();
+		throw new Error("错误getval2: "+t);
+	}
+	return ret;
+}
+
 //比较文本从位置x开始的字符是否和字符str相同。
 function textcheck(str,x){
 	var i=0;
@@ -687,7 +800,7 @@ function textcheck(str,x){
 }
 
 function DEBUG(){
-	//console.log.apply(console,arguments);
+	console.log.apply(console,arguments);
 }
 
 function DEBUGPOS(){
