@@ -10,6 +10,7 @@ SAE.check = SAE.check || {};
 
 var tnode,tdata,checkdata,isstage;
 var fromhead,fromproj,fromspri;
+var broadlist;
 var sprilist,     costlist,soundlist,     varilist,     listlist,defslist,argslist;
 var          stagecostlist,          stagevarilist,stagelistlist,         argblist;
 var               costfile,soundfile,     variused,     listused,defsused,argsused;
@@ -56,7 +57,7 @@ SAE.check.proj = function proj(id){
 	for(var i=tnode[id];i<tnode[id+1];i++){
 		broadspri(tdata[i]);
 	}
-	DEBUG(broadlist);
+	DEBUG("broadlist",broadlist);
 	
 	isstage=1;
 	DEBUG(tnode[id],tnode[id+1]);
@@ -84,8 +85,10 @@ SAE.check.proj = function proj(id){
 function broadspri(id){
 	var i=tdata[tnode[id]+6];
 	for(var j=tnode[i];j<tnode[i+1];j++){
+			DEBUG("broadspri",tdata[j]);
 		if(tdata[j]==="event_whenbroadcastreceived"){
 			var check=tdata[tnode[j]+2];
+			DEBUG("broadspri",tdata[tnode[j]+2],tdata[tnode[check]]);
 			if(tdata[tnode[check]]!=='[选项]'){
 				warn(999,"未预料到的情况",check);
 			}else{
@@ -229,7 +232,8 @@ function blockstart(id){
 
 function block(id){
 	DEBUG("block st",id);
-	var blocktype=tdata[tnode[id]];
+	var v=tnode[id],v1=tdata[v+1],v2=tdata[tnode[id]+2];
+	var blocktype=tdata[v];
 	warn(2,"block: " + blocktype,id);
 	var j=0;
 	switch(blocktype){
@@ -240,7 +244,7 @@ function block(id){
 			//下面的重复内容主要是考虑到特殊情况下不同的内容可能会区别对待
 		case 'procedures_call':
 			j=1;
-			var i=defslist.indexOf(tdata[tnode[id]+1]);
+			var i=defslist.indexOf(v1);
 			if(i===-1){
 				warn(140,"积木未定义",id);
 			}else{
@@ -249,11 +253,11 @@ function block(id){
 			break;
 
 		case '[变量]':
-			var i=varilist.indexOf(tdata[tnode[id]+1]);
+			var i=varilist.indexOf(v1);
 			if(i===-1){
-				var i=stagevarilist.indexOf(tdata[tnode[id]+1]);
+				var i=stagevarilist.indexOf(v1);
 				if(i===-1){
-					warn(110,"变量" + tdata[tnode[id]+1] + "不在变量列表中",id);
+					warn(110,"变量" + v1 + "不在变量列表中",id);
 				}else{
 					stagevariused[i]=1;
 				}
@@ -263,11 +267,11 @@ function block(id){
 			break;
 
 		case '[列表]':
-			var i=listlist.indexOf(tdata[tnode[id]+1]);
+			var i=listlist.indexOf(v1);
 			if(i===-1){
-				var i=stagelistlist.indexOf(tdata[tnode[id]+1]);
+				var i=stagelistlist.indexOf(v1);
 				if(i===-1){
-					warn(120,"列表 " + tdata[tnode[id]+1] + " 不在列表列表中",id);
+					warn(120,"列表 " + v1 + " 不在列表列表中",id);
 				}else{
 					stagelistused[i]=1;
 				}
@@ -277,68 +281,64 @@ function block(id){
 			break;
 
 		case '[参数]':
-			var i=argslist.indexOf(tdata[tnode[id]+1]);
+			var i=argslist.indexOf(v1);
 			if(i===-1){
-				warn(130,"参数 " + tdata[tnode[id]+1] + " 没在积木定义中出现",id);
+				warn(130,"参数 " + v1 + " 没在积木定义中出现",id);
 			}else{
 				argsused[i]=1;
 			}
 			break;
 
 		case '[布尔参数]':
-			var i=argblist.indexOf(tdata[tnode[id]+1]);
+			var i=argblist.indexOf(v1);
 			if(i===-1){
-				warn(132,"布尔参数 " + tdata[tnode[id]+1] + " 没在积木定义中出现",id);
+				warn(132,"布尔参数 " + v1 + " 没在积木定义中出现",id);
 			}else{
 				argbused[i]=1;
 			}
 			break;
 			//下面的内容相似度过高
 		case 'looks_costume':
-			var check=tdata[tnode[id]+2];
-			if(tdata[tnode[check]]!=='[选项]'){
-				warn(999,"未预料到的情况",check);
+			if(tdata[tnode[v2]]!=='[选项]'){
+				warn(999,"未预料到的情况",v2);
 			}else{
-				if(!costlist.includes(tdata[tnode[check]+1])){
-					DEBUG("warn",160,tdata[tnode[check]+1],costlist);
-					warn(160,"造型 " + tdata[tnode[check]+1] + " 不存在",id);
+				if(!costlist.includes(tdata[tnode[v2]+1])){
+					DEBUG("warn",160,tdata[tnode[v2]+1],costlist);
+					warn(160,"造型 " + tdata[tnode[v2]+1] + " 不存在",id);
 				}
 			}
 			break;
 
 		case 'looks_backdrops':
 		case "event_whenbackdropswitchesto":
-			var check=tdata[tnode[id]+2];
-			if(tdata[tnode[check]]!=='[选项]'){
-				warn(999,"未预料到的情况",check);
+			if(tdata[tnode[v2]]!=='[选项]'){
+				warn(999,"未预料到的情况",v2);
 			}else{
-				if(!stagecostlist.includes(tdata[tnode[check]+1])){
-					DEBUG("warn",170,tdata[tnode[check]+1],stagecostlist);
-					warn(170,"背景 " + tdata[tnode[check]+1] + " 不存在",id);
+				if(!stagecostlist.includes(tdata[tnode[v2]+1])){
+					DEBUG("warn",170,tdata[tnode[v2]+1],stagecostlist);
+					warn(170,"背景 " + tdata[tnode[v2]+1] + " 不存在",id);
 				}
 			}
 			break;
 
 		case 'sound_sounds_menu':
-			var check=tdata[tnode[id]+2];
-			if(tdata[tnode[check]]!=='[选项]'){
-				warn(999,"未预料到的情况",check);
+			if(tdata[tnode[v2]]!=='[选项]'){
+				warn(999,"未预料到的情况",v2);
 			}else{
-				if(!soundlist.includes(tdata[tnode[check]+1])){
-					DEBUG("warn",180,tdata[tnode[check]+1],soundlist);
-					warn(180,"声音 " + tdata[tnode[check]+1] + " 不存在",id);
+				if(!soundlist.includes(tdata[tnode[v2]+1])){
+					DEBUG("warn",180,tdata[tnode[v2]+1],soundlist);
+					warn(180,"声音 " + tdata[tnode[v2]+1] + " 不存在",id);
 				}
 			}
 			break;
 
 		case 'event_broadcast':
 		case 'event_broadcastandwait':
-			var check=tdata[tnode[id]+2];
 			// 广播中的下拉列表看起来是选项在json中却是文本，详见SAE-json.md中的__inputs__部分。
-			if(tdata[tnode[check]]==='[文字]'){
-				if(!broadlist.includes(tdata[tnode[check]+1])){
-					DEBUG("warn",180,tdata[tnode[check]+1],broadlist);
-					warn(190,"没有接收广播 " + tdata[tnode[check]+1] + " 的积木",id);
+			if(tdata[tnode[v2]]==='[文本]'){
+				if(!broadlist.includes(tdata[tnode[v2]+1])){
+					DEBUG("warn",190,tdata[tnode[v2]+1],broadlist);
+					warn(190,"没有接收广播 " + tdata[tnode[v2]+1] + " 的积木",id);
 				}
 			}
 			break;
@@ -346,13 +346,12 @@ function block(id){
 
 		default:
 			if(spriblocklist.includes(blocktype)){
-				var check=tdata[tnode[id]+2];
-				if(tdata[tnode[check]]!=='[选项]'){
-					warn(999,"未预料到的情况",check);
+				if(tdata[tnode[v2]]!=='[选项]'){
+					warn(999,"未预料到的情况",v2);
 				}else{
-					if(!sprilist.includes(tdata[tnode[check]+1])){
-						DEBUG(sprilist,tdata[tnode[check]+1]);
-						warn(150,"角色 " + tdata[tnode[check]+1] + " 不存在",id);
+					if(!sprilist.includes(tdata[tnode[v2]+1])){
+						DEBUG(sprilist,tdata[tnode[v2]+1]);
+						warn(150,"角色 " + tdata[tnode[v2]+1] + " 不存在",id);
 					}
 				}
 			}
@@ -369,9 +368,9 @@ function block(id){
 				block(tdata[i]);
 			}
 		}
-		if(tdata[tnode[id]+1]!==-1){
-			DEBUG("check next",id,tnode[id],tdata[tnode[id]+1]);
-			block(tdata[tnode[id]+1]);
+		if(v1!==-1){
+			DEBUG("check next",id,tnode[id],v1);
+			block(v1);
 		}
 	}
 }
