@@ -230,13 +230,13 @@ function block(id,indent,level,type){
 								if(pattern[i]==='1'){
 									// 如果是第一个参数，因为计算顺序是从左到右，因此括号可以去掉。
 									if(c==='&'){
-										block(value,indent,-Math.abs(levelcr),"&"+blocktype+":");
+										block(value,indent,-Math.abs(levelcr),"&"+blocktype+"#"+pattern[i]+":");
 									}else{
 										block(value,indent,-Math.abs(levelcr),c);
 									}
 								}else{
 									if(c==='&'){
-										block(value,indent,levelcr,"&"+blocktype+":");
+										block(value,indent,levelcr,"&"+blocktype+"#"+pattern[i]+":");
 									}else{
 										block(value,indent,levelcr,c);
 									}
