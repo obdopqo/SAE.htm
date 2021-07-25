@@ -51,6 +51,13 @@ SAE.check.proj = function proj(id){
 		sprilist.push(tdata[tnode[tdata[i]]]);
 	}
 
+	// 扫描广播接收积木
+	broadlist=[];
+	for(var i=tnode[id];i<tnode[id+1];i++){
+		broadspri(tdata[i]);
+	}
+	DEBUG(broadlist);
+	
 	isstage=1;
 	DEBUG(tnode[id],tnode[id+1]);
 	for(var i=tnode[id];i<tnode[id+1];i++){
@@ -72,6 +79,20 @@ SAE.check.proj = function proj(id){
 	}
 
 	tnode.pop();
+}
+
+function broadspri(id){
+	var i=tdata[tnode[id]+6];
+	for(var j=tnode[i];j<tnode[i+1];j++){
+		if(tdata[j]==="event_whenbroadcastreceived"){
+			var check=tdata[tnode[j]+2];
+			if(tdata[tnode[check]]!=='[选项]'){
+				warn(999,"未预料到的情况",check);
+			}else{
+				broadlist.push(tdata[tnode[check]+1]);
+			}
+		}
+	}
 }
 
 function spri(id){
@@ -309,6 +330,19 @@ function block(id){
 				}
 			}
 			break;
+
+		case 'event_broadcast':
+		case 'event_broadcastandwait':
+			var check=tdata[tnode[id]+2];
+			// 广播中的下拉列表看起来是选项在json中却是文本，详见SAE-json.md中的__inputs__部分。
+			if(tdata[tnode[check]]==='[文字]'){
+				if(!broadlist.includes(tdata[tnode[check]+1])){
+					DEBUG("warn",180,tdata[tnode[check]+1],broadlist);
+					warn(190,"没有接收广播 " + tdata[tnode[check]+1] + " 的积木",id);
+				}
+			}
+			break;
+
 
 		default:
 			if(spriblocklist.includes(blocktype)){
