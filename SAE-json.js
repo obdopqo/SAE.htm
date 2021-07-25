@@ -545,7 +545,8 @@ function blockargs(){
 	t=findtext('":[',inputstart,inputend,true);
 	while(t!==-1){
 		//获得input位置
-		t-=24;
+		t-=4;
+		t=getrev();
 		var inputid = argids.indexOf(getval());
 		DEBUGPOS();
 		t+=3;
@@ -775,6 +776,14 @@ function getval2(){
 		throw new Error("错误getval2: "+t);
 	}
 	return ret;
+}
+
+//获取前面一个"号的位置
+function getrev(){
+	while(text[t]!=='"'&&t>0){
+		t--;
+	}
+	return t;
 }
 
 //比较文本从位置x开始的字符是否和字符str相同。
