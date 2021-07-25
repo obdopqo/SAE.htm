@@ -19,17 +19,6 @@ var spriblocklist = [
 	"motion_goto_menu",
 	"motion_glideto_menu",
 	"motion_pointtowards_menu",
-	"looks_costume",
-	"looks_backdrops",
-	"control_create_clone_of_menu",
-	"sensing_touchingobjectmenu",
-	"sensing_distancetomenu",
-	"sensing_of_object_menu",
-	"motion_goto_menu",
-	"motion_glideto_menu",
-	"motion_pointtowards_menu",
-	"looks_costume",
-	"looks_backdrops",
 	"control_create_clone_of_menu",
 	"sensing_touchingobjectmenu",
 	"sensing_distancetomenu",
@@ -114,14 +103,14 @@ function spri(id){
 
 	for(var i=0;i<variused.length;i++){
 		if(variused[i] === 0){
-			warn(111,"未使用的变量: " + varilist[i],id);
+			warn(111,"未使用的变量: " + varilist[i],0);
 		}
 	}
 
 	// TODO: example
 	for(var i=0;i<listused.length;i++){
 		if(listused[i] === 0){
-			warn(121,"未使用的列表: " + listlist[i],id);
+			warn(121,"未使用的列表: " + listlist[i],0);
 		}
 	}
 
@@ -246,7 +235,7 @@ function block(id){
 			if(i===-1){
 				var i=stagevarilist.indexOf(tdata[tnode[id]+1]);
 				if(i===-1){
-					warn(110,"变量不在变量列表中",id);
+					warn(110,"变量" + tdata[tnode[id]+1] + "不在变量列表中",id);
 				}else{
 					stagevariused[i]=1;
 				}
@@ -260,7 +249,7 @@ function block(id){
 			if(i===-1){
 				var i=stagelistlist.indexOf(tdata[tnode[id]+1]);
 				if(i===-1){
-					warn(120,"列表不在列表列表中",id);
+					warn(120,"列表 " + tdata[tnode[id]+1] + " 不在列表列表中",id);
 				}else{
 					stagelistused[i]=1;
 				}
@@ -272,7 +261,7 @@ function block(id){
 		case '[参数]':
 			var i=argslist.indexOf(tdata[tnode[id]+1]);
 			if(i===-1){
-				warn(130,"参数没在积木定义中出现",id);
+				warn(130,"参数 " + tdata[tnode[id]+1] + " 没在积木定义中出现",id);
 			}else{
 				argsused[i]=1;
 			}
@@ -281,7 +270,7 @@ function block(id){
 		case '[布尔参数]':
 			var i=argblist.indexOf(tdata[tnode[id]+1]);
 			if(i===-1){
-				warn(132,"布尔参数没在积木定义中出现",id);
+				warn(132,"布尔参数 " + tdata[tnode[id]+1] + " 没在积木定义中出现",id);
 			}else{
 				argbused[i]=1;
 			}
@@ -292,30 +281,34 @@ function block(id){
 			if(tdata[tnode[check]]!=='[选项]'){
 				warn(999,"未预料到的情况",check);
 			}else{
-				if(!sprilist.includes(tdata[tnode[check]+1])){
-					warn(160,"造型不存在",id);
+				if(!costlist.includes(tdata[tnode[check]+1])){
+					DEBUG("warn",160,tdata[tnode[check]+1],costlist);
+					warn(160,"造型 " + tdata[tnode[check]+1] + " 不存在",id);
 				}
 			}
 			break;
 
 		case 'looks_backdrops':
+		case "event_whenbackdropswitchesto":
 			var check=tdata[tnode[id]+2];
 			if(tdata[tnode[check]]!=='[选项]'){
 				warn(999,"未预料到的情况",check);
 			}else{
 				if(!stagecostlist.includes(tdata[tnode[check]+1])){
-					warn(170,"背景不存在",id);
+					DEBUG("warn",170,tdata[tnode[check]+1],stagecostlist);
+					warn(170,"背景 " + tdata[tnode[check]+1] + " 不存在",id);
 				}
 			}
 			break;
 
-		case 'sound_play':
+		case 'sound_sounds_menu':
 			var check=tdata[tnode[id]+2];
 			if(tdata[tnode[check]]!=='[选项]'){
 				warn(999,"未预料到的情况",check);
 			}else{
 				if(!soundlist.includes(tdata[tnode[check]+1])){
-					warn(180,"声音不存在",id);
+					DEBUG("warn",180,tdata[tnode[check]+1],soundlist);
+					warn(180,"声音 " + tdata[tnode[check]+1] + " 不存在",id);
 				}
 			}
 			break;
@@ -327,8 +320,8 @@ function block(id){
 					warn(999,"未预料到的情况",check);
 				}else{
 					if(!sprilist.includes(tdata[tnode[check]+1])){
-						console.log(sprilist,tdata[tnode[check]+1]);
-						warn(150,"角色不存在",id);
+						DEBUG(sprilist,tdata[tnode[check]+1]);
+						warn(150,"角色 " + tdata[tnode[check]+1] + " 不存在",id);
 					}
 				}
 			}
