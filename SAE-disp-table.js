@@ -51,6 +51,7 @@ SAE.disp.table = [
 	"#looks_costume",			"(%1)",					0,
 	"#looks_nextcostume",			"下一个造型",				0,
 	"#looks_switchbackdropto",		"换成 %1 背景",				0,
+	"#looks_switchbackdroptoandwait",	"换成 %1 背景并等待",			0,
 	"#looks_backdrops",			"(%1)",					0,
 	"#looks_nextbackdrop",			"下一个背景",				0,
 	"#looks_changesizeby",			"将大小增加 %1",			0,
@@ -84,8 +85,8 @@ SAE.disp.table = [
 
 	//声音
 	"#sound_playuntildone",			"播放声音 %1 等待播完",			0,
-	"#sound_sounds_menu",			"播放声音 %1",				0,
-	"#sound_play",				"(%1)",					99,
+	"#sound_sounds_menu",			"(%1)",					99,
+	"#sound_play",				"播放声音 %1",				0,
 	"#sound_stopallsounds",			"停止所有声音",				0,
 	"#sound_changeeffectby",		"将 &2 音效增加 %1",			0,
 	"#sound_seteffectto",			"将 &2 音效设为 %1",			0,
