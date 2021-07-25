@@ -21,9 +21,8 @@ var blockpos,blockend;
 var defspos;
 var blockidc,blocktype;
 var blockid,blockidx,blockidp;
-var blockends;
-var blockspecs;
-var blockdata;
+var blockends,blockspecs,blockdata;
+var isblockid;
 /*}}}*/
 
 // 基本函数
@@ -491,53 +490,8 @@ function blockinput(){
 			//'":1~3,'
 			if("123".includes(text[t])&&text[t+1]===','){
 				t+=2;
-				//接下来i表示填入的数值，isblocid表示是否为积木id。
-				var isblocid=0;
-				//是不是空的？
-				if(text[t]==="n"){
-					//是空的积木
-					if(text[t-2]==="3"){
-						//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
-						i=99999999;
-					}else{
-						i=-1;
-					}
-				}else{
-					if(text[t]==='"'){
-						//这是一个积木
-						isblocid=1;
-						i=getval();
-					}else{
-						// 这里是特殊的调试模式。
-						if(SAE.options._OrigInputType){
-							t++;
-							i=getval();
-							blockdata.push('['+i+']');
-							t++;
-						}else{
-							if(text[t+1]==="1"){
-								//可能是变量
-								i=text[t+2];
-								t+=4;
-								if(i==="2"){
-									blockdata.push("[变量]"); // 12
-								}else if(i==="3"){
-									blockdata.push("[列表]"); // 13
-								}else{
-									blockdata.push("[文本]"); // 1x
-								}
-							}else{
-								t+=3;
-								blockdata.push("[文本]"); // x
-							}
-						}
-						//放入数值
-						blockdata.push(getval());
-						//这里预先计算好在后面积木数据增加的时候到达的位置
-						i=tnode.length+blockdata.length/2-1;
-						DEBUG('preload ('+i+')');
-					}
-				}
+				//接下来i表示填入的数值，isblockid表示是否为积木id。
+				i=blockinputval();
 				//到达这里时变量i表示要放入的数据，节点序号或者积木id
 				if(i!==99999999){
 					//判断是不是特殊顺序积木
@@ -550,13 +504,13 @@ function blockinput(){
 						if(j!==blockspec.length){
 							j=tdata.length-blockspec.length+j;
 							tdata[j]=i;
-							if(isblocid===1){
+							if(isblockid===1){
 								blockidp.push(j);
 							}
 						}
 					}else{
 						//普通顺序积木
-						if(isblocid===1){
+						if(isblockid===1){
 							blockidp.push(tdata.length);
 						}
 						tdata.push(i);
@@ -601,58 +555,13 @@ function blockargs(){
 			//'":1~3,'
 			if("123".includes(text[t])&&text[t+1]===','){
 				t+=2;
-				//接下来i表示填入的数值，isblocid表示是否为积木id。
-				var isblocid=0;
-				//是不是空的？
-				if(text[t]==="n"){
-					//是空的积木
-					if(text[t-2]==="3"){
-						//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
-						i=99999999;
-					}else{
-						i=-1;
-					}
-				}else{
-					if(text[t]==='"'){
-						//这是一个积木
-						isblocid=1;
-						i=getval();
-					}else{
-						// 这里是特殊的调试模式。
-						if(SAE.options._OrigInputType){
-							t++;
-							i=getval();
-							blockdata.push('['+i+']');
-							t++;
-						}else{
-							if(text[t+1]==="1"){
-								//可能是变量
-								i=text[t+2];
-								t+=4;
-								if(i==="2"){
-									blockdata.push("[变量]"); // 12
-								}else if(i==="3"){
-									blockdata.push("[列表]"); // 13
-								}else{
-									blockdata.push("[文本]"); // 1x
-								}
-							}else{
-								t+=3;
-								blockdata.push("[文本]"); // x
-							}
-						}
-						//放入数值
-						blockdata.push(getval());
-						//这里预先计算好在后面积木数据增加的时候到达的位置
-						i=tnode.length+blockdata.length/2-1;
-						DEBUG('preload ('+i+')');
-					}
-				}
+				//接下来i表示填入的数值，isblockid表示是否为积木id。
+				i=blockinputval();
 				//到达这里时变量i表示要放入的数据，节点序号或者积木id
 				if(i!==99999999){
 					j=tdata.length-argids.length+inputid;
 					tdata[j]=i;
-					if(isblocid===1){
+					if(isblockid===1){
 						blockidp.push(j);
 					}
 				}
@@ -661,6 +570,58 @@ function blockargs(){
 		t=findtext('":[',t,inputend,true);
 	}
 	t=inputend;
+}
+
+//获取输入的值，isblockid表示是否为积木id，i表示数值所在的位置
+function blockinputval(){
+	var i;
+	isblockid=0;
+	//是不是空的？
+	if(text[t]==="n"){
+		//是空的积木
+		if(text[t-2]==="3"){
+			//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
+			i=99999999;
+		}else{
+			i=-1;
+		}
+	}else{
+		if(text[t]==='"'){
+			//这是一个积木
+			isblockid=1;
+			i=getval();
+		}else{
+			// 这里是特殊的调试模式。
+			if(SAE.options._OrigInputType){
+				t++;
+				i=getval();
+				blockdata.push('['+i+']');
+				t++;
+			}else{
+				if(text[t+1]==="1"){
+					//可能是变量
+					i=text[t+2];
+					t+=4;
+					if(i==="2"){
+						blockdata.push("[变量]"); // 12
+					}else if(i==="3"){
+						blockdata.push("[列表]"); // 13
+					}else{
+						blockdata.push("[文本]"); // 1x
+					}
+				}else{
+					t+=3;
+					blockdata.push("[文本]"); // x
+				}
+			}
+			//放入数值
+			blockdata.push(getval());
+			//这里预先计算好在后面积木数据增加的时候到达的位置
+			i=tnode.length+blockdata.length/2-1;
+			DEBUG('preload ('+i+')');
+		}
+	}
+	return i;
 }
 
 function blockfield(){
