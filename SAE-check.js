@@ -65,7 +65,6 @@ SAE.check.proj = function proj(id){
 		}
 	}
 
-	// TODO: example
 	for(var i=0;i<stagelistused.length;i++){
 		if(stagelistused[i] === 0){
 			warn(122,"未使用的全局列表: " + stagelistlist[i],id);
@@ -107,7 +106,6 @@ function spri(id){
 		}
 	}
 
-	// TODO: example
 	for(var i=0;i<listused.length;i++){
 		if(listused[i] === 0){
 			warn(121,"未使用的列表: " + listlist[i],0);
@@ -230,7 +228,6 @@ function block(id){
 			break;
 
 		case '[变量]':
-			// TODO: 公用变量，列表
 			var i=varilist.indexOf(tdata[tnode[id]+1]);
 			if(i===-1){
 				var i=stagevarilist.indexOf(tdata[tnode[id]+1]);
