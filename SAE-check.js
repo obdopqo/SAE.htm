@@ -85,10 +85,11 @@ SAE.check.proj = function proj(id){
 function broadspri(id){
 	var i=tdata[tnode[id]+6];
 	for(var j=tnode[i];j<tnode[i+1];j++){
-			DEBUG("broadspri",tdata[j]);
-		if(tdata[j]==="event_whenbroadcastreceived"){
-			var check=tdata[tnode[j]+2];
-			DEBUG("broadspri",tdata[tnode[j]+2],tdata[tnode[check]]);
+		var blo=tnode[tdata[j]];
+		DEBUG("broadspri",tdata[blo]);
+		if(tdata[blo]==="event_whenbroadcastreceived"){
+			var check=tdata[blo+2];
+			DEBUG("broadspri",tdata[blo+2],tdata[tnode[check]]);
 			if(tdata[tnode[check]]!=='[选项]'){
 				warn(999,"未预料到的情况",check);
 			}else{
