@@ -252,6 +252,8 @@ function block(id){
 			if(tdata[i]!==-1){
 				DEBUG("block1",tdata[i]);
 				block(tdata[i]);
+			}else{
+				warn(102,"缺少积木",id);
 			}
 		}
 		if(v1!==-1){
@@ -364,7 +366,6 @@ function block1xx(id){
 				}
 			}
 			break;
-
 
 		default:
 			if(spriblocklist.includes(blocktype)){
