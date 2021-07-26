@@ -15,6 +15,7 @@ var sprilist,     costlist,soundlist,     varilist,     listlist,defslist,argsli
 var          stagecostlist,          stagevarilist,stagelistlist,         argblist;
 var               costfile,soundfile,     variused,     listused,defsused,argsused;
 var                                  stagevariused,stagelistused,defsposi,argbused;
+var blocktype;
 
 var spriblocklist = [
 	"motion_goto_menu",
@@ -182,7 +183,7 @@ function blockstart(id){
 	argblist=[];
 	argbused=[];
 
-	var blocktype=tdata[tnode[id]];
+	blocktype=tdata[tnode[id]];
 	switch(blocktype){
 		case 'procedures_definition':
 			//记录使用的参数
@@ -233,18 +234,38 @@ function blockstart(id){
 
 function block(id){
 	DEBUG("block st",id);
-	var v=tnode[id],v1=tdata[v+1],v2=tdata[tnode[id]+2];
-	var blocktype=tdata[v];
+	var v=tnode[id],v1=tdata[v+1],v2=tdata[v+2];
+	blocktype=tdata[v];
 	warn(2,"block: " + blocktype,id);
-	var j=0;
-	switch(blocktype){
-		case 'procedures_definition':
-			j=1;
-			break;
 
+	block1xx(id);
+
+	DEBUG("bl",id);
+	DEBUG("block",id,blocktype[0]);
+
+	if(blocktype[0] !== '['){
+		var j=0;
+		if(blocktype === 'procedures_definition' || blocktype === 'procedures_call'){
+			j=1;
+		}
+		for(var i=tnode[id]+2;i<tnode[id+1]-j;i++){
+			if(tdata[i]!==-1){
+				DEBUG("block1",tdata[i]);
+				block(tdata[i]);
+			}
+		}
+		if(v1!==-1){
+			DEBUG("check next",id,tnode[id],v1);
+			block(v1);
+		}
+	}
+}
+
+function block1xx(id){
+	var v=tnode[id],v1=tdata[v+1],v2=tdata[v+2];
+	switch(blocktype){
 			//下面的重复内容主要是考虑到特殊情况下不同的内容可能会区别对待
 		case 'procedures_call':
-			j=1;
 			var i=defslist.indexOf(v1);
 			if(i===-1){
 				warn(140,"积木未定义",id);
@@ -357,22 +378,6 @@ function block(id){
 				}
 			}
 			break;
-	}
-
-	DEBUG("bl",id);
-	DEBUG("block",id,blocktype[0]);
-
-	if(blocktype[0] !== '['){
-		for(var i=tnode[id]+2;i<tnode[id+1]-j;i++){
-			if(tdata[i]!==-1){
-				DEBUG("block1",tdata[i]);
-				block(tdata[i]);
-			}
-		}
-		if(v1!==-1){
-			DEBUG("check next",id,tnode[id],v1);
-			block(v1);
-		}
 	}
 }
 
