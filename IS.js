@@ -29,6 +29,19 @@ function __pn(x,y){
 	});
 	return new IS(res);
 }
+function __pa(x,y){
+	var res=[];
+	x.eval(function(z){
+		var nx = z[y];
+		while(nx !== null){
+			if(!res.includes(nx)){
+				res.push(nx);
+				nx = nx[y];
+			}
+		}
+	});
+	return new IS(res);
+}
 function __child(x,b){
 	var res=[];
 	x.eval(function(y){___child(y,res,b);});
@@ -70,9 +83,12 @@ IS.prototype.inner = function _inner(){return __child(this,true);};
 IS.prototype.child = function _child(){return __child(this,false);};
 IS.prototype.prev = function _prev(){return __pn(this,"previousElementSibling");};
 IS.prototype.next = function _next(){return __pn(this,"nextElementSibling");};
+IS.prototype.before = function _before(){return __pa(this,"previousElementSibling");};
+IS.prototype.after = function _after(){return __pa(this,"nextElementSibling");};
 IS.prototype.eval = function _eval(x){this.list.forEach(x);return this;};
 IS.prototype.when = function _when(a,b){return this.eval(function(x){x.addEventListener(a,b);});};
 IS.prototype.set = function _set(a,b){return this.eval(function(x){x[a]=b;});};
+IS.prototype.attr = function _getattr(a,b){return this.eval(function(x){x.setAttribute(a,b);});};
 IS.prototype.append = function _append(x){return this.eval(function(y){y.appendChild(x.cloneNode(true));});};
 IS.prototype.remove = function _remove(){this.eval(function(x){x.parentElement.removeChild(x);});};
 IS.prototype.style = function _style(a,b){return this.eval(function(x){x.style[a]=b;});};
