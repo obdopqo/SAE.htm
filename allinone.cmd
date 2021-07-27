@@ -7,7 +7,11 @@ function f1(a,b){
 	return "<script>\r\n"+LoadUTF8(b)+"\r\n</script>"
 }
 	
-var r2=/<link rel="stylesheet" href="([^"]*)">/g;
+var r2=/<link rel="stylesheet" href="([^"]*)"\/>/g;
+function f2(a,b){
+	return "<style>\r\n"+LoadUTF8(b)+"\r\n</style>"
+}
+var r3=/<iframe src="([^"]*)"><\/iframe>/g;
 function f2(a,b){
 	return "<style>\r\n"+LoadUTF8(b)+"\r\n</style>"
 }
