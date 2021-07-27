@@ -89,7 +89,7 @@ function IS(res){
 }
 function is(x){return new IS().is(x);}
 function not(x){return new IS().not(x);}
-function when(a,b){document.addEventListener(a,b);}
+function when(a,b){window.addEventListener(a,b);}
 function id(x){
 	var res = document.getElementById(x);
 	if(res === null){
