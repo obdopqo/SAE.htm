@@ -90,6 +90,13 @@ function IS(res){
 function is(x){return new IS().is(x);}
 function not(x){return new IS().not(x);}
 function when(a,b){document.addEventListener(a,b);}
-function id(x){return is(document.getElementById(x));}
+function id(x){
+	var res = document.getElementById(x);
+	if(res === null){
+		return new IS([]);
+	}else{
+		return is(document.getElementById(x));
+	}
+}
 function create(x){return document.createElement(x);}
 
