@@ -1,8 +1,36 @@
 SAE.init();
 
+var hashCorrect;
+id("nav").inner().is("a").when("click",nav_click);
+when("hashchange",hashChange);
+hashChange();
 
+function hashChange(){
+	hashCorrect = false;
+	id("nav").inner().is("a").eval(nav_each);
+	if(!hashCorrect){
+		window.location.hash = "#home";
+	}
+}
 
+function nav_click(event){
+	setTimeout(hashChange,0);
+}
 
+function nav_each(object){
+	console.log(/#.*/.exec(object.href)[0],window.location.hash);
+	if(/#.*/.exec(object.href)[0] === window.location.hash){
+		hashCorrect = true;
+		console.log("WOW");
+		is(object).set("className","selected");
+	}else{
+		is(object).set("className","");
+	}
+}
+
+id("_loading").style("display","none");
+
+///////////////////////////////////////////////////////////////////////////////
 
 id("file-upload").when('change',function(event){
 	loadsb3(event.target,function(json,filename){SAE.json.load(json,filename)},function(e){alert(e);throw e;});
@@ -44,6 +72,7 @@ function makeSVG(tag, attrs) {
 	}
 	return el;
 }
+
 function loadsb3(file,func,err){
 	try {
 		if(!file.files || !file.files[0]){
@@ -127,4 +156,3 @@ function Utf8ArrayToStr(array) {
 	return out;
 }
 
-id("_loading").style("display","none");
