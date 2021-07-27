@@ -1,4 +1,9 @@
 SAE.init();
+
+
+
+
+
 id("file-upload").when('change',function(event){
 	loadsb3(event.target,function(json,filename){SAE.json.load(json,filename)},function(e){alert(e);throw e;});
 });
@@ -121,3 +126,5 @@ function Utf8ArrayToStr(array) {
 	}
 	return out;
 }
+
+id("_loading").style("display","none");
