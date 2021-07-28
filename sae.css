@@ -1,3 +1,8 @@
+::selection {
+	background-color: black;
+	color: white;
+}
+
 #_loading {
 	position: fixed;
 	font-size: 100px;
