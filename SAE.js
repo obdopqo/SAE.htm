@@ -113,7 +113,7 @@ function loadsb3(file,func,err){
 		reader.onload = function(){
 			var bstr=this.result;
 			try {
-				if(bstr.slice(0,4)==="PK\u0003\u0004"||true){
+				if(bstr.slice(0,4)==="PK\u0003\u0004"){
 					var zip = new JSZip(bstr);
 					var files = zip.files;
 					if(!('project.json' in files)){
