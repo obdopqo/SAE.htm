@@ -123,8 +123,6 @@ function spri(json){
 	// 积木和定义，spripos的第5个和第6个数字都在这里设定.
 	block(json.blocks,spripos);
 	// 造型
-	//console.log(t,"t");
-	//console.log(spriend,"spriend");
 	spripos[1]=datalist2(json.costumes);
 	// 声音
 	spripos[2]=datalist2(json.sounds);
@@ -134,20 +132,16 @@ function spri(json){
 		tdata.push(spripos[i]);
 	}
 	return tnode.length-1;
-	//console.log(t);
 }
 
 //datalist(获取列表)用于在处理json时获得名字列表，用法:
-//  datalist(文本)
-//    文本:变量/列表列表结束文本
-//    文本2:名字判断文本
 function datalist(json){
 	tnode.push(tdata.length);
 	for(var i in json){
-		//console.log(i,json[i][0]);
+		DEBUG(i,json[i][0]);
 		tdata.push(json[i][0]);
 	}
-	//console.log("-------");
+	DEBUG("-------");
 	return tnode.length-1;
 }
 
@@ -260,11 +254,12 @@ function block(json,spripos){
 	}
 
 	//现在把积木的原始id转换为tnode位置。
+	DEBUG(blockidp);
 	for(var i=0;i<blockidp.length;i++){
 		j=blockidp[i];
-		//console.log('['+j+']',tdata[j]);
+		DEBUG('['+j+']',tdata[j]);
 		tdata[j]=blockidx[blockid.indexOf(tdata[j])];
-		//console.log("=>",tdata[j]);
+		DEBUG("=>",tdata[j]);
 	}
 	t=blockend;
 
@@ -284,7 +279,7 @@ function block(json,spripos){
 function blockop(json,jsonParent){
 	//积木类型(opcode)
 	blocktype=json.opcode;
-	//console.log("block "+blocktype+' ('+(tnode.length-1)+')');
+	DEBUG("block "+blocktype+' ('+(tnode.length-1)+')');
 	tdata.push(blocktype);
 	//"next",下一个积木的编号
 	if(json.next === null){
@@ -292,10 +287,11 @@ function blockop(json,jsonParent){
 		tdata.push(-1);
 	}else{
 		//获得下一个积木编号
+		DEBUG("blockidp1",tdata.length);
 		blockidp.push(tdata.length);
 		tdata.push(json.next);
 	}
-	//console.log("next "+' '+tdata[tdata.length-1]);
+	DEBUG("next "+' '+tdata[tdata.length-1]);
 
 	//初始化特殊积木数据列表
 	blockdata=[];
@@ -370,7 +366,7 @@ function blockop(json,jsonParent){
 		tnode.push(tdata.length);
 		tdata.push(blockdata[i+0]);
 		tdata.push(blockdata[i+1]);
-		//console.log('insert','('+(tnode.length-1)+')',blockdata[i+0],blockdata[i+1]);
+		DEBUG('insert','('+(tnode.length-1)+')',blockdata[i+0],blockdata[i+1]);
 	}
 
 	return true;
@@ -402,7 +398,7 @@ function blockinput(json){
 	i=blockspecs.indexOf("#"+blocktype);
 	if(i>-1){
 		blockspec=blockspecs[i+1];
-		//console.log("blockspec",blocktype,blockspec);
+		DEBUG("blockspec",blocktype,blockspec);
 		//预先为输入保留空间
 		for(j=0;j<blockspec.length;j++){
 			tdata.push(-1);
@@ -470,7 +466,7 @@ function blockinput(json){
 						while(j<blockspec.length&&blockspec[j]!==blockspecc){
 							j++;
 						}
-						//console.log("blockspec",blocktype,blockspecc,blockspec,j);
+						DEBUG("blockspec",blocktype,blockspecc,blockspec,j);
 						if(j!==blockspec.length){
 							j=tdata.length-blockspec.length+j;
 							tdata[j]=i;
@@ -608,6 +604,10 @@ function blockproc(json){
 		proc+='%';
 	}
 	tdata.push(proc);
+}
+
+function DEBUG(){
+	//console.log.apply(console,arguments);
 }
 
 /*}}}*/
