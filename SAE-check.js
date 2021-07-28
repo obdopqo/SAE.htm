@@ -64,6 +64,22 @@ var block2xx_number = [
 	"operator_mathop",
 ]
 
+var block2xx_change = [
+	"motion_changexby",
+	"motion_changeyby",
+	"looks_changesizeby",
+	"looks_changeeffectby",
+	"looks_goforwardbackwardlayers",
+	"sound_changeeffectby",
+	"sound_changevolumeby",
+	"data_changevariableby",
+	"music_changeTempo",
+	"pen_changePenColorParamBy",
+	"pen_changePenSizeBy",
+	"box2d_changeVelocity",
+	"box2d_changeScroll"
+];
+
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
 	tdata = SAE.data.tdata;
@@ -558,12 +574,14 @@ function block2xx(id){
 			}
 			break;
 	}
-	/*if(block2xx_change.includes(blocktype)){
-		if(checkvalue(v+2,0,'=='){
-			warn(227,"改变量等于0",id);
+
+	if(block2xx_change.includes(blocktype)){
+		for(var i=v+2;i<tnode[id+1];i++){
+			if(checkvalue(i,0,'==')){
+				warn(230,"改变量等于0",id);
+			}
 		}
-	}*/
-	break;
+	}
 }
 
 function checkvalue(i,value,operator){
