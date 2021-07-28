@@ -1,16 +1,36 @@
 SAE.init();
 
+// 导航栏
+
+var position;
 var hashCorrect;
-id("nav").inner().is("a").when("click",nav_click);
+var navButton = id("nav").inner().is("li").child().is("a");
+navButton.when("click",nav_click);
 when("hashchange",hashChange);
 hashChange();
 
 function hashChange(){
 	hashCorrect = false;
-	id("nav").inner().is("a").eval(nav_each);
+
+	if(window.location.hash!==""){
+		position = window.location.hash.slice(1).split('/');
+	}
+	navButton.eval(nav_each);
 	if(!hashCorrect){
 		window.location.hash = "#home";
+	}else if(position.length>1){
+		id("navReturn").style("display","inline");
+		id("navReturn").attr("href",'#'+position.slice(0,-1).join('/'));
+	}else{
+		id("navReturn").style("display","none");
 	}
+	is(".content").eval(function(x){
+		if(x.getAttribute("label")===position[0]){
+			is(x).style("display","block");
+		}else{
+			is(x).style("display","none");
+		}
+	});
 }
 
 function nav_click(event){
@@ -18,10 +38,8 @@ function nav_click(event){
 }
 
 function nav_each(object){
-	console.log(/#.*/.exec(object.href)[0],window.location.hash);
-	if(/#.*/.exec(object.href)[0] === window.location.hash){
+	if(/#(.*)/.exec(object.href)[1] === position[0]){
 		hashCorrect = true;
-		console.log("WOW");
 		is(object).set("className","selected");
 	}else{
 		is(object).set("className","");
@@ -32,12 +50,24 @@ id("_loading").style("display","none");
 
 ///////////////////////////////////////////////////////////////////////////////
 
-id("file-upload").when('change',function(event){
-	loadsb3(event.target,function(json,filename){SAE.json.load(json,filename)},function(e){alert(e);throw e;});
+id("home_file").when('change',function(event){
+	loadsb3(event.target,function(json,filename){
+		SAE.init();
+		var proj = SAE.json.load(json);
+		SAE.disp.proj(proj);
+		id('home_result').set("innerText",SAE.disp.data.join('\n'));
+		SAE.check.proj(proj);
+		SAE.check.debug();
+	},function(e){alert(e);throw e;});
 });
-id("file-subm").when('click',function(){
+id("home_submit").when('click',function(){
 	try{
-		SAE.json.load(id('file').list[0].value,"<FILE>");
+		SAE.init();
+		var proj = SAE.json.load(id('home_json').list[0].value);
+		SAE.disp.proj(proj);
+		id('home_result').set("innerText",SAE.disp.data.join('\n'));
+		SAE.check.proj(proj);
+		SAE.check.debug();
 	} catch(e) {
 		alert(e);
 		throw e;
