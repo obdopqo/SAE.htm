@@ -570,7 +570,7 @@ function block2xx(id){
 				warn(226,"触发数值小于0",id);
 			}
 			if(checkvalue(v+3,"LOUDNESS",'===') && checkvalue(v+2,100,'>')){
-				warn(226,"触发数值大于100",id);
+				warn(227,"触发数值大于100",id);
 			}
 			break;
 	}
