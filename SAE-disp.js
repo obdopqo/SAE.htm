@@ -252,7 +252,9 @@ function block(id,indent,level,type){
 							DEBUG("block3",pattern[i],value);
 							block(value,indent+"| ",levelcr,'%');
 							displine("");
-							display(indent+"\\-------"); // ?C2
+							if(i!==pattern.length-1){
+								display(indent+"\\-------"); // ?C2
+							}
 							break;
 						case '^':
 							//转义字符
