@@ -641,12 +641,13 @@ SAE.check.debug = function debug(){
 				DEBUG(cl,j,k,SAE.disp.data);
 				for(var k=-4;k<5;k++){
 					if(j+k>=SAE.disp.data.length){
-						console.log("");
-					}else{
-						if(j+k===cl){
-							console.log(('['+(j+k)+']      ').slice(0,8)+'|'+SAE.disp.data[j+k]);
+						console.log("       |");
 						}else{
-							console.log((' '+(j+k)+'       ').slice(0,8)+'|'+SAE.disp.data[j+k]);
+							if(j+k===cl){
+								console.log(('> '+(j+k)+'     ').slice(0,7)+'| '+SAE.disp.data[j+k]);
+							}else{
+								console.log(('  '+(j+k)+'     ').slice(0,7)+'| '+SAE.disp.data[j+k]);
+							}
 						}
 					}
 				}
