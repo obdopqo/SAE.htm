@@ -18,25 +18,25 @@
 	border-bottom: solid 2px black;
 }
 
-#nav>ul {
+#nav ul {
 	display: inline;
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 }
 
-#nav>ul>li {
+#nav li {
 	text-align: center;
 	display: inline-block;
 }
 
-#nav>ul>li>a {
+#nav a {
 	padding: 10px;
 	text-decoration: none;
 	color: black;
 }
 
-#nav>ul>li>a.selected{
+#nav a.selected {
 	background-color:black;
 	color:white;
 }
