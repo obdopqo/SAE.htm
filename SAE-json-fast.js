@@ -21,9 +21,8 @@ var blockpos,blockend;
 var defspos;
 var blockidc,blocktype;
 var blockid,blockidx,blockidp;
-var blockends;
-var blockspecs;
-var blockdata;
+var blockends,blockspecs,blockdata;
+var isblockid;
 /*}}}*/
 
 // 基本函数
@@ -417,47 +416,9 @@ function blockinput(json){
 		if(true){
 			//'":1~3,'
 			if(jix[0]>0 && jix[0]<4){
-				//接下来i表示填入的数值，isblocid表示是否为积木id。
-				var isblocid=0;
-				//是不是空的？
-				if(jix[1] === null){
-					//是空的积木
-					if(jix[0] === 3){
-						//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
-						i=99999999;
-					}else{
-						i=-1;
-					}
-				}else{
-					if(typeof jix[1] === "string"){
-						//这是一个积木
-						isblocid=1;
-						i=jix[1];
-					}else{
-						// 这里是特殊的调试模式。
-						if(SAE.options._OrigInputType){
-							i=jix[1][0];
-							blockdata.push('['+i+']');
-						}else{
-							switch(jix[1][0]){
-								case 12:
-									blockdata.push("[变量]"); // 12
-									break;
-								case 13:
-									blockdata.push("[列表]"); // 13
-									break;
-								default:
-									blockdata.push("[文本]"); // 1x
-									break;
-							}
-						}
-						//放入数值
-						blockdata.push(String(jix[1][1]));
-						//这里预先计算好在后面积木数据增加的时候到达的位置
-						i=tnode.length+blockdata.length/2-1;
-						//console.log('preload ('+i+')');
-					}
-				}
+				t+=2;
+				//接下来i表示填入的数值，isblockid表示是否为积木id。
+				i=blockinputval(jix);
 				//到达这里时变量i表示要放入的数据，节点序号或者积木id
 				if(i!==99999999){
 					//判断是不是特殊顺序积木
@@ -470,13 +431,15 @@ function blockinput(json){
 						if(j!==blockspec.length){
 							j=tdata.length-blockspec.length+j;
 							tdata[j]=i;
-							if(isblocid===1){
+							if(isblockid===1){
+								DEBUG("blockidp2",j);
 								blockidp.push(j);
 							}
 						}
 					}else{
 						//普通顺序积木
-						if(isblocid===1){
+						if(isblockid===1){
+							DEBUG("blockidp3",tdata.length);
 							blockidp.push(tdata.length);
 						}
 						tdata.push(i);
@@ -487,101 +450,89 @@ function blockinput(json){
 	}
 }
 
-/* TODO ob: 新增的函数
-function blockargs(){
-	var inputstart=findtext(',"inputs":{',t,spriend,false);
-	var inputend=findtext('},"fields":{',inputstart,spriend,false);
-	var argstart=findtext(',"argumentids":"[',inputend,spriend,false);
-	var argend=findtext(']","',argstart,spriend,false);
+function blockargs(json){
 	var argids=[];
 	//这里的输入要考虑自定义积木的特性。
 	//1. 获取argumentids
-	if(argstart+4!==argend){
-		t=argstart;
-		while(text[t]!=='"'){
-			argids.push(getval2());
-			tdata.push(-1);
-			t+=2;
-		}
+	var argids = JSON.parse(json.mutation.argumentids);
+	for(var i=0;i<argids.length;i++){
+		tdata.push(-1);
 	}
+
 	DEBUG("args",argids);
 	
 	//2. 处理input输入
-	t=findtext('":[',inputstart,inputend,true);
-	while(t!==-1){
+	//处理input输入
+	for(var x in json.inputs){
 		//获得input位置
-		t-=24;
-		var inputid = argids.indexOf(getval());
-		DEBUGPOS();
-		t+=3;
+		var inputid = argids.indexOf(x);
+		var jix=json.inputs[x];
 
 		// !!! 防止误判
 		if(inputid!==-1){
 			//'":1~3,'
-			if("123".includes(text[t])&&text[t+1]===','){
-				t+=2;
-				//接下来i表示填入的数值，isblocid表示是否为积木id。
-				var isblocid=0;
-				//是不是空的？
-				if(text[t]==="n"){
-					//是空的积木
-					if(text[t-2]==="3"){
-						//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
-						i=99999999;
-					}else{
-						i=-1;
-					}
-				}else{
-					if(text[t]==='"'){
-						//这是一个积木
-						isblocid=1;
-						i=getval();
-					}else{
-						// 这里是特殊的调试模式。
-						if(SAE.options._OrigInputType){
-							t++;
-							i=getval();
-							blockdata.push('['+i+']');
-							t++;
-						}else{
-							if(text[t+1]==="1"){
-								//可能是变量
-								i=text[t+2];
-								t+=4;
-								if(i==="2"){
-									blockdata.push("[变量]"); // 12
-								}else if(i==="3"){
-									blockdata.push("[列表]"); // 13
-								}else{
-									blockdata.push("[文本]"); // 1x
-								}
-							}else{
-								t+=3;
-								blockdata.push("[文本]"); // x
-							}
-						}
-						//放入数值
-						blockdata.push(getval());
-						//这里预先计算好在后面积木数据增加的时候到达的位置
-						i=tnode.length+blockdata.length/2-1;
-						DEBUG('preload ('+i+')');
-					}
-				}
+			if(jix[0]>0 && jix[0]<4){
+				//接下来i表示填入的数值，isblockid表示是否为积木id。
+				i=blockinputval(jix);
 				//到达这里时变量i表示要放入的数据，节点序号或者积木id
 				if(i!==99999999){
 					j=tdata.length-argids.length+inputid;
 					tdata[j]=i;
-					if(isblocid===1){
+					if(isblockid===1){
+						DEBUG("blockidp4","j",j,"tdata.length",tdata.length,"argids.length",argids.length,"inputid",inputid);
 						blockidp.push(j);
 					}
 				}
 			}
 		}
-		t=findtext('":[',t,inputend,true);
 	}
-	t=inputend;
 }
-*/
+
+//获取输入的值，isblockid表示是否为积木id，i表示数值所在的位置
+function blockinputval(jix){
+	var i;
+	isblockid=0;
+	//是不是空的？
+	if(jix[1] === null){
+		//是空的积木
+		if(jix[0] === 3){
+			//有的时候会有类似[3,null,xxx]的特殊情况，这种情况要被忽略
+			i=99999999;
+		}else{
+			i=-1;
+		}
+	}else{
+		if(typeof jix[1] === "string"){
+			//这是一个积木
+			isblockid=1;
+			i=jix[1];
+		}else{
+			// 这里是特殊的调试模式。
+			if(SAE.options._OrigInputType){
+				i=jix[1][0];
+				blockdata.push('['+i+']');
+			}else{
+				switch(jix[1][0]){
+					case 12:
+						blockdata.push("[变量]"); // 12
+						break;
+					case 13:
+						blockdata.push("[列表]"); // 13
+						break;
+					default:
+						blockdata.push("[文本]"); // 1x
+						break;
+				}
+			}
+			//放入数值
+			blockdata.push(String(jix[1][1]));
+			//这里预先计算好在后面积木数据增加的时候到达的位置
+			i=tnode.length+blockdata.length/2-1;
+			DEBUG('preload ('+i+')');
+		}
+	}
+	return i;
+}
 
 function blockfield(json){
 	//处理field
