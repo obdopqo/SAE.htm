@@ -27,6 +27,43 @@ var spriblocklist = [
 	"sensing_of_object_menu",
 ];
 
+var block2xx_noness = [
+	"operator_add",
+	"operator_subtract",
+	"operator_multiply",
+	"operator_divide",
+	"operator_gt",
+	"operator_lt",
+	"operator_equals",
+	"operator_join",
+	"operator_letter_of",
+	"operator_length",
+	"operator_contains",
+	"operator_mod",
+	"operator_round"
+]
+
+var block2xx_number = [
+	"operator_add",
+	"operator_subtract",
+	"operator_multiply",
+	"operator_divide",
+	"operator_random",
+	"operator_gt",
+	"operator_lt",
+	//"operator_equals",
+	//"operator_and",
+	//"operator_or",
+	//"operator_not",
+	"operator_join",
+	"operator_letter_of",
+	"operator_length",
+	"operator_contains",
+	"operator_mod",
+	"operator_round",
+	"operator_mathop",
+]
+
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
 	tdata = SAE.data.tdata;
@@ -239,6 +276,7 @@ function block(id){
 	warn(2,"block: " + blocktype,id);
 
 	block1xx(id);
+	block2xx(id);
 
 	DEBUG("bl",id);
 	DEBUG("block",id,blocktype[0]);
@@ -380,6 +418,199 @@ function block1xx(id){
 			}
 			break;
 	}
+}
+
+function block2xx(id){
+	var v=tnode[id],v2=tdata[v+2],v3=tdata[v+3];
+	var j=0;
+
+	if(block2xx_number.includes(blocktype)){
+		for(var i=v+2;i<tnode[id+1];i++){
+			if(checkvalue(i,"",'===')){
+				warn(200,"缺少数字",id);
+			}
+		}
+	}
+
+	if(block2xx_noness.includes(blocktype)){
+		var j=0;
+		for(var i=v+2;i<tnode[id+1];i++){
+			var check=tdata[tnode[i]];
+			if(check!==-1){
+				if(tdata[check]!=="[文本]"){
+					//有不是文本的输入
+					j=1;
+				}
+			}
+		}
+		if(j===0){
+			warn(201,"常数计算",id);
+		}
+	}
+
+	switch(blocktype){
+		case 'operator_add':
+			if(checkvalue(v+2,0,'==')){
+				warn(210,"无意义的计算:加0",id);
+			}
+			if(checkvalue(v+3,0,'==')){
+				warn(210,"无意义的计算:加0",id);
+			}
+			break;
+		case 'operator_subtract':
+			if(checkvalue(v+3,0,'==')){
+				warn(211,"无意义的计算:减0",id);
+			}
+			break;
+		case 'operator_multiply':
+			if(checkvalue(v+2,0,'==')){
+				warn(212,"无意义的计算:乘0",id);
+			}
+			if(checkvalue(v+3,0,'==')){
+				warn(212,"无意义的计算:乘0",id);
+			}
+			DEBUG("checking",id,v+2);
+			if(checkvalue(v+2,1,'==')){
+				warn(213,"无意义的计算:乘1",id);
+			}
+			DEBUG("checking",id,v+3);
+			if(checkvalue(v+3,1,'==')){
+				warn(213,"无意义的计算:乘1",id);
+			}
+			break;
+		case 'operator_divide':
+			if(checkvalue(v+3,1,'==')){
+				warn(214,"无意义的计算:除1",id);
+			}
+			if(checkvalue(v+2,0,'==')){
+				warn(215,"无意义的计算:0被除",id);
+			}
+			if(checkvalue(v+3,0,'==')){
+				warn(215,"无意义的计算:除0",id);
+			}
+			break;
+		case 'operator_mod':
+			if(checkvalue(v+3,0,'==')){
+				warn(216,"无意义的计算:取模0",id);
+			}
+			break;
+		case 'operator_gt':
+		case 'operator_lt':
+			if(checkvalue(v+2,0,'number')){
+				warn(217,"使用非数字比较大小",id);
+			}
+			if(checkvalue(v+3,0,'number')){
+				warn(217,"使用非数字比较大小",id);
+			}
+			break;
+	}
+
+	switch(blocktype){
+		case 'operator_mathop':
+			var check=tdata[v+3];
+			DEBUG("operator_mathop",v+3,tdata[v+3]);
+			if(tdata[tnode[check]]!=='[选项]'){
+				warn(999,"未预料到的情况",check);
+			}else{
+			DEBUG("operator_mathop_val",tnode[check]+1,tdata[tnode[check]+1]);
+				switch(tdata[tnode[check]+1]){
+					case 'sqrt':
+						if(checkvalue(v+2,0,'<')){
+							warn(220,"求负数的平方根",id);
+						}
+						break;
+					case 'asin':
+					case 'acos':
+						if(checkvalue(v+2,-1,'<') || checkvalue(v+2,1,'>')){
+							warn(221,"反三角函数自变量不在(-1,1)之间",id);
+						}
+						break;
+					case 'ln':
+					case 'log':
+						if(checkvalue(v+2,0,'<') || checkvalue(v+2,0,'==')){
+							warn(222,"对数函数自变量不大于0",id);
+						}
+						break;
+				}
+			}
+			break;
+		case 'data_itemnumoflist':
+			if(checkvalue(v+2,1,'<')){
+				warn(223,"列表编号不是正数",id);
+			}
+			break;
+		case 'control_repeat':
+		case 'control_for_each':
+			if(checkvalue(v+2,1,'<')){
+				warn(224,"重复次数不是正数",id);
+			}
+		case 'control_wait':
+			if(checkvalue(v+2,0,'<')){
+				warn(225,"等待时间小于0",id);
+			}
+			break;
+		case 'event_whengreaterthan':
+			if(checkvalue(v+2,0,'<')){
+				warn(226,"触发数值小于0",id);
+			}
+			if(checkvalue(v+3,"LOUDNESS",'===') && checkvalue(v+2,100,'>')){
+				warn(226,"触发数值大于100",id);
+			}
+			break;
+	}
+	/*if(block2xx_change.includes(blocktype)){
+		if(checkvalue(v+2,0,'=='){
+			warn(227,"改变量等于0",id);
+		}
+	}*/
+	break;
+}
+
+function checkvalue(i,value,operator){
+	DEBUG("checkvalue",i,value,operator);
+	if(tdata[i]!==-1){
+		var check=tnode[tdata[i]];
+		DEBUG("check1",check,tdata[check]);
+		if(tdata[check]==="[文本]"){
+			DEBUG("check",tdata[check+1]);
+			if(String(tdata[check+1])===""){
+				//考虑Number("")===0的特殊情况
+				return value==="" && operator==="===";
+			}else{
+				switch(operator){
+					case '<':
+						if(Number(tdata[check+1])<value){
+							return true;
+						}
+						break;
+					case '>':
+						if(Number(tdata[check+1])>value){
+							return true;
+						}
+						break;
+					case '==':
+						if(Number(tdata[check+1])===value){
+							return true;
+						}
+						break;
+					case '===':
+						if(String(tdata[check+1])===value){
+							return true;
+						}
+						break;
+					case 'number':
+						if(String(Number(tdata[check+1]))===tdata[check+1]){
+							return true;
+						}
+						break;
+					default:
+						throw new Error("无效的operator: "+operator);
+						break;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 function warn(errid,errtext,fromblock){
