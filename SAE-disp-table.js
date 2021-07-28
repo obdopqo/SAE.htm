@@ -247,7 +247,7 @@ SAE.disp.table = [
 	"#music_setInstrument",			"将乐器设为 %1",			99,
 	"#music_menu_INSTRUMENT",		"(&1)",					0,
 	"#music_setTempo",			"将演奏速度设定为 %1",			99,
-	"#music_changeTempo",			"将演奏速度增加 %1",			99,
+	"#music_changeTempo",			"将演奏速度增加 %1",			0,
 	"#music_getTempo",			"(演奏速度)",				0,
 
 	"&music_menu_DRUM#1:1",			"(1) 小军鼓",
