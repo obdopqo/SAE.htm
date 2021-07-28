@@ -10,6 +10,7 @@
 
 #nav {
 	position: fixed;
+	font-size: 20px;
 	top: 0px;
 	left: 0px;
 	right: 0px;
@@ -36,11 +37,81 @@
 	color: black;
 }
 
+#nav a:hover {
+	background-color: lightgrey;
+}
+
 #nav a.selected {
 	background-color:black;
 	color:white;
 }
 
-#nav-right {
+#nav a:active {
+	background-color: grey;
+	color:white;
+}
+
+#navReturn {
+	border-right: 2px solid black;
+}
+
+#navRight {
 	float:right;
+}
+
+.noscript {
+	padding-top: 40px;
+}
+
+.content {
+	padding-top: 40px;
+	display: none;
+}
+
+#home_test {
+	text-align:center;
+}
+
+#home_file {
+	font-size:40px;
+	border:4px black solid;
+	background-color:white;
+}
+
+#home_json {
+	font-size:40px;
+	border:4px black solid;
+	background-color:white;
+}
+
+#home_submit {
+	font-size:40px;
+	border:4px black solid;
+	background-color:white;
+}
+
+.upload {
+	padding: 5px;
+	font-size: 40px;
+	position: relative;
+	color: black;
+	background: white;
+	border: 4px solid black;
+	overflow: hidden;
+	display: inline-block;
+	text-decoration: none;
+}
+
+.upload input {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+
+#home_result {
+	white-space:pre;
 }
