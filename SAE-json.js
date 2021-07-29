@@ -376,11 +376,12 @@ function blockop(){
 			//自定义积木的定义积木
 			//下一个积木就是prototype，直接跳过来省事
 			t=findtext('":{"opcode":"procedures_prototype","next":',t,spriend,false);
+			var procend=findtext("}},",t,spriend,true);
 
 			//读取参数输入
 			blockargs();
 			//读取积木定义
-			blockproc();
+			blockproc(procend);
 
 			defspos.push(tdata[tdata.length-1]);
 			defspos.push(tnode.length-1);
@@ -390,12 +391,13 @@ function blockop(){
 			break;
 		case "procedures_call":
 			//自定义积木的调用积木
+			var procend=findtext("}},",t,spriend,true);
 
 			//读取参数输入
 			blockargs();
 
 			//读取积木定义
-			blockproc();
+			blockproc(procend);
 
 			//调用积木一定不是头部积木
 			break;
@@ -646,12 +648,14 @@ function blockfield(){
 	t=inputend;
 }
 
-function blockproc(){
+function blockproc(procend){
 	t=findtext('],"proccode":"',t,spriend,true)-1;
 	var proc=getval();
-	t=findtext('","warp":"',t,spriend,true);
-	if(text[t]==='t'){
-		proc+='%';
+	t=findtext('","warp":"',t,procend,false);
+	if(t!==-1){
+		if(text[t]==='t'){
+			proc+='%';
+		}
 	}
 	tdata.push(proc);
 }
