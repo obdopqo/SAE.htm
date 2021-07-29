@@ -322,8 +322,10 @@ function block1xx(id){
 	switch(blocktype){
 			//下面的重复内容主要是考虑到特殊情况下不同的内容可能会区别对待
 		case 'procedures_call':
-			var i=defslist.indexOf(v1);
+			var v_=tdata[tnode[id+1]-1];
+			var i=defslist.indexOf(v_);
 			if(i===-1){
+				DEBUG("defslist",defslist,v_);
 				warn(140,"积木未定义",id);
 			}else{
 				defsused[i]=1;
