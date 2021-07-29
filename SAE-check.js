@@ -164,6 +164,7 @@ function spri(id){
 		stagelistlist = load(tdata[tnode[id]+4]);
 		stagevariused = zeroarray(stagevarilist.length);
 		stagelistused = zeroarray(stagelistlist.length);
+		costlist = [];
 		varilist = [];
 		listlist = [];
 	}else{
