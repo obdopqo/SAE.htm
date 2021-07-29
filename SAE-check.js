@@ -322,8 +322,10 @@ function block1xx(id){
 	switch(blocktype){
 			//下面的重复内容主要是考虑到特殊情况下不同的内容可能会区别对待
 		case 'procedures_call':
-			var i=defslist.indexOf(v1);
+			var v_=tdata[tnode[id+1]-1];
+			var i=defslist.indexOf(v_);
 			if(i===-1){
+				DEBUG("defslist",defslist,v_);
 				warn(140,"积木未定义",id);
 			}else{
 				defsused[i]=1;
@@ -512,10 +514,10 @@ function block2xx(id){
 			break;
 		case 'operator_gt':
 		case 'operator_lt':
-			if(checkvalue(v+2,0,'number')){
+			if(checkvalue(v+2,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
-			if(checkvalue(v+3,0,'number')){
+			if(checkvalue(v+3,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
 			break;
@@ -618,6 +620,11 @@ function checkvalue(i,value,operator){
 						break;
 					case 'number':
 						if(String(Number(tdata[check+1]))===tdata[check+1]){
+							return true;
+						}
+						break;
+					case 'nonumber':
+						if(String(Number(tdata[check+1]))!==tdata[check+1]){
 							return true;
 						}
 						break;
