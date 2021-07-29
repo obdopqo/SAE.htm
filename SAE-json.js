@@ -529,17 +529,14 @@ function blockargs(){
 	var inputstart=findtext(',"inputs":{',t,spriend,false);
 	var inputend=findtext('},"fields":{',inputstart,spriend,false);
 	var argstart=findtext(',"argumentids":"[',inputend,spriend,false);
-	var argend=findtext(']","',argstart,spriend,false);
 	var argids=[];
 	//这里的输入要考虑自定义积木的特性。
 	//1. 获取argumentids
-	if(argstart+4!==argend){
-		t=argstart;
-		while(text[t]!=='"'){
-			argids.push(getval2());
-			tdata.push(-1);
-			t+=2;
-		}
+	t=argstart;
+	while(text[t]==='\\'){
+		argids.push(getval2());
+		tdata.push(-1);
+		t+=2;
 	}
 	DEBUG("args",argids);
 	
