@@ -514,10 +514,10 @@ function block2xx(id){
 			break;
 		case 'operator_gt':
 		case 'operator_lt':
-			if(checkvalue(v+2,0,'number')){
+			if(checkvalue(v+2,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
-			if(checkvalue(v+3,0,'number')){
+			if(checkvalue(v+3,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
 			break;
@@ -620,6 +620,11 @@ function checkvalue(i,value,operator){
 						break;
 					case 'number':
 						if(String(Number(tdata[check+1]))===tdata[check+1]){
+							return true;
+						}
+						break;
+					case 'nonumber':
+						if(String(Number(tdata[check+1]))!==tdata[check+1]){
 							return true;
 						}
 						break;
