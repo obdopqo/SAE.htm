@@ -252,8 +252,10 @@ function block(id,indent,level,type){
 							DEBUG("block3",pattern[i],value);
 							block(value,indent+"| ",levelcr,'%');
 							displine("");
-							if(i!==pattern.length-1){
+							if(i===pattern.length-1){
 								display(indent+"\\-------"); // ?C2
+							}else{
+								display(indent);
 							}
 							break;
 						case '^':
