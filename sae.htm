@@ -2,6 +2,7 @@
 	<head>
 		<!-- 模拟rthe.xyz的安全环境，不能用onxxxx=""和style=""和data URL-->
 		<meta http-equiv="Content-Security-Policy" content="img-src https:; media-src https:; upgrade-insecure-requests">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
 		<!--<link rel="shortcut icon" href="https://z3.ax1x.com/2021/06/20/RihZy6.png" type="image/png"/>-->
 		<!--<link rel="icon" href="https://z3.ax1x.com/2021/06/20/RihZy6.png" type="image/png"/>-->
 		<!--<meta name="viewport" content="width=device-width,user-scalable=no"></meta>-->
@@ -10,19 +11,24 @@
 		<link rel="stylesheet" href="sae.css"/>
 	</head>
 	<body>
-		<noscript><div class="noscript">您的浏览器不支持Javascript.</div></noscript>
-		<span id="_loading">LOADING</span>
+		<span id="_loading">
+			<noscript><div class="noscript">您的浏览器不支持Javascript.</div></noscript>
+			<span>LOADING</span>
+		</span>
 		<div id="nav">
 			<a id="navReturn" href="javascript:;">返回</a>
 			<ul>
 				<li><a href="#home">主页</a></li>
-				<li><a href="#file">文件</a></li>
-				<li><a href="#disp">显示</a></li>
 				<li><a href="#stat">统计</a></li>
-				<li><a href="#check">检查</a></li>
-				<li><a href="#graph">流程图</a></li>
+				<li><a href="#disp">积木</a></li>
+				<li><a href="#check">查错</a></li>
+				<li><a href="#graph">流程</a></li>
+				<li><a href="#eval">评估</a></li>
+				<li><a href="#diff">比较</a></li>
+				<li><a href="#tools">其它</a></li>
 			</ul>
 			<ul id="navRight">
+				<li><a href="#file">文件</a></li>
 				<li><a href="#options">选项</a></li>
 				<li><a href="#about">关于</a></li>
 				<li><a href="#more">更多</a></li>
