@@ -176,7 +176,7 @@ function block(id,indent,level,type){
 				break;
 			default:
 				var j=0;
-				if(levelcr!==0 && levelcr!==99 && levelcr!==-99){
+				if(levelcr !== 0 || Math.abs(levelcr) !== 99){
 					// 判断是否去括号
 					if(Math.abs(levelcr) > Math.abs(level)){
 						j=1;
@@ -185,6 +185,11 @@ function block(id,indent,level,type){
 						j=1;
 					}
 				}
+
+				if(Math.abs(levelcr) === 99){
+					j=0;
+				}
+
 				for(var i=j;i<pattern.length-j;i++){
 					var c=pattern[i];
 					switch(c){
@@ -292,7 +297,7 @@ function blockdefs(id,title,indent){
 					display('%');
 				}else{
 					DEBUG("block1",tdata[j],"j=",j);
-					block(tdata[j],indent,0,c);
+					block(tdata[j],indent,99,c);
 					i++;
 					j++;
 				}
