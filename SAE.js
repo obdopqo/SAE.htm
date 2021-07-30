@@ -1,3 +1,38 @@
+//缩放视图
+when("load",resizeDiv);
+when("resize",resizeDiv);
+
+function resizeDiv(){
+	var width = document.body.clientWidth;
+	var height = document.body.clientHeight;
+	var targetwidth = 800;
+	if(width > targetwidth){
+		targetwidth = width;
+	}
+	var scale = width/targetwidth;
+
+	//按设备比例缩放div的比例
+	var scaleFunc = "scale("+scale+","+scale+")";
+
+	is("body")
+		.style("width",targetwidth)
+
+		.style("transform",scaleFunc) //缩放比例
+		.style("transform-origin","left top") //缩放基点
+
+		.style("-ms-transform",scaleFunc)     /* IE 9 */
+		.style("-ms-transform-origin","left top")
+
+		.style("-moz-transform",scaleFunc)     /* Firefox */
+		.style("-moz-transform-origin","left top")
+
+		.style("-webkit-transform",scaleFunc) /* Safari 和 Chrome */
+		.style("-webkit-transform-origin","left top")
+
+		.style("-o-transform",scaleFunc)     /* Opera */
+		.style("-o-transform-origin","left top");
+}
+
 SAE.init();
 
 // 导航栏
