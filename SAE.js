@@ -83,6 +83,7 @@ function nav_each(object){
 }
 
 id("_loading").style("display","none");
+is("body").style("overflow","auto");
 
 ///////////////////////////////////////////////////////////////////////////////
 
