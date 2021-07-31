@@ -33,8 +33,6 @@ function resizeDiv(){
 		.style("-o-transform-origin","left top");
 }
 
-SAE.init();
-
 // 导航栏
 
 var position;
