@@ -2,6 +2,8 @@
 when("load",resizeDiv);
 when("resize",resizeDiv);
 
+id("nav").inner().is("a").classadd("click");
+
 function resizeDiv(){
 	var width = document.body.clientWidth;
 	var height = document.body.clientHeight;
@@ -39,6 +41,7 @@ var position;
 var hashCorrect;
 var navButton = id("nav").inner().is("li").child().is("a");
 navButton.when("click",nav_click);
+
 when("load",hashChange);
 when("hashchange",hashChange);
 

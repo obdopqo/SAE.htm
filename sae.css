@@ -9,6 +9,11 @@ body{
 	color: white;
 }
 
+input,button,.box {
+	border-width: 4px;
+	border-style: solid;
+}
+
 @keyframes _loading {
 	0%  {color: black;}
 	50% {color: grey; }
@@ -60,23 +65,13 @@ body{
 }
 
 #nav a {
-	transition: background-color 0.2s;
 	padding: 10px;
 	text-decoration: none;
 	color: black;
 }
 
-#nav a:hover {
-	background-color: lightgrey;
-}
-
 #nav a.selected {
 	background-color:black;
-	color:white;
-}
-
-#nav a:active {
-	background-color: grey;
 	color:white;
 }
 
@@ -139,7 +134,7 @@ body{
 
 .click {
 	transition: background-color 0.2s, border-color 0.2s;
-	border: 4px black solid;
+	border-color: black;
 	background-color: white;
 }
 
