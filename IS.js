@@ -92,6 +92,8 @@ IS.prototype.attr = function _getattr(a,b){return this.eval(function(x){x.setAtt
 IS.prototype.append = function _append(x){return this.eval(function(y){y.appendChild(x.cloneNode(true));});};
 IS.prototype.remove = function _remove(){this.eval(function(x){x.parentElement.removeChild(x);});};
 IS.prototype.style = function _style(a,b){return this.eval(function(x){x.style[a]=b;});};
+IS.prototype.classadd = function _classadd(a){return this.eval(function(x){x.classList.add(a);});};
+IS.prototype.classdel = function _classdel(a){return this.eval(function(x){x.classList.remove(a);});};
 IS.prototype.call = function _call(a,b){return this.eval(function(x){x[a].call(x,b);});};
 function IS(res){
 	if(this.constructor.name === "Window"){
@@ -114,5 +116,6 @@ function id(x){
 		return is(document.getElementById(x));
 	}
 }
+function select(x){return new IS(document.querySelectorAll(x));}
 function create(x){return document.createElement(x);}
 
