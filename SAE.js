@@ -39,8 +39,8 @@ var position;
 var hashCorrect;
 var navButton = id("nav").inner().is("li").child().is("a");
 navButton.when("click",nav_click);
+when("load",hashChange);
 when("hashchange",hashChange);
-hashChange();
 
 function hashChange(){
 	hashCorrect = false;
@@ -76,9 +76,9 @@ function nav_click(event){
 function nav_each(object){
 	if(/#(.*)/.exec(object.href)[1] === position[0]){
 		hashCorrect = true;
-		is(object).set("className","selected");
+		is(object).classadd("selected");
 	}else{
-		is(object).set("className","");
+		is(object).classdel("selected");
 	}
 }
 
