@@ -60,6 +60,7 @@ body{
 }
 
 #nav a {
+	transition: background-color 0.2s;
 	padding: 10px;
 	text-decoration: none;
 	color: black;
@@ -102,20 +103,14 @@ body{
 
 #home_file {
 	font-size:40px;
-	border:4px black solid;
-	background-color:white;
 }
 
 #home_json {
 	font-size:40px;
-	border:4px black solid;
-	background-color:white;
 }
 
 #home_submit {
 	font-size:40px;
-	border:4px black solid;
-	background-color:white;
 }
 
 .upload {
@@ -123,8 +118,6 @@ body{
 	font-size: 40px;
 	position: relative;
 	color: black;
-	background: white;
-	border: 4px solid black;
 	overflow: hidden;
 	display: inline-block;
 	text-decoration: none;
@@ -142,4 +135,22 @@ body{
 
 #home_result {
 	white-space:pre;
+}
+
+.click {
+	transition: background-color 0.2s, border-color 0.2s;
+	border: 4px black solid;
+	background-color: white;
+}
+
+.click:hover {
+	background-color: lightgrey;
+}
+
+.click:focus {
+	border-color: grey;
+}
+
+.click:active {
+	background-color: grey;
 }
