@@ -9,7 +9,14 @@ body{
 	color: white;
 }
 
+@keyframes _loading {
+	0%  {color: black;}
+	50% {color: grey; }
+	100%{color: black;}
+}
+
 #_loading {
+	animation: _loading 2s ease 0s infinite;
 	position: fixed;
 	top: 0;
 	left: 0;
