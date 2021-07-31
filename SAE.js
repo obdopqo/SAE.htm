@@ -49,7 +49,10 @@ function hashChange(){
 
 	if(window.location.hash!==""){
 		position = window.location.hash.slice(1).split('/');
+	}else{
+		position = [];
 	}
+
 	navButton.eval(nav_each);
 	if(!hashCorrect){
 		window.location.hash = "#home";
