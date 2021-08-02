@@ -234,7 +234,7 @@ function spri(id){
 		varilist = load(tdata[tnode[id]+3]);
 		listlist = load(tdata[tnode[id]+4]);
 	}
-	defslist = load(tdata[tnode[id]+5],defsposi);
+	defslist = load(tdata[tnode[id]+5]);
 
 	variused = zeroarray(varilist.length);
 	listused = zeroarray(listlist.length);
