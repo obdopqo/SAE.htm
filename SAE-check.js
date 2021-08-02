@@ -16,6 +16,7 @@ var          stagecostlist,          stagevarilist,stagelistlist,         argbli
 var               costfile,soundfile,     variused,     listused,defsused,argsused;
 var                                  stagevariused,stagelistused,defsposi,argbused;
 var blocktype;
+var blockstack;
 
 var spriblocklist = [
 	"motion_goto_menu",
@@ -302,6 +303,8 @@ function blockstart(id){
 	argblist=[];
 	argbused=[];
 
+	blockstack=[];
+
 	blocktype=tdata[tnode[id]];
 	switch(blocktype){
 		case 'procedures_definition':
@@ -372,7 +375,9 @@ function block(id){
 		for(var i=tnode[id]+2;i<tnode[id+1]-j;i++){
 			if(tdata[i]!==-1){
 				DEBUG("block1",tdata[i]);
+				blockstack.push(id);
 				block(tdata[i]);
+				blockstack.pop();
 			}else{
 				warn(102,"缺少积木",id);
 			}
@@ -681,6 +686,21 @@ function block3xx(id){
 				}
 			}
 		}
+	}
+
+	switch(blocktype){
+		case 'control_create_clone_of_menu':
+			if(checkvalue(v+2,"_myself_",'===')){
+				if(tdata[tnode[fromhead]]==='control_start_as_clone'){
+					//这里要检测if
+					for(var j=0;j<blockstack.length;j++){
+						if(tdata[tnode[blockstack[j]]]==='control_if'
+							|| tdata[tnode[blockstack[j]]]==='control_if_else')
+							if(!blockcheck(blockstack[j],"spritevarlist")){
+								warn(310,"克隆时没有角色变量条件控制",id);
+					}
+				}
+			}
 	}
 }
 
