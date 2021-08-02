@@ -80,6 +80,71 @@ var block2xx_change = [
 	"box2d_changeScroll"
 ];
 
+// 这些积木都是设定模式用的，两个相同的设定积木连用可以判断为错误。
+var block3xx_same = [
+	"motion_changexby",
+	"motion_changeyby",
+	"motion_setx",
+	"motion_sety",
+	"motion_turnleft",
+	"motion_turnright",
+	"motion_gotoxy",
+	"motion_goto",
+	"motion_pointtowards",
+	"motion_pointindirection",
+	"motion_ifonedgebounce",
+	"motion_setrotationstyle",
+	"looks_changesizeby",
+	"looks_setsizeto",
+	"looks_say",
+	"looks_think",
+	"looks_show",
+	"looks_hide",
+	"looks_goforwardbackwardlayers",
+	"looks_switchbackdropto",
+	"looks_gotofrontback",
+	"looks_cleargraphiceffects",
+	"sound_changevolumeby",
+	"sound_stopallsounds",
+	"sound_setvolumeto",
+	"sensing_setdragmode",
+	"sensing_resettimer",
+	"pen_changePenSizeBy",
+	"pen_clear",
+	"pen_stamp",
+	"pen_penDown",
+	"pen_penUp",
+	"pen_setPenColorToColor",
+	"pen_setPenSizeTo",
+	"music_changeTempo",
+	"music_setInstrument",
+	"music_setTempo",
+	"videoSensing_videoToggle",
+	"faceSensing_goToPart",
+	"faceSensing_pointInFaceTiltDirection",
+	"faceSensing_setSizeToFaceSize",
+];
+
+var block3xx_same2 = [
+	"looks_changeeffectby",
+	"looks_seteffectto",
+	"sound_changeeffectby",
+	"sound_seteffectto",
+	"data_changevariableby",
+	"data_setvariableto",
+	"pen_changePenColorParamBy",
+	"pen_setPenColorParamTo"
+];
+
+var block3xx_same1 = [
+	"data_deletealloflist",
+	"data_showlist",
+	"data_showvariable",
+	"data_hidelist",
+	"data_hidevariable",
+];
+
+
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
 	tdata = SAE.data.tdata;
@@ -294,6 +359,7 @@ function block(id){
 
 	block1xx(id);
 	block2xx(id);
+	block3xx(id);
 
 	DEBUG("bl",id);
 	DEBUG("block",id,blocktype[0]);
@@ -582,6 +648,37 @@ function block2xx(id){
 		for(var i=v+2;i<tnode[id+1];i++){
 			if(checkvalue(i,0,'==')){
 				warn(230,"改变量等于0",id);
+			}
+		}
+	}
+}
+
+function block3xx(id){
+	var v=tnode[id],v1=tdata[v+1],v2=tdata[v+2];
+	if(v1!==-1){
+		if(block3xx_same.includes(blocktype)){
+			if(tdata[tnode[v1]]===blocktype){
+				warn(300,"重复的积木",id);
+			}
+		}
+
+		if(block3xx_same1.includes(blocktype)){
+			var id2=tnode[v1];
+			if(tdata[id2]===blocktype){
+				if(tdata[tnode[tdata[id2]]+1]
+					===tdata[tnode[tdata[id]]+1]){
+					warn(301,"重复的积木",id);
+				}
+			}
+		}
+
+		if(block3xx_same2.includes(blocktype)){
+			var id2=tnode[v1];
+			if(tdata[id2]===blocktype){
+				if(tdata[tnode[tdata[id2]]+2]
+					===tdata[tnode[tdata[id]]+2]){
+					warn(302,"重复的积木",id);
+				}
 			}
 		}
 	}
