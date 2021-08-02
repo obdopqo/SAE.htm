@@ -13,7 +13,6 @@ if(FAST){
 include("SAE-disp.js");
 include("SAE-disp-table.js");
 include("SAE-check.js");
-include("SAE-check-table.js");
 
 SAE.init();
 //SAE.options._OrigInputType = true;
