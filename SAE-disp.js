@@ -304,7 +304,7 @@ function blockdefs(id,title,indent){
 	}
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
 /*}}}*/

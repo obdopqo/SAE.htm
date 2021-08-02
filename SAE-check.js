@@ -819,7 +819,7 @@ function zeroarray(n){
 	return Array(n).fill(0);
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
 /*}}}*/

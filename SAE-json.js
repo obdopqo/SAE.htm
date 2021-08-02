@@ -794,7 +794,7 @@ function textcheck(str,x){
 	return true;
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
 

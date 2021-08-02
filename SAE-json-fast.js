@@ -552,7 +552,7 @@ function blockproc(json){
 	tdata.push(proc);
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
 
