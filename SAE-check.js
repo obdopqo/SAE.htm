@@ -698,9 +698,29 @@ function block3xx(id){
 							|| tdata[tnode[blockstack[j]]]==='control_if_else')
 							if(!blockcheck(blockstack[j],"spritevarlist")){
 								warn(310,"克隆时没有角色变量条件控制",id);
+							}
 					}
 				}
 			}
+			break;
+		case 'control_delete_this_clone':
+			for(var j=0;j<blockstack.length;j++){
+				if(tdata[tnode[blockstack[j]]+1]!==-1){
+					warn(311,"删除克隆体积木后仍有可执行积木",id);
+				}
+			}
+			/* fall through */
+		case 'control_stop':
+			if(blockstack.length===0){
+				warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
+			}else{
+				var j=blockstack[blockstack.length-1];
+				if(tdata[tnode[j]]==='control_if'
+					|| tdata[tnode[j]]==='control_if_else'){
+					warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
+				}
+			}
+			break;
 	}
 }
 
