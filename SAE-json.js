@@ -1,9 +1,4 @@
-SAE = SAE || {};
-
-SAE.json = SAE.json || {};
-
-SAE.options = SAE.options || {};
-
+// json分析
 (function(){
 "use strict";
 /*{{{*/

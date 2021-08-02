@@ -1,7 +1,3 @@
-SAE = SAE || {};
-
-SAE.check = SAE.check || {};
-
 // check检查
 (function(){
 "use strict";

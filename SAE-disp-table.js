@@ -1,7 +1,3 @@
-SAE = SAE || {};
-
-SAE.disp = SAE.disp || {};
-
 SAE.disp.table = [
 	// 基础scratch积木
 	/*{{{*/

@@ -1,7 +1,3 @@
-SAE = SAE || {};
-
-SAE.disp = SAE.disp || {};
-
 // disp显示
 (function(){
 "use strict";
