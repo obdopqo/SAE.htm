@@ -718,6 +718,13 @@ function block3xx(id){
 				}
 			}
 			break;
+		case 'operator_not':
+			for(var j=0;j<blockstack.length;j++){
+				if(tdata[tnode[blockstack[j]]]==="operator_not"){
+					warn(320,"“不成立”积木重复使用",id);
+				}
+			}
+			break;
 	}
 }
 
