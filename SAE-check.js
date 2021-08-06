@@ -703,6 +703,7 @@ function block3xx(id){
 			for(var j=0;j<blockstack.length;j++){
 				if(tdata[tnode[blockstack[j]]+1]!==-1){
 					warn(311,"删除克隆体积木后仍有可执行积木",id);
+					warn(931,"在这里:",tdata[tnode[blockstack[j]]+1]);
 				}
 			}
 			/* fall through */
