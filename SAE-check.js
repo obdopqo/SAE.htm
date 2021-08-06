@@ -692,7 +692,7 @@ function block3xx(id){
 					for(var j=0;j<blockstack.length;j++){
 						if(tdata[tnode[blockstack[j]]]==='control_if'
 							|| tdata[tnode[blockstack[j]]]==='control_if_else')
-							if(!blockcheck(blockstack[j],"spritevarlist")){
+							if(!checkblock(tdata[tnode[blockstack[j]]+2],"spritevarlist")){
 								warn(310,"克隆时没有角色变量条件控制",id);
 							}
 					}
@@ -718,6 +718,36 @@ function block3xx(id){
 			}
 			break;
 	}
+}
+
+
+function checkblock(i,operator){
+	DEBUG("checkblock",i,operator);
+	if(tdata[i]!==-1){
+		var check=tnode[tdata[i]];
+		for(var j=tnode[tdata[i]]+1;j<tnode[tdata[i]+1];j++){
+			if(checkblock(j,operator)){
+				return true;
+			}
+		}
+		switch(operator){
+			case 'spritevarlist':
+				switch(tdata[check]){
+					case '[变量]':
+						if(varilist.includes(tdata[check+1])){
+							return true;
+						}
+						break;
+					case '[列表]':
+						if(listlist.includes(tdata[check+1])){
+							return true;
+						}
+						break;
+				}
+				break;
+		}
+	}
+	return false;
 }
 
 function checkvalue(i,value,operator){
