@@ -95,6 +95,86 @@ id("filelist_add").when("click",function(){
 	id("home_file").call("click");
 });
 
+when("load",file_list);
+
+function file_list(){
+	id("filelist").child().remove();
+	for(var i=0;i<SAE.file.list.length;i++){
+		var fadd=create("li");
+		var fadd1=create("div");
+		var fadd2=create("div");
+		var fdel=create("span");
+		is(fadd).classadd("click");
+		is(fadd1).classadd("filename");
+		is(fadd2).classadd("filetime");
+		is(fdel).when("click",File_del(i));
+		fadd1.innerText=SAE.file.list[i].name;
+		fadd2.innerText=SAE.file.list[i].time;
+		fdel.innerText="删除";
+		fadd2.append(fdel);
+		is(fadd).append0(fadd1).append0(fadd2).when("click",File_load(i));
+		id("filelist").append0(fadd);
+	}
+
+	var fadd=create("li");
+	var fadd1=create("div");
+	var fadd2=create("div");
+	is(fadd).classadd("click");
+	is(fadd1).classadd("filename");
+	is(fadd2).classadd("filetime");
+	fadd1.innerText="+ 添加文件";
+	fadd2.innerText="添加.sb3文件或者project.json文件(不需要指定拓展名，会自动识别)";
+	is(fadd).append0(fadd1).append0(fadd2).when("click",file_add);
+	id("filelist").append0(fadd);
+}
+
+function file_add(){
+	var file=create("input");
+	file.type="FILE";
+	is(file)
+		.style("display","none")
+		.when("change",function(event){
+			//is("body").append0(file);
+			loadsb3(event.target,function(json,filename){
+				SAE.file.add(filename,new Date().toLocaleString(),json);
+				file_list();
+			},function(e){
+				alert(e.message);
+				throw e;
+			});
+		});
+	file.click();
+}
+
+function File_load(x){
+	return function file_load(event){
+		try{
+			SAE.init();
+			var proj = SAE.json.load(SAE.file.data(x));
+			SAE.disp.proj(proj);
+			id('home_result').style("color","black");
+			id('home_result').set("innerText",SAE.disp.data.join('\n'));
+			SAE.check.proj(proj);
+			SAE.check.debug();
+		}catch(e){
+			id('home_result').style("color","red");
+			id('home_result').set("innerText",e);
+			throw(e);
+		}finally{
+			window.location.hash="#home";
+		}
+	}
+}
+
+function File_del(x){
+	return function file_del(event){
+		SAE.file.del(x);
+		file_list();
+		event.stopPropagation();
+		event.cancelBubble = true;
+	}
+}
+
 var saeicon='<path d="M50,75 50,90M35,35 35,35M65,35 65,35M45,55c2,2.5 8,2.5 10,0M50,10c15,0 32.5,12.5 32.5,32.5c0,20 -15,32.5 -32.5,32.5c-15,0 -32.5,-12.5 -32.5,-32.5c0,-20 15,-32.5 32.5,-32.5zM20,100c20,-12 40,-12 60,0M17.5,35c-15,7.5 -12,25 -12,30M82.5,35c15,7.5 12,25 12,30" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/>';
 is('.sae-logo').style("overflow","hidden").append(innerSVG(100,100,saeicon));
 
