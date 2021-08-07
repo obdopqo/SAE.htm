@@ -90,6 +90,7 @@ IS.prototype.when = function _when(a,b){return this.eval(function(x){x.addEventL
 IS.prototype.set = function _set(a,b){return this.eval(function(x){x[a]=b;});};
 IS.prototype.attr = function _getattr(a,b){return this.eval(function(x){x.setAttribute(a,b);});};
 IS.prototype.append = function _append(x){return this.eval(function(y){y.appendChild(x.cloneNode(true));});};
+IS.prototype.append0 = function _append0(x){this.list[0].append(x);return this;};
 IS.prototype.remove = function _remove(){this.eval(function(x){x.parentElement.removeChild(x);});};
 IS.prototype.style = function _style(a,b){return this.eval(function(x){x.style[a]=b;});};
 IS.prototype.classadd = function _classadd(a){return this.eval(function(x){x.classList.add(a);});};
