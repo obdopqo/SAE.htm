@@ -108,26 +108,6 @@ input,button,.box {
 	font-size:40px;
 }
 
-.upload {
-	padding: 5px;
-	font-size: 40px;
-	position: relative;
-	color: black;
-	overflow: hidden;
-	display: inline-block;
-	text-decoration: none;
-}
-
-.upload input {
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	opacity: 0;
-	filter: alpha(opacity=0);
-}
-
 #home_result {
 	white-space:pre;
 }

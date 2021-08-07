@@ -90,37 +90,6 @@ is("body").style("overflow","auto");
 
 ///////////////////////////////////////////////////////////////////////////////
 
-id("home_file").when('change',function(event){
-	loadsb3(event.target,function(json,filename){
-		SAE.init();
-		var proj = SAE.json.load(json);
-		SAE.disp.proj(proj);
-		id('home_result').style("color","black");
-		id('home_result').set("innerText",SAE.disp.data.join('\n'));
-		SAE.check.proj(proj);
-		SAE.check.debug();
-	},function(e){
-		id('home_result').style("color","red");
-		id('home_result').set("innerText",e);
-		throw e;
-	});
-});
-id("home_submit").when('click',function(){
-	try{
-		SAE.init();
-		var proj = SAE.json.load(id('home_json').list[0].value);
-		SAE.disp.proj(proj);
-		id('home_result').style("color","black");
-		id('home_result').set("innerText",SAE.disp.data.join('\n'));
-		SAE.check.proj(proj);
-		SAE.check.debug();
-	} catch(e) {
-		id('home_result').style("color","red");
-		id('home_result').set("innerText",e);
-		throw e;
-	}
-});
-
 id("filelist").inner().is("li").classadd("click");
 id("filelist_add").when("click",function(){
 	id("home_file").call("click");
