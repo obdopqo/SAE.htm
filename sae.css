@@ -132,6 +132,33 @@ input,button,.box {
 	white-space:pre;
 }
 
+#filelist {
+	display: inline;
+	list-style-type: none;
+}
+
+#filelist li {
+	display: block;
+	border-width: 2px;
+	border-style: solid;
+	padding: 5px;
+	margin: 5px;
+}
+
+#filelist .filename {
+	font-size: 30px;
+}
+
+#filelist .filetime {
+	font-size: 15px;
+}
+
+#filelist_add {
+	border-color: grey;
+}
+
+/*                                                               */
+
 .click {
 	transition: background-color 0.2s, border-color 0.2s;
 	border-color: black;

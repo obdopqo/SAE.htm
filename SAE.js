@@ -121,6 +121,11 @@ id("home_submit").when('click',function(){
 	}
 });
 
+id("filelist").inner().is("li").classadd("click");
+id("filelist_add").when("click",function(){
+	id("home_file").call("click");
+});
+
 var saeicon='<path d="M50,75 50,90M35,35 35,35M65,35 65,35M45,55c2,2.5 8,2.5 10,0M50,10c15,0 32.5,12.5 32.5,32.5c0,20 -15,32.5 -32.5,32.5c-15,0 -32.5,-12.5 -32.5,-32.5c0,-20 15,-32.5 32.5,-32.5zM20,100c20,-12 40,-12 60,0M17.5,35c-15,7.5 -12,25 -12,30M82.5,35c15,7.5 12,25 12,30" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/>';
 is('.sae-logo').style("overflow","hidden").append(innerSVG(100,100,saeicon));
 
