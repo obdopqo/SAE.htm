@@ -1,6 +1,20 @@
 //缩放视图
+
 when("load",resizeDiv);
 when("resize",resizeDiv);
+
+when("load",loadData);
+
+function loadData(){
+	var t=localStorage.getItem("SAE.file.list");
+	if(t!==null){
+		SAE.file.list=JSON.parse(t);
+	}
+}
+
+function saveData(){
+	localStorage.setItem("SAE.file.list",JSON.stringify(SAE.file.list));
+}
 
 id("nav").inner().is("a").classadd("click");
 
@@ -96,6 +110,7 @@ id("filelist_add").when("click",function(){
 });
 
 when("load",file_list);
+when("paste",console.log);
 
 function file_list(){
 	id("filelist").child().remove();
@@ -137,6 +152,7 @@ function file_add(){
 			//is("body").append0(file);
 			loadsb3(event.target,function(json,filename){
 				SAE.file.add(filename,new Date().toLocaleString(),json);
+				saveData();
 				file_list();
 			},function(e){
 				alert(e.message);
@@ -172,6 +188,7 @@ function File_del(x){
 		file_list();
 		event.stopPropagation();
 		event.cancelBubble = true;
+		saveData();
 	}
 }
 
