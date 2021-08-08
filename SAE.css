@@ -42,6 +42,11 @@ input,button,.box {
 }
 
 #nav {
+	padding: 0px;
+	margin: 0px;
+}
+
+#nav div {
 	position: fixed;
 	font-size: 20px;
 	top: 0px;

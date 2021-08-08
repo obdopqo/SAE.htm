@@ -30,7 +30,7 @@ function resizeDiv(){
 	//按设备比例缩放div的比例
 	var scaleFunc = "scale("+scale+","+scale+")";
 
-	is("body")
+	id("nav").and(is(".content"))
 		.style("width",targetwidth)
 
 		.style("transform",scaleFunc) //缩放比例
