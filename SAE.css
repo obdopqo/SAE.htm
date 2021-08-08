@@ -42,16 +42,17 @@ input,button,.box {
 }
 
 #nav {
-	padding: 0px;
-	margin: 0px;
-}
-
-#nav div {
 	position: fixed;
-	font-size: 20px;
 	top: 0px;
 	left: 0px;
 	right: 0px;
+	padding: 0px;
+	margin: 0px;
+	z-index: 100;
+}
+
+#nav div {
+	font-size: 20px;
 	padding: 10px;
 	background-color: white;
 	border-bottom: solid 2px black;
