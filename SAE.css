@@ -143,6 +143,13 @@ input,button,.box {
 	transition: background-color 0.2s, border-color 0.2s;
 	border-color: black;
 	background-color: white;
+	moz-user-select: -moz-none;
+	-moz-user-select: none;
+	-o-user-select:none;
+	-khtml-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
 }
 
 .click:hover {
