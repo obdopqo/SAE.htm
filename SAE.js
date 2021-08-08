@@ -147,6 +147,7 @@ function file_add(){
 	var file=create("input");
 	file.type="FILE";
 	is(file)
+		.set("multiple","multiple")
 		.style("display","none")
 		.when("change",function(event){
 			//is("body").append0(file);
@@ -223,45 +224,49 @@ function makeSVG(tag, attrs) {
 
 function loadsb3(file,func,err){
 	try {
-		if(!file.files || !file.files[0]){
-			return;
+		for(var i=0;i<file.files.length;i++){
+			var reader = new FileReader();
+			reader.readAsBinaryString(file.files[i]);
+			reader.onload = Loadsb3_call(file.files[i],func,err);
 		}
-		var reader = new FileReader();
-		reader.readAsBinaryString(file.files[0]);
-		reader.onload = function(){
-			var bstr=this.result;
-			try {
-				if(bstr.slice(0,4)==="PK\u0003\u0004"){
-					var zip = new JSZip(bstr);
-					var files = zip.files;
-					if(!('project.json' in files)){
-						throw new Error('sb3 文件错误 : 无法找到 project.json');
-					}
-					var Uint8ArrayStr = files['project.json']._data.getContent();
-					func(Utf8ArrayToStr(Uint8ArrayStr),file.files[0].name);
-				}else{
-					//var reader = new FileReader();
-					reader.readAsText(file.files[0],"utf-8");
-					reader.onload = function(){
-						try {
-							var bstr=this.result;
-							func(bstr,file.files[0].name);
-						} catch (e) {
-							err(e);
-						}
-					};
-				}
-			} catch (e) {
-				if(e.message.slice(0,15) == "Corrupted zip :"){
-					e.message = "sb3 文件错误 :" + e.message.slice(15);
-				}
-				err(e);
-			}
-		};
 	} catch (e) {
 		err(e);
 	}
 }
+
+function Loadsb3_call(file,func,err){
+	return function(){
+		var bstr=this.result;
+		try {
+			if(bstr.slice(0,4)==="PK\u0003\u0004"){
+				var zip = new JSZip(bstr);
+				var files = zip.files;
+				if(!('project.json' in files)){
+					throw new Error('sb3 文件错误 : 无法找到 project.json');
+				}
+				var Uint8ArrayStr = files['project.json']._data.getContent();
+				func(Utf8ArrayToStr(Uint8ArrayStr),file.name);
+			}else{
+				//var reader = new FileReader();
+				reader.readAsText(file,"utf-8");
+				reader.onload = function(){
+					try {
+						var bstr=this.result;
+						func(bstr,file.name);
+					} catch (e) {
+						err(e);
+					}
+				};
+			}
+		} catch (e) {
+			if(e.message.slice(0,15) == "Corrupted zip :"){
+				e.message = "sb3 文件错误 :" + e.message.slice(15);
+			}
+			err(e);
+		}
+	};
+}
+
 // Uint8Array 编码转 utf-8
 // https://blog.csdn.net/weixin_42448623/article/details/107845783
 function Utf8ArrayToStr(array) {
