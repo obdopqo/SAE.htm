@@ -5,7 +5,7 @@ SAE.file={};
 SAE.file.list = [];
 
 SAE.file.add = function fadd(name,time,data){
-	SAE.file.list.push({name:name,time:time,data:data});
+	SAE.file.list.splice(0,0,{name:name,time:time,data:data});
 };
 
 SAE.file.del = function fdel(x){
