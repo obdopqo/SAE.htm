@@ -247,7 +247,7 @@ function Loadsb3_call(file,func,err){
 				var Uint8ArrayStr = files['project.json']._data.getContent();
 				func(Utf8ArrayToStr(Uint8ArrayStr),file.name);
 			}else{
-				//var reader = new FileReader();
+				var reader = new FileReader();
 				reader.readAsText(file,"utf-8");
 				reader.onload = function(){
 					try {
