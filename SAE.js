@@ -267,6 +267,56 @@ function Loadsb3_call(file,func,err){
 	};
 }
 
+//统计
+
+function SAE_stat(data,list,color){
+	var innerHTML="";
+	var innerList="";
+	var j=-3.1415926/2;
+	for(var i=0;i<data.length;i++){
+		var k=j+data[i]*2*3.1415926;
+		innerHTML+=SAE_statg(j,k,140,color[i]);
+		innerList+="<li style=\"color:"+color[i]+";\">"+list[i]+" ("+Math.round(data[i]*100)+"%)";
+		innerList+="<span style=\"background-color:"+color[i]+";width:"+(data[i]*100)+"%\"></span></li>"
+		j=k;
+	}
+	id("stat_graph").child().set("innerHTML",innerHTML);
+	id("stat_list").set("innerHTML",innerList);
+}
+
+var take=[],left=1;
+for(var i=0;i<10;i++){
+	take.push(left*Math.random()*0.2);
+	left-=take[take.length-1];
+}
+
+var color_list = [
+	"#4c97ff",
+	"#9966ff",
+	"#cf63cf",
+	"#ffbf00",
+	"#ffab19",
+	"#5cb1d6",
+	"#59c059",
+	"#ff8c1a",
+	"#ff6680",
+	"#0fbd8c",
+	//#ff661a
+];
+
+SAE_stat(take,[1,2,3,4,5,6,7,8,9,0],color_list);
+
+function SAE_statg(arc,arc2,r,color){
+	var innerHTML="";
+	innerHTML="<path d=\"M0,0 ";
+	innerHTML+=(r*Math.cos(arc))+","+(r*Math.sin(arc))+"A";
+	innerHTML+=r+","+r+",1,";
+	innerHTML+=(Math.abs(arc-arc2)>3.1415926?"1":"0")+","+(arc<arc2?"1":"0")+",";
+	innerHTML+=(r*Math.cos(arc2))+","+(r*Math.sin(arc2));
+	innerHTML+="Z\" stroke=\"none\" stroke-width=\"1px\" fill=\""+color+"\"></path>";
+	return innerHTML;
+}
+
 // Uint8Array 编码转 utf-8
 // https://blog.csdn.net/weixin_42448623/article/details/107845783
 function Utf8ArrayToStr(array) {
