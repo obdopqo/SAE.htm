@@ -288,6 +288,9 @@ function SAE_statg(arc,arc2,r,color){
 	return innerHTML;
 }
 
+//选项
+
+id("options").inner().is("input").and(id("options").inner().is("button")).classadd("click");
 
 //其他
 
