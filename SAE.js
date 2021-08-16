@@ -102,7 +102,7 @@ function nav_each(object){
 id("_loading").style("display","none");
 is("body").style("overflow","auto");
 
-///////////////////////////////////////////////////////////////////////////////
+//文件
 
 id("filelist").inner().is("li").classadd("click");
 id("filelist_add").when("click",function(){
@@ -191,35 +191,6 @@ function File_del(x){
 		event.cancelBubble = true;
 		saveData();
 	}
-}
-
-var saeicon='<path d="M50,75 50,90M35,35 35,35M65,35 65,35M45,55c2,2.5 8,2.5 10,0M50,10c15,0 32.5,12.5 32.5,32.5c0,20 -15,32.5 -32.5,32.5c-15,0 -32.5,-12.5 -32.5,-32.5c0,-20 15,-32.5 32.5,-32.5zM20,100c20,-12 40,-12 60,0M17.5,35c-15,7.5 -12,25 -12,30M82.5,35c15,7.5 12,25 12,30" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/>';
-is('.sae-logo').style("overflow","hidden").append(innerSVG(100,100,saeicon));
-
-function innerSVG(w,h,svgstr){
-	var elem = makeSVG("svg",{width:w,height:h},svgstr);
-	elem.style.marginBottom= "-100%";
-	elem.innerHTML=svgstr;
-	return elem;
-}
-// makeSVG
-// https://blog.csdn.net/yk583443123/article/details/91883754
-function makeSVG(tag, attrs) {
-	var ns = 'http://www.w3.org/2000/svg';
-	var xlinkns = 'http://www.w3.org/1999/xlink';
-
-	var el= document.createElementNS(ns, tag);
-	if (tag==='svg'){
-		el.setAttribute('xmlns:xlink', xlinkns);
-	}
-	for (var k in attrs) {
-		if (k === 'xlink:href') {
-			el.setAttributeNS(xlinkns, k, attrs[k]);
-		} else {
-			el.setAttribute(k, attrs[k]);
-		}
-	}
-	return el;
 }
 
 function loadsb3(file,func,err){
@@ -315,6 +286,38 @@ function SAE_statg(arc,arc2,r,color){
 	innerHTML+=(r*Math.cos(arc2))+","+(r*Math.sin(arc2));
 	innerHTML+="Z\" stroke=\"none\" stroke-width=\"1px\" fill=\""+color+"\"></path>";
 	return innerHTML;
+}
+
+
+//其他
+
+var saeicon='<path d="M50,75 50,90M35,35 35,35M65,35 65,35M45,55c2,2.5 8,2.5 10,0M50,10c15,0 32.5,12.5 32.5,32.5c0,20 -15,32.5 -32.5,32.5c-15,0 -32.5,-12.5 -32.5,-32.5c0,-20 15,-32.5 32.5,-32.5zM20,100c20,-12 40,-12 60,0M17.5,35c-15,7.5 -12,25 -12,30M82.5,35c15,7.5 12,25 12,30" fill="none" stroke="black" stroke-width="2" stroke-linecap="round"/>';
+is('.sae-logo').style("overflow","hidden").append(innerSVG(100,100,saeicon));
+
+function innerSVG(w,h,svgstr){
+	var elem = makeSVG("svg",{width:w,height:h},svgstr);
+	elem.style.marginBottom= "-100%";
+	elem.innerHTML=svgstr;
+	return elem;
+}
+// makeSVG
+// https://blog.csdn.net/yk583443123/article/details/91883754
+function makeSVG(tag, attrs) {
+	var ns = 'http://www.w3.org/2000/svg';
+	var xlinkns = 'http://www.w3.org/1999/xlink';
+
+	var el= document.createElementNS(ns, tag);
+	if (tag==='svg'){
+		el.setAttribute('xmlns:xlink', xlinkns);
+	}
+	for (var k in attrs) {
+		if (k === 'xlink:href') {
+			el.setAttributeNS(xlinkns, k, attrs[k]);
+		} else {
+			el.setAttribute(k, attrs[k]);
+		}
+	}
+	return el;
 }
 
 // Uint8Array 编码转 utf-8
