@@ -6,11 +6,10 @@ var tnode,tdata,checkdata,isstage;
 var fromhead,fromproj,fromspri;
 var broadlist;
 var sprilist,     costlist,soundlist,     varilist,     listlist,defslist,argslist;
-var          stagecostlist,          stagevarilist,stagelistlist,         argblist;
+var          stagecostlist,          stagevarilist,stagelistlist,defswarp,argblist;
 var               costfile,soundfile,     variused,     listused,defsused,argsused;
 var                                  stagevariused,stagelistused,defsposi,argbused;
-var blocktype;
-var blockstack;
+var blocktype,blockstack,warpmode;
 
 var spriblocklist = [
 	"motion_goto_menu",
@@ -177,6 +176,22 @@ var block3xx_waitblock = [
 	"sensing_askandwait",
 ];
 	
+var block4xx_spriteref = [
+	"motion_direction",
+	"motion_xposition",
+	"motion_yposition",
+	"looks_costumenumbername",
+	"looks_backdropnumbername",
+	"looks_size",
+	"sound_volume",
+	"sensing_answer",
+	"operator_random",
+	"data_itemnumoflist",
+	"data_itemoflist",
+	"data_lengthoflist",
+	"data_listcontainsitem",
+	"music_getTempo"
+];
 
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
@@ -327,6 +342,8 @@ function blockstart(id){
 	// 这里的fromhead是全局变量，意味着接下来的调用中fromhead就是积木id的头积木。
 	// 有一个例外，就是追踪引用的时候可能会跳转到积木定义中，这是积木定义就会变成头积木
 	fromhead = id;
+	warpmode = 0;
+	// TODO warpmode
 	warn(1,"blockstart",id);
 	DEBUG("blockstart",id);
 
@@ -395,6 +412,7 @@ function block(id){
 	block1xx(id);
 	block2xx(id);
 	block3xx(id);
+	block4xx(id);
 
 	DEBUG("bl",id);
 	DEBUG("block",id,blocktype[0]);
@@ -789,6 +807,27 @@ function block3xx(id){
 	}
 }
 
+function block4xx(id){
+	switch(blocktype){
+		case "control_repeat_until":
+		case "control_while":
+			// (检查是否有内部变量改变的可能)
+			// (可能一步执行的积木：只允许内部变量)
+			// (？？？)
+			// TODO: 反向提醒
+			if(warpmode>-1){
+				if(!checkblock(tdata[tnode[id]+2],"spritevarlist")
+					&& !checkblock(tdata[tnode[id]+2],"spriterefs")){
+					warn(400,"逻辑跳出判定不变",id);
+				}
+			}
+			break;
+		case "wait":
+			if(warpmode>-1){
+				warn(411,"等待跳出判定在运行时不刷新屏幕中",id);
+			}
+	}
+}
 
 function checkblock(i,operator){
 	DEBUG("checkblock",i,operator);
