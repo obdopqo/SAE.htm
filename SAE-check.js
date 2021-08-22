@@ -21,6 +21,12 @@ var spriblocklist = [
 	"sensing_of_object_menu",
 ];
 
+var block1xx_listref = [
+	"data_itemoflist",
+	"data_itemnumoflist",
+	"data_listcontainsitem",
+];
+
 var block2xx_noness = [
 	"operator_add",
 	"operator_subtract",
@@ -851,6 +857,12 @@ function checkblock(i,operator){
 							return true;
 						}
 						break;
+					default:
+						if(block1xx_listref.includes(tdata[check])){
+							if(listlist.includes(tdata[check+2])){
+								return true;
+							}
+						}
 				}
 				break;
 		}
