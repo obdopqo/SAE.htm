@@ -617,11 +617,13 @@ function block2xx(id){
 			break;
 		case 'operator_gt':
 		case 'operator_lt':
-			if(checkvalue(v+2,0,'nonumber')){
+			if(checkvalue(v+2,0,'nonumber')
+			|| checkvalue(v+3,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
-			if(checkvalue(v+3,0,'nonumber')){
-				warn(217,"使用非数字比较大小",id);
+			if(block3xx_textblock.includes(tdata[tnode[tdata[v+2]]])
+			|| block3xx_textblock.includes(tdata[tnode[tdata[v+3]]])){
+				warn(332,"和文本积木比较大小",id);
 			}
 			break;
 	}
