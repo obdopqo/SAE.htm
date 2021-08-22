@@ -217,9 +217,9 @@ function spri(id){
 	fromspri = id;
 
 	// -6: 这里同理
-	soundlist = load2(tdata[tnode[id]+2]);
+	soundlist = load2(tdata[tnode[id]+2],[]);
 	if(isstage){
-		stagecostlist = load2(tdata[tnode[id]+1]);
+		stagecostlist = load2(tdata[tnode[id]+1],[]);
 		stagevarilist = load(tdata[tnode[id]+3]);
 		stagelistlist = load(tdata[tnode[id]+4]);
 		stagevariused = zeroarray(stagevarilist.length);
@@ -228,11 +228,12 @@ function spri(id){
 		varilist = [];
 		listlist = [];
 	}else{
-		costlist = load2(tdata[tnode[id]+1]);
+		costlist = load2(tdata[tnode[id]+1],[]);
 		varilist = load(tdata[tnode[id]+3]);
 		listlist = load(tdata[tnode[id]+4]);
 	}
-	defslist = load(tdata[tnode[id]+5]);
+	defsposi=[];
+	defslist = load2(tdata[tnode[id]+5],defsposi);
 
 	variused = zeroarray(varilist.length);
 	listused = zeroarray(listlist.length);
@@ -252,9 +253,7 @@ function spri(id){
 		}
 	}
 
-	//由于定义积木列表奇数项是积木名，偶数项是积木的位置，所以这里需要+2
-	// TODO
-	for(var i=0;i<defsused.length;i+=2){
+	for(var i=0;i<defsused.length;i++){
 		if(defsused[i] === 0){
 			warn(141,"未使用的自定义积木: " + defslist[i],id);
 		}
@@ -270,10 +269,11 @@ function load(id){
 }
 
 //load2，用于获取造型，声音列表中的名称
-function load2(id){
+function load2(id,data2){
 	var ret=[];
 	for(var i=tnode[id];i<tnode[id+1];i+=2){
 		ret.push(tdata[i]);
+		data2.push(tdata[i+1]);
 	}
 	return ret;
 }
