@@ -176,6 +176,14 @@ input,button,.box {
 
 /*                                                               */
 
+#check_list .preview p {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+
+/*                                                               */
+
 .click {
 	transition: background-color 0.2s, border-color 0.2s;
 	border-color: black;
