@@ -1,8 +1,6 @@
 // check检查
 (function(){
 "use strict";
-/*{{{*/
-/*{{{*/
 
 var tnode,tdata,checkdata,isstage;
 var fromhead,fromproj,fromspri;
@@ -860,5 +858,4 @@ function zeroarray(n){
 function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
-/*}}}*/
 })();
