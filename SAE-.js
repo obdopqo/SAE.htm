@@ -13,6 +13,7 @@ if(FAST){
 include("SAE-disp.js");
 include("SAE-disp-table.js");
 include("SAE-check.js");
+include("SAE-stat.js");
 
 SAE.init();
 //SAE.options._OrigInputType = true;
@@ -23,6 +24,8 @@ var x=SAE.json.load(fs.readFileSync(process.argv.length>2?process.argv[2]:"proje
 //SAE.disp.disperr();
 SAE.check.proj(x);
 SAE.check.debug();
+SAE.stat.proj(x);
+//SAE.stat.debug();
 // console.log(require('util').inspect(Symbol,true,null,true));
 function include(x){
 	eval(fs.readFileSync(x).toString());
