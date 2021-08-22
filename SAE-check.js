@@ -895,6 +895,19 @@ function checkvalue(i,value,operator){
 							return true;
 						}
 						break;
+					case 'float':
+						if(String(Math.floor(Number(tdata[check+1])))===tdata[check+1]){
+							return true;
+						}
+					case 'capital':
+						var str=tdata[check+1];
+						for(var i=0;i<str.length;i++){
+							if("ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(str[i])){
+								return true;
+							}
+						}
+						return false;
+						break;
 					case 'nonumber':
 						if(String(Number(tdata[check+1]))!==tdata[check+1]){
 							return true;
