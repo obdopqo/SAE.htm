@@ -865,6 +865,10 @@ function checkblock(i,operator){
 						}
 				}
 				break;
+			case 'spriterefs':
+						if(block4xx_spriteref.includes(tdata[check])){
+							return true;
+						}
 		}
 	}
 	return false;
