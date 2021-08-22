@@ -777,6 +777,15 @@ function block3xx(id){
 				}
 			}
 			break;
+		case 'operator_equals':
+			if(checkvalue(tnode[id]+2,0,'float')
+			|| checkvalue(tnode[id]+3,0,'float')){
+				warn(330,"用等号比较小数",id);
+			}
+			if(checkvalue(tnode[id]+2,0,'capital')
+			|| checkvalue(tnode[id]+3,0,'capital')){
+				warn(331,"比较大写字母",id);
+			}
 	}
 }
 
