@@ -1,9 +1,4 @@
-SAE = SAE || {};
-
-SAE.json = SAE.json || {};
-
-SAE.options = SAE.options || {};
-
+// json分析
 (function(){
 "use strict";
 /*{{{*/
@@ -137,7 +132,7 @@ function spri(){
 	t=findtext(',"costumes":[',t,spriend,false);
 	spripos[1]=datalist2('],"sounds":[',);
 	// 声音
-	spripos[2]=datalist2('],"volume":',',"name":"');
+	spripos[2]=datalist2('],"volume":');
 
 	tnode.push(tdata.length);
 	for(i=0;i<spripos.length;i++){
@@ -799,7 +794,7 @@ function textcheck(str,x){
 	return true;
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
 

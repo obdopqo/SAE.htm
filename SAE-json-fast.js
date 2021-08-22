@@ -1,9 +1,4 @@
-SAE = SAE || {};
-
-SAE.json = SAE.json || {};
-
-SAE.options = SAE.options || {};
-
+// json分析
 (function(){
 "use strict";
 /*{{{*/
@@ -557,7 +552,7 @@ function blockproc(json){
 	tdata.push(proc);
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
 

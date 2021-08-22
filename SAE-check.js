@@ -1,21 +1,15 @@
-SAE = SAE || {};
-
-SAE.check = SAE.check || {};
-
 // check检查
 (function(){
 "use strict";
-/*{{{*/
-/*{{{*/
 
 var tnode,tdata,checkdata,isstage;
 var fromhead,fromproj,fromspri;
 var broadlist;
 var sprilist,     costlist,soundlist,     varilist,     listlist,defslist,argslist;
-var          stagecostlist,          stagevarilist,stagelistlist,         argblist;
+var          stagecostlist,          stagevarilist,stagelistlist,defswarp,argblist;
 var               costfile,soundfile,     variused,     listused,defsused,argsused;
 var                                  stagevariused,stagelistused,defsposi,argbused;
-var blocktype;
+var blocktype,blockstack,warpmode;
 
 var spriblocklist = [
 	"motion_goto_menu",
@@ -25,6 +19,12 @@ var spriblocklist = [
 	"sensing_touchingobjectmenu",
 	"sensing_distancetomenu",
 	"sensing_of_object_menu",
+];
+
+var block1xx_listref = [
+	"data_itemoflist",
+	"data_itemnumoflist",
+	"data_listcontainsitem",
 ];
 
 var block2xx_noness = [
@@ -78,6 +78,125 @@ var block2xx_change = [
 	"pen_changePenSizeBy",
 	"box2d_changeVelocity",
 	"box2d_changeScroll"
+];
+
+// 这些积木都是设定模式用的，两个相同的设定积木连用可以判断为错误。
+var block3xx_same = [
+	"motion_changexby",
+	"motion_changeyby",
+	"motion_setx",
+	"motion_sety",
+	"motion_turnleft",
+	"motion_turnright",
+	"motion_gotoxy",
+	"motion_goto",
+	"motion_pointtowards",
+	"motion_pointindirection",
+	"motion_ifonedgebounce",
+	"motion_setrotationstyle",
+	"looks_changesizeby",
+	"looks_setsizeto",
+	"looks_say",
+	"looks_think",
+	"looks_show",
+	"looks_hide",
+	"looks_goforwardbackwardlayers",
+	"looks_switchbackdropto",
+	"looks_gotofrontback",
+	"looks_cleargraphiceffects",
+	"sound_changevolumeby",
+	"sound_stopallsounds",
+	"sound_setvolumeto",
+	"sensing_setdragmode",
+	"sensing_resettimer",
+	"pen_changePenSizeBy",
+	"pen_clear",
+	"pen_stamp",
+	"pen_penDown",
+	"pen_penUp",
+	"pen_setPenColorToColor",
+	"pen_setPenSizeTo",
+	"music_changeTempo",
+	"music_setInstrument",
+	"music_setTempo",
+	"videoSensing_videoToggle",
+	"faceSensing_goToPart",
+	"faceSensing_pointInFaceTiltDirection",
+	"faceSensing_setSizeToFaceSize",
+];
+
+var block3xx_same2 = [
+	"looks_changeeffectby",
+	"looks_seteffectto",
+	"sound_changeeffectby",
+	"sound_seteffectto",
+	"data_changevariableby",
+	"data_setvariableto",
+	"pen_changePenColorParamBy",
+	"pen_setPenColorParamTo"
+];
+
+var block3xx_same1 = [
+	"data_deletealloflist",
+	"data_showlist",
+	"data_showvariable",
+	"data_hidelist",
+	"data_hidevariable",
+];
+
+var block3xx_textblock = [
+	"sensing_username",
+	"operator_join",
+	"operator_letter_of",
+	"translate_getTranslate",
+	"translate_getViewerLanguage",
+];
+
+var block3xx_logicblock = [
+	"[布尔参数]",
+	"sensing_keypressed",
+	"sensing_mousedown",
+	"operator_gt",
+	"operator_lt",
+	"operator_equals",
+	"operator_and",
+	"operator_or",
+	"operator_not",
+	"operator_contains",
+	"data_listcontainsitem",
+	"tw_getButtonIsDown",
+	"community_isFollower",
+	"community_isProjectLover",
+	"puzzle_isPaintSameAsWatermark",
+	"community_isMyFans",
+	"community_isLiked",
+	"faceSensing_faceIsDetected",
+];
+
+var block3xx_waitblock = [
+	"control_wait",
+	"control_wait_until",
+	"looks_switchbackdroptoandwait",
+	"sound_playuntildone",
+	"event_broadcastandwait",
+	"sensing_askandwait",
+];
+	
+var block4xx_spriteref = [
+	"motion_direction",
+	"motion_xposition",
+	"motion_yposition",
+	"looks_costumenumbername",
+	"looks_backdropnumbername",
+	"looks_size",
+	"sound_volume",
+	"sensing_answer",
+	"operator_random",
+	"data_itemnumoflist",
+	"data_itemoflist",
+	"data_lengthoflist",
+	"data_listcontainsitem",
+	"music_getTempo"
 ];
 
 SAE.check.proj = function proj(id){
@@ -157,9 +276,9 @@ function spri(id){
 	fromspri = id;
 
 	// -6: 这里同理
-	soundlist = load2(tdata[tnode[id]+2]);
+	soundlist = load2(tdata[tnode[id]+2],[]);
 	if(isstage){
-		stagecostlist = load2(tdata[tnode[id]+1]);
+		stagecostlist = load2(tdata[tnode[id]+1],[]);
 		stagevarilist = load(tdata[tnode[id]+3]);
 		stagelistlist = load(tdata[tnode[id]+4]);
 		stagevariused = zeroarray(stagevarilist.length);
@@ -168,11 +287,12 @@ function spri(id){
 		varilist = [];
 		listlist = [];
 	}else{
-		costlist = load2(tdata[tnode[id]+1]);
+		costlist = load2(tdata[tnode[id]+1],[]);
 		varilist = load(tdata[tnode[id]+3]);
 		listlist = load(tdata[tnode[id]+4]);
 	}
-	defslist = load(tdata[tnode[id]+5],defsposi);
+	defsposi=[];
+	defslist = load2(tdata[tnode[id]+5],defsposi);
 
 	variused = zeroarray(varilist.length);
 	listused = zeroarray(listlist.length);
@@ -192,9 +312,7 @@ function spri(id){
 		}
 	}
 
-	//由于定义积木列表奇数项是积木名，偶数项是积木的位置，所以这里需要+2
-	// TODO
-	for(var i=0;i<defsused.length;i+=2){
+	for(var i=0;i<defsused.length;i++){
 		if(defsused[i] === 0){
 			warn(141,"未使用的自定义积木: " + defslist[i],id);
 		}
@@ -210,10 +328,11 @@ function load(id){
 }
 
 //load2，用于获取造型，声音列表中的名称
-function load2(id){
+function load2(id,data2){
 	var ret=[];
 	for(var i=tnode[id];i<tnode[id+1];i+=2){
 		ret.push(tdata[i]);
+		data2.push(tdata[i+1]);
 	}
 	return ret;
 }
@@ -229,6 +348,8 @@ function blockstart(id){
 	// 这里的fromhead是全局变量，意味着接下来的调用中fromhead就是积木id的头积木。
 	// 有一个例外，就是追踪引用的时候可能会跳转到积木定义中，这是积木定义就会变成头积木
 	fromhead = id;
+	warpmode = 0;
+	// TODO warpmode
 	warn(1,"blockstart",id);
 	DEBUG("blockstart",id);
 
@@ -236,6 +357,8 @@ function blockstart(id){
 	argsused=[];
 	argblist=[];
 	argbused=[];
+
+	blockstack=[];
 
 	blocktype=tdata[tnode[id]];
 	switch(blocktype){
@@ -294,6 +417,8 @@ function block(id){
 
 	block1xx(id);
 	block2xx(id);
+	block3xx(id);
+	block4xx(id);
 
 	DEBUG("bl",id);
 	DEBUG("block",id,blocktype[0]);
@@ -306,7 +431,9 @@ function block(id){
 		for(var i=tnode[id]+2;i<tnode[id+1]-j;i++){
 			if(tdata[i]!==-1){
 				DEBUG("block1",tdata[i]);
+				blockstack.push(id);
 				block(tdata[i]);
+				blockstack.pop();
 			}else{
 				warn(102,"缺少积木",id);
 			}
@@ -448,6 +575,14 @@ function block2xx(id){
 			if(checkvalue(i,"",'===')){
 				warn(200,"缺少数字",id);
 			}
+			if(block3xx_textblock.includes(tdata[tnode[tdata[v+2]]])
+			|| block3xx_textblock.includes(tdata[tnode[tdata[v+3]]])){
+				warn(202,"使用文本积木",id);
+			}
+			if(block3xx_logicblock.includes(tdata[tnode[tdata[v+2]]])
+			|| block3xx_logicblock.includes(tdata[tnode[tdata[v+3]]])){
+				warn(203,"使用判断积木",id);
+			}
 		}
 	}
 
@@ -515,11 +650,13 @@ function block2xx(id){
 			break;
 		case 'operator_gt':
 		case 'operator_lt':
-			if(checkvalue(v+2,0,'nonumber')){
+			if(checkvalue(v+2,0,'nonumber')
+			|| checkvalue(v+3,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
-			if(checkvalue(v+3,0,'nonumber')){
-				warn(217,"使用非数字比较大小",id);
+			if(block3xx_textblock.includes(tdata[tnode[tdata[v+2]]])
+			|| block3xx_textblock.includes(tdata[tnode[tdata[v+3]]])){
+				warn(332,"和文本积木比较大小",id);
 			}
 			break;
 	}
@@ -587,6 +724,156 @@ function block2xx(id){
 	}
 }
 
+function block3xx(id){
+	var v=tnode[id],v1=tdata[v+1],v2=tdata[v+2];
+	if(v1!==-1){
+		if(block3xx_same.includes(blocktype)){
+			if(tdata[tnode[v1]]===blocktype){
+				warn(300,"重复的积木",id);
+			}
+		}
+
+		if(block3xx_same1.includes(blocktype)){
+			var id2=tnode[v1];
+			if(tdata[id2]===blocktype){
+				if(tdata[tnode[tdata[id2]]+1]
+					===tdata[tnode[tdata[id]]+1]){
+					warn(301,"重复的积木",id);
+				}
+			}
+		}
+
+		if(block3xx_same2.includes(blocktype)){
+			var id2=tnode[v1];
+			if(tdata[id2]===blocktype){
+				if(tdata[tnode[tdata[id2]]+2]
+					===tdata[tnode[tdata[id]]+2]){
+					warn(302,"重复的积木",id);
+				}
+			}
+		}
+
+		if(block3xx_waitblock.includes(blocktype)){
+			if(warpmode>-1){
+				warn(340,"在运行时不刷新屏幕的积木里使用这个积木",id);
+			}
+		}
+	}
+
+	switch(blocktype){
+		case 'control_create_clone_of_menu':
+			if(checkvalue(v+2,"_myself_",'===')){
+				if(tdata[tnode[fromhead]]==='control_start_as_clone'){
+					//这里要检测if
+					for(var j=0;j<blockstack.length;j++){
+						if(tdata[tnode[blockstack[j]]]==='control_if'
+							|| tdata[tnode[blockstack[j]]]==='control_if_else')
+							if(!checkblock(tdata[tnode[blockstack[j]]+2],"spritevarlist")){
+								warn(310,"克隆时没有角色变量条件控制",id);
+							}
+					}
+				}
+			}
+			break;
+		case 'control_delete_this_clone':
+			for(var j=0;j<blockstack.length;j++){
+				if(tdata[tnode[blockstack[j]]+1]!==-1){
+					warn(311,"删除克隆体积木后仍有可执行积木",id);
+					warn(931,"在这里:",tdata[tnode[blockstack[j]]+1]);
+				}
+			}
+			/* fall through */
+		case 'control_stop':
+			if(blockstack.length===0){
+				warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
+			}else{
+				var j=blockstack[blockstack.length-1];
+				if(tdata[tnode[j]]==='control_if'
+					|| tdata[tnode[j]]==='control_if_else'){
+					warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
+				}
+			}
+			break;
+		case 'operator_not':
+			for(var j=0;j<blockstack.length;j++){
+				if(tdata[tnode[blockstack[j]]]==="operator_not"){
+					warn(320,"“不成立”积木重复使用",id);
+				}
+			}
+			break;
+		case 'operator_equals':
+			if(checkvalue(tnode[id]+2,0,'float')
+			|| checkvalue(tnode[id]+3,0,'float')){
+				warn(330,"用等号比较小数",id);
+			}
+			if(checkvalue(tnode[id]+2,0,'capital')
+			|| checkvalue(tnode[id]+3,0,'capital')){
+				warn(331,"比较大写字母",id);
+			}
+	}
+}
+
+function block4xx(id){
+	switch(blocktype){
+		case "control_repeat_until":
+		case "control_while":
+			// (检查是否有内部变量改变的可能)
+			// (可能一步执行的积木：只允许内部变量)
+			// (？？？)
+			// TODO: 反向提醒
+			if(warpmode>-1){
+				if(!checkblock(tdata[tnode[id]+2],"spritevarlist")
+					&& !checkblock(tdata[tnode[id]+2],"spriterefs")){
+					warn(400,"逻辑跳出判定不变",id);
+				}
+			}
+			break;
+		case "wait":
+			if(warpmode>-1){
+				warn(411,"等待跳出判定在运行时不刷新屏幕中",id);
+			}
+	}
+}
+
+function checkblock(i,operator){
+	DEBUG("checkblock",i,operator);
+	if(tdata[i]!==-1){
+		var check=tnode[tdata[i]];
+		for(var j=tnode[tdata[i]]+1;j<tnode[tdata[i]+1];j++){
+			if(checkblock(j,operator)){
+				return true;
+			}
+		}
+		switch(operator){
+			case 'spritevarlist':
+				switch(tdata[check]){
+					case '[变量]':
+						if(varilist.includes(tdata[check+1])){
+							return true;
+						}
+						break;
+					case '[列表]':
+						if(listlist.includes(tdata[check+1])){
+							return true;
+						}
+						break;
+					default:
+						if(block1xx_listref.includes(tdata[check])){
+							if(listlist.includes(tdata[check+2])){
+								return true;
+							}
+						}
+				}
+				break;
+			case 'spriterefs':
+						if(block4xx_spriteref.includes(tdata[check])){
+							return true;
+						}
+		}
+	}
+	return false;
+}
+
 function checkvalue(i,value,operator){
 	DEBUG("checkvalue",i,value,operator);
 	if(tdata[i]!==-1){
@@ -623,6 +910,19 @@ function checkvalue(i,value,operator){
 						if(String(Number(tdata[check+1]))===tdata[check+1]){
 							return true;
 						}
+						break;
+					case 'float':
+						if(String(Math.floor(Number(tdata[check+1])))===tdata[check+1]){
+							return true;
+						}
+					case 'capital':
+						var str=tdata[check+1];
+						for(var i=0;i<str.length;i++){
+							if("ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(str[i])){
+								return true;
+							}
+						}
+						return false;
 						break;
 					case 'nonumber':
 						if(String(Number(tdata[check+1]))!==tdata[check+1]){
@@ -686,8 +986,7 @@ function zeroarray(n){
 	return Array(n).fill(0);
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
-/*}}}*/
 })();

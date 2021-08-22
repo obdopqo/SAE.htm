@@ -1,7 +1,3 @@
-SAE = SAE || {};
-
-SAE.disp = SAE.disp || {};
-
 // disp显示
 (function(){
 "use strict";
@@ -308,7 +304,7 @@ function blockdefs(id,title,indent){
 	}
 }
 
-function DEBUG(){
+function DEBUG(...args){
 	//console.log.apply(console,arguments);
 }
 /*}}}*/

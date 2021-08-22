@@ -1,7 +1,3 @@
-SAE = SAE || {};
-
-SAE.disp = SAE.disp || {};
-
 SAE.disp.table = [
 	// 基础scratch积木
 	/*{{{*/
@@ -35,8 +31,8 @@ SAE.disp.table = [
 	"#motion_ifonedgebounce",		"碰到边缘就反弹",			0,
 	"#motion_setrotationstyle",		"将旋转方式设为 &1",			0,
 	"#motion_direction",			"(方向)",				99,
-	"#motion_yposition",			"(x坐标)",				99,
-	"#motion_xposition",			"(y坐标)",				99,
+	"#motion_xposition",			"(x坐标)",				99,
+	"#motion_yposition",			"(y坐标)",				99,
 
 	"&motion_setrotationstyle#1:left-right","左右翻转",
 	"&motion_setrotationstyle#1:don't rotate","不可旋转",
