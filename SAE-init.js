@@ -4,6 +4,8 @@ SAE = {
 	json: {},
 	disp: {},
 	check: {},
+	stat: {},
+	graph: {},
 	options: {},
 };
 
