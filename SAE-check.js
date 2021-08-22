@@ -168,6 +168,15 @@ var block3xx_logicblock = [
 	"faceSensing_faceIsDetected",
 ];
 
+var block3xx_waitblock = [
+	"control_wait",
+	"control_wait_until",
+	"looks_switchbackdroptoandwait",
+	"sound_playuntildone",
+	"event_broadcastandwait",
+	"sensing_askandwait",
+];
+	
 
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
@@ -717,6 +726,12 @@ function block3xx(id){
 					===tdata[tnode[tdata[id]]+2]){
 					warn(302,"重复的积木",id);
 				}
+			}
+		}
+
+		if(block3xx_waitblock.includes(blocktype)){
+			if(warpmode>-1){
+				warn(340,"在运行时不刷新屏幕的积木里使用这个积木",id);
 			}
 		}
 	}
