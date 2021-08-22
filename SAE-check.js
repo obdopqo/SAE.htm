@@ -139,6 +139,35 @@ var block3xx_same1 = [
 	"data_hidevariable",
 ];
 
+var block3xx_textblock = [
+	"sensing_username",
+	"operator_join",
+	"operator_letter_of",
+	"translate_getTranslate",
+	"translate_getViewerLanguage",
+];
+
+var block3xx_logicblock = [
+	"[布尔参数]",
+	"sensing_keypressed",
+	"sensing_mousedown",
+	"operator_gt",
+	"operator_lt",
+	"operator_equals",
+	"operator_and",
+	"operator_or",
+	"operator_not",
+	"operator_contains",
+	"data_listcontainsitem",
+	"tw_getButtonIsDown",
+	"community_isFollower",
+	"community_isProjectLover",
+	"puzzle_isPaintSameAsWatermark",
+	"community_isMyFans",
+	"community_isLiked",
+	"faceSensing_faceIsDetected",
+];
+
 
 SAE.check.proj = function proj(id){
 	tnode = SAE.data.tnode;
@@ -512,6 +541,14 @@ function block2xx(id){
 		for(var i=v+2;i<tnode[id+1];i++){
 			if(checkvalue(i,"",'===')){
 				warn(200,"缺少数字",id);
+			}
+			if(block3xx_textblock.includes(tdata[tnode[tdata[v+2]]])
+			|| block3xx_textblock.includes(tdata[tnode[tdata[v+3]]])){
+				warn(202,"使用文本积木",id);
+			}
+			if(block3xx_logicblock.includes(tdata[tnode[tdata[v+2]]])
+			|| block3xx_logicblock.includes(tdata[tnode[tdata[v+3]]])){
+				warn(203,"使用判断积木",id);
 			}
 		}
 	}
