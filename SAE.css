@@ -151,7 +151,8 @@ input,button,.box {
 
 .stat>*{
 	text-align: left;
-	margin:auto;
+	vertical-align: middle;
+	display: inline-block;
 }
 
 .stat_graph {
@@ -159,9 +160,6 @@ input,button,.box {
 	height: 300px;
 }
 
-	display: inline-block;
-	width: 400px;
-	height:250px;
 .stat_list {
 }
 
