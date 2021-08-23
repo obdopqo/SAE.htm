@@ -264,7 +264,8 @@ function SAE_stat(data,list,color){
 		var k=j+data[i]*2*3.1415926;
 		innerHTML+=SAE_statg(j,k,140,color[i]);
 		innerList+="<li style=\"color:"+color[i]+";\">"+list[i]+" ("+Math.round(data[i]*100)+"%)";
-		innerList+="<span style=\"background-color:"+color[i]+";width:"+(data[i]*100)+"%\"></span></li>"
+		innerList+="<span style=\"opacity:0.2;background-color:"+color[i]+";width:100%\"></span>"
+		innerList+="<span style=\"position:relative;margin-top:-2px;background-color:"+color[i]+";width:"+(data[i]*100)+"%\"></span></li>"
 		j=k;
 	}
 	id("stat_1").child().is(".stat_graph").set("innerHTML",innerHTML);
