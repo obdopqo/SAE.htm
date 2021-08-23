@@ -167,6 +167,9 @@ input,button,.box {
 
 .stat_list li {
 	white-space:pre;
+	tab-size: 15;
+	-moz-tab-size: 15;
+	-o-tab-size: 15;
 	position: relative;
 }
 
