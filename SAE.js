@@ -168,11 +168,27 @@ function File_load(x){
 		try{
 			SAE.init();
 			var proj = SAE.json.load(SAE.file.data(x));
+			SAE.options.graph = {};
 			SAE.disp.proj(proj);
+			//SAE.check.proj(proj);
+			SAE.stat.proj(proj);
+			SAE.graph.proj(proj);
 			id('home_result').style("color","black");
 			id('home_result').set("innerText",SAE.disp.data.join('\n'));
-			SAE.check.proj(proj);
-			SAE.check.debug();
+			var typecount=[],counts=0;
+			for(var i=0;i<SAE.stat.typecount.length;i++){
+				counts+=SAE.stat.typecount[i];
+			}
+			for(var i=0;i<SAE.stat.typecount.length;i++){
+				if(i<10){
+					typecount.push(SAE.stat.typecount[i]/counts);
+				}else{
+					typecount[9]+=SAE.stat.typecount[i]/counts;
+				}
+			}
+			SAE.stat.typename[9]="extensions";
+			SAE_stat(typecount,SAE.stat.typename,color_list);
+			//SAE.check.debug();
 		}catch(e){
 			id('home_result').style("color","red");
 			id('home_result').set("innerText",e);
@@ -275,7 +291,6 @@ var color_list = [
 	//#ff661a
 ];
 
-SAE_stat(take,[1,2,3,4,5,6,7,8,9,0],color_list);
 
 function SAE_statg(arc,arc2,r,color){
 	var innerHTML="";
