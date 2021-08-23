@@ -267,8 +267,8 @@ function SAE_stat(data,list,color){
 		innerList+="<span style=\"background-color:"+color[i]+";width:"+(data[i]*100)+"%\"></span></li>"
 		j=k;
 	}
-	id("stat_graph").child().set("innerHTML",innerHTML);
-	id("stat_list").set("innerHTML",innerList);
+	id("stat_1").child().is(".stat_graph").set("innerHTML",innerHTML);
+	id("stat_1").child().is(".stat_list").set("innerHTML",innerList);
 }
 
 var take=[],left=1;

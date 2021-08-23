@@ -145,31 +145,31 @@ input,button,.box {
 
 /*                                                               */
 
-#stat_1 {
+.stat {
 	text-align: center;
 }
 
-#stat_1>*{
+.stat>*{
 	text-align: left;
 	margin:auto;
 }
 
-#stat_graph {
+.stat_graph {
 	width: 300px;
 	height: 300px;
 }
 
-#stat_list {
 	display: inline-block;
 	width: 400px;
 	height:250px;
+.stat_list {
 }
 
-#stat_list li {
+.stat_list li {
 	position: relative;
 }
 
-#stat_list li span {
+.stat_list li span {
 	display:block;
 	height:2px;
 }
