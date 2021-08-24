@@ -74,30 +74,37 @@ function block(id){
 		// 积木类型
 		var blocktype=tdata[tnode[id]];
 		if(blocktype.slice(0,1)!=="["&&!shadowblock.includes(blocktype)){
-			if(blocktype!=="procedures_definition"){
-				//不是输入积木和定义积木
-				var j=0,str="";
-				while(j<blocktype.length&&blocktype[j]!=='_'){
-					str+=blocktype[j];
-					j++;
-				}
-				DEBUG("typename",str);
-				var i=SAE.stat.typename.indexOf(str);
-				if(i===-1){
-					i=SAE.stat.typecount.length;
-					SAE.stat.typename.push(str);
-					SAE.stat.typecount.push(0);
-				}
+			//不是输入积木和定义积木
+			var j=0,str="";
+			while(j<blocktype.length&&blocktype[j]!=='_'){
+				str+=blocktype[j];
+				j++;
+			}
+			DEBUG("typename",str);
+			var i=SAE.stat.typename.indexOf(str);
+			if(i===-1){
+				i=SAE.stat.typecount.length;
+				SAE.stat.typename.push(str);
+				SAE.stat.typecount.push(0);
+			}
+			SAE.stat.typecount[i]++;
+			i=tnode[id]+1;
+			j=tnode[id+1];
+			if(blocktype==="procedures_definition"){
+				j--;
+				i=j-1;
+			}
+			if(blocktype==="procedures_call"){
+				j--;
+			}
+			while(i<j){
+				block(tdata[i]);
+				i++;
+			}
+		}else{
+			if(blocktype==="[变量]"||blocktype==="[列表]"){
+				var i=SAE.stat.typename.indexOf("data");
 				SAE.stat.typecount[i]++;
-				i=tnode[id]+1;
-				j=tnode[id+1];
-				if(blocktype==="procedures_call"){
-					j--;
-				}
-				while(i<j){
-					block(tdata[i]);
-					i++;
-				}
 			}
 		}
 	}
