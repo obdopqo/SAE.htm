@@ -169,12 +169,12 @@ function File_load(x){
 			SAE.init();
 			var proj = SAE.json.load(SAE.file.data(x));
 			SAE.options.graph = {};
-			SAE.disp.proj(proj);
+			//SAE.disp.proj(proj);
 			//SAE.check.proj(proj);
 			SAE.stat.proj(proj);
 			SAE.graph.proj(proj);
-			id('home_result').style("color","black");
-			id('home_result').set("innerText",SAE.disp.data.join('\n'));
+			//id('home_result').style("color","black");
+			//id('home_result').set("innerText",SAE.disp.data.join('\n'));
 			var typecount=SAE.stat.typecount.slice(0,9);
 			var extenname=SAE.stat.typename.slice(9);
 			var extencount=SAE.stat.typecount.slice(9);
@@ -214,6 +214,7 @@ function File_load(x){
 				id("stat_2").and(id("stat_2").prev()).style("display","block");
 				stat_draw("stat_2",extencount,extenname,extencolor);
 			}
+			disp_draw(proj);
 			//SAE.check.debug();
 		}catch(e){
 			id('home_result').style("color","red");
@@ -312,6 +313,66 @@ function stat_drawsvg(arc,arc2,r,color){
 	svghtml+="Z\" stroke=\"none\" stroke-width=\"1px\" fill=\""+color+"\"></path>";
 	return svghtml;
 }
+
+//积木
+
+function disp_draw(tid){
+	tnode=SAE.data.tnode;
+	tdata=SAE.data.tdata;
+
+	var spritelist="";
+	tnode.push(tdata.length);
+	for(var i=tnode[tid];i<tnode[tid+1];i++){
+		if(i===tnode[tid]){
+		spritelist+="<option value=\""+tdata[i]+"\">舞台</option>";
+		}else{
+		spritelist+="<option value=\""+tdata[i]+"\">"+htmlescape("角色:"+tdata[tnode[tdata[i]]])+"</option>";
+		}
+	}
+	tnode.pop();
+	id("disp_spri").set("innerHTML",spritelist);
+	disp_draw2();
+}
+
+id("disp_spri").when("change",disp_draw2);
+
+function disp_draw2(){
+	var blocklist="";
+	var tid=tdata[tnode[id("disp_spri").list[0].value]+6];
+	tnode.push(tdata.length);
+	for(var i=tnode[tid];i<tnode[tid+1];i++){
+		SAE.disp.block(Number(tdata[i]));
+		blocklist+="<option value=\""+tdata[i]+"\">"+htmlescape("积木:"+SAE.disp.data[0])+"</option>";
+	}
+	if(blocklist===""){
+		blocklist="<option value=\"-1\">(没有积木)</option>";
+	}
+	id("disp_block").set("innerHTML",blocklist);
+	tnode.pop();
+	disp_draw3();
+}
+
+id("disp_block").when("change",disp_draw3);
+
+function disp_draw3(){
+	var tid=id("disp_block").list[0].value;
+	if(tid==="-1"){
+id('dispcontent').set("innerText","(没有积木)");
+	}else{
+		SAE.disp.block(Number(tid));
+		id('dispcontent').set("innerText",SAE.disp.data.join('\n'));
+	}
+}
+
+function htmlescape(html){
+	// https://www.jb51.net/article/152700.htm
+	var temp = document.createElement ("div");
+	(temp.textContent != undefined ) ? (temp.textContent = html) : (temp.innerText = html);
+	var output = temp.innerHTML;
+	temp = null;
+	return output;
+}
+
 
 //选项
 
