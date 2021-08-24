@@ -193,12 +193,18 @@ input,button,.box {
 }
 
 #dispcontent {
+}
+
+.sccode {
 	border:1px solid black;
 	margin: 5px 10px;
 	padding:5px;
-	font-size: 10px;
-	font-family:monospace;
+	font-size: 15px;
 	white-space:pre;
+	word-wrap:break-word;
+	word-break:break-all;
+	font-family:monospace;
+	overflow:auto;
 }
 
 .click {
