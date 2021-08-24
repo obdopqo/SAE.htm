@@ -4,9 +4,6 @@
 
 var tnode,tdata;
 
-SAE.stat.typecount = [];
-SAE.stat.typename = ["motion","looks","sound","event","control","sensing","operator","data","procedures"];
-
 var shadowblock=[
 	"#motion_goto_menu",
 	"#motion_glideto_menu",
@@ -41,6 +38,7 @@ var shadowblock=[
 
 function statinit(){
 	SAE.stat.typecount=[];
+	SAE.stat.typename = ["motion","looks","sound","event","control","sensing","operator","data","procedures"];
 	for(var i=0;i<SAE.stat.typename.length;i++){
 		SAE.stat.typecount.push(0);
 	}
@@ -62,8 +60,7 @@ function proj(id){
 }
 
 function spri(id){
-	var i=tnode[id];
-	blocklist(tdata[i+6]);
+	blocklist(tdata[tnode[id]+6]);
 }
 
 function blocklist(id){
