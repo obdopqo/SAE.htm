@@ -184,7 +184,7 @@ function File_load(x){
 				typecount[9]+=extencount[i];
 				extencolor.push("hsl("+i*360/extencount.length+",80%,48%)");
 			}
-			SAE_stat("stat_1",typecount,[
+			stat_draw("stat_1",typecount,[
 				"运动",
 				"外观",
 				"声音",
@@ -212,7 +212,7 @@ function File_load(x){
 				id("stat_2").and(id("stat_2").prev()).style("display","none");
 			}else{
 				id("stat_2").and(id("stat_2").prev()).style("display","block");
-				SAE_stat("stat_2",extencount,extenname,extencolor);
+				stat_draw("stat_2",extencount,extenname,extencolor);
 			}
 			//SAE.check.debug();
 		}catch(e){
@@ -282,7 +282,7 @@ function Loadsb3_call(file,func,err){
 
 //统计
 
-function SAE_stat(statid,data,list,color){
+function stat_draw(statid,data,list,color){
 	var svghtml="";
 	var listhtml="";
 	var count=0;
@@ -292,7 +292,7 @@ function SAE_stat(statid,data,list,color){
 	var j=-3.1415926/2;
 	for(var i=0;i<data.length;i++){
 		var k=j+data[i]/count*2*3.1415926;
-		svghtml+=SAE_statg(j,k,140,color[i]);
+		svghtml+=stat_drawsvg(j,k,140,color[i]);
 		listhtml+="<li style=\"color:"+color[i]+";\">"+list[i]+"\t"+data[i]+"\t"+Math.round(data[i]/count*100)+"%";
 		listhtml+="<span style=\"opacity:0.2;background-color:"+color[i]+";width:100%\"></span>"
 		listhtml+="<span style=\"position:relative;margin-top:-2px;background-color:"+color[i]+";width:"+(data[i]/count*100)+"%\"></span></li>"
@@ -302,13 +302,7 @@ function SAE_stat(statid,data,list,color){
 	id(statid).child().is(".stat_list").set("innerHTML",listhtml);
 }
 
-var take=[],left=1;
-for(var i=0;i<10;i++){
-	take.push(left*Math.random()*0.2);
-	left-=take[take.length-1];
-}
-
-function SAE_statg(arc,arc2,r,color){
+function stat_drawsvg(arc,arc2,r,color){
 	var svghtml="";
 	svghtml="<path d=\"M0,0 ";
 	svghtml+=(r*Math.cos(arc))+","+(r*Math.sin(arc))+"A";
