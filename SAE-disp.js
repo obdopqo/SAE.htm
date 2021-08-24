@@ -262,8 +262,8 @@ function block(id,indent,level,type){
 						case '^':
 							//转义字符
 							i++;
-							//防止jslint警告，这里的确是要向下执行的（没有break会导致向下面的default子句进行）
-							/* fall through */
+							display(pattern[i]);
+							break;
 						default:
 							display(c);
 							break;
