@@ -180,6 +180,27 @@ input,button,.box {
 
 /*                                                               */
 
+#dispoption {
+	position:relative;
+	text-align:center;
+}
+
+#dispoption select {
+	width:48%;
+	margin: 5px 0.5%;
+	border-width: 2px;
+	font-size: 20px;
+}
+
+#dispcontent {
+	border:1px solid black;
+	margin: 5px 10px;
+	padding:5px;
+	font-size: 10px;
+	font-family:monospace;
+	white-space:pre;
+}
+
 .click {
 	transition: background-color 0.2s, border-color 0.2s;
 	border-color: black;
