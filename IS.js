@@ -114,8 +114,11 @@ function id(x){
 	if(res === null){
 		return new IS([]);
 	}else{
-		return is(document.getElementById(x));
+		return is(res);
 	}
+}
+function isbody(){
+	return is(document.body);
 }
 function select(x){return new IS(document.querySelectorAll(x));}
 function create(x){return document.createElement(x);}
