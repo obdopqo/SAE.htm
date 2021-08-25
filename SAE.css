@@ -189,7 +189,7 @@ input,button,.box {
 	box-sizing:border-box;
 	width:48%;
 	margin: 5px 0.5%;
-	border-width: 2px;
+	border-width: 1px;
 	font-size: 20px;
 }
 
@@ -204,11 +204,7 @@ input,button,.box {
 	opacity: 0.5;
 }
 
-#disp_search:hover{
-	opacity: 1;
-}
-
-#disp_search:focus{
+#disp_search:hover {
 	opacity: 1;
 }
 
@@ -237,8 +233,18 @@ input,button,.box {
 	-o-text-overflow: ellipsis;
 }
 
-#disp_search:hover #disp_search_result.enable{
-	height: 200px;
+#disp_content_pointer {
+	display: none;
+	position: relative;
+	height: 15px;
+	top: 50px;
+	margin-bottom: -15px;
+	background-color: lightgrey;
+	z-index: -1;
+}
+
+.highlight {
+	background-color: lightgrey;
 }
 
 .sccode {
@@ -246,6 +252,7 @@ input,button,.box {
 	margin: 5px 10px;
 	padding:5px;
 	font-size: 15px;
+	line-height: 17px;
 	white-space:pre;
 	word-wrap:break-word;
 	word-break:break-all;
