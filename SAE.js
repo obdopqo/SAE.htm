@@ -214,7 +214,7 @@ function File_load(x){
 				id("stat_2").and(id("stat_2").prev()).style("display","block");
 				stat_draw("stat_2",extencount,extenname,extencolor);
 			}
-			disp_draw(proj);
+			disp_load(proj);
 			//SAE.check.debug();
 		}catch(e){
 			id('home_result').style("color","red");
@@ -315,21 +315,41 @@ function stat_drawsvg(arc,arc2,r,color){
 }
 
 //积木
+var disp=[];
 
-function disp_draw(tid){
-	tnode=SAE.data.tnode;
-	tdata=SAE.data.tdata;
-
-	var spritelist="";
+function disp_load(tid){
+	disp=[];
+	var tnode=SAE.data.tnode;
+	var tdata=SAE.data.tdata;
 	tnode.push(tdata.length);
 	for(var i=tnode[tid];i<tnode[tid+1];i++){
-		if(i===tnode[tid]){
-		spritelist+="<option value=\""+tdata[i]+"\">舞台</option>";
-		}else{
-		spritelist+="<option value=\""+tdata[i]+"\">"+htmlescape("角色:"+tdata[tnode[tdata[i]]])+"</option>";
-		}
+		disp.push([
+			tdata[i],
+			i===tnode[tid]?"舞台":"角色:"+tdata[tnode[tdata[i]]],
+			disp_load_spri(tdata[tnode[tdata[i]]+6])
+		]);
 	}
 	tnode.pop();
+	disp_draw(tid);
+}
+
+function disp_load_spri(tid){
+	var data=[];
+	var tnode=SAE.data.tnode;
+	var tdata=SAE.data.tdata;
+	for(var i=tnode[tid];i<tnode[tid+1];i++){
+		SAE.disp.block(tdata[i]);
+		var datav=[tdata[i]].concat(SAE.disp.data);
+		data.push(datav);
+	}
+	return data;
+}
+
+function disp_draw(tid){
+	var spritelist="";
+	for(var i=0;i<disp.length;i++){
+		spritelist+="<option value=\""+disp[i][0]+"\">"+htmlescape(disp[i][1])+"</option>";
+	}
 	id("disp_spri").set("innerHTML",spritelist);
 	disp_draw2();
 }
@@ -338,30 +358,29 @@ id("disp_spri").when("change",disp_draw2);
 
 function disp_draw2(){
 	var blocklist="";
-	var tid=tdata[tnode[id("disp_spri").list[0].value]+6];
-	tnode.push(tdata.length);
-	for(var i=tnode[tid];i<tnode[tid+1];i++){
-		SAE.disp.block(Number(tdata[i]));
-		blocklist+="<option value=\""+tdata[i]+"\">"+htmlescape("积木:"+SAE.disp.data[0])+"</option>";
-	}
-	if(blocklist===""){
+	var data=disp[id("disp_spri").list[0].selectedIndex][2];
+	if(data.length===0){
 		blocklist="<option value=\"-1\">(没有积木)</option>";
+	}else{
+		for(var i=0;i<data.length;i++){
+			blocklist+="<option value=\""+data[i][0]+"\">"+htmlescape(data[i][1])+"</option>";
+		}
 	}
 	id("disp_block").set("innerHTML",blocklist);
-	tnode.pop();
 	disp_draw3();
 }
 
 id("disp_block").when("change",disp_draw3);
 
 function disp_draw3(){
-	var tid=id("disp_block").list[0].value;
-	if(tid==="-1"){
-id('dispcontent').set("innerText","(没有积木)");
+	var data=disp[id("disp_spri").list[0].selectedIndex][2];
+	if(data.length===0){
+		id('disp_content').set("innerText","(没有积木)");
 	}else{
-		SAE.disp.block(Number(tid));
-		id('dispcontent').set("innerText",SAE.disp.data.join('\n'));
+		var datav=data[id("disp_block").list[0].selectedIndex].slice(1);
+		id('disp_content').set("innerText",datav.join('\n'));
 	}
+	id("disp_content_pointer").style("display","none");
 }
 
 function htmlescape(html){
