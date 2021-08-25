@@ -180,12 +180,13 @@ input,button,.box {
 
 /*                                                               */
 
-#dispoption {
+.fliter {
 	position:relative;
 	text-align:center;
 }
 
-#dispoption select {
+.fliter select {
+	box-sizing:border-box;
 	width:48%;
 	margin: 5px 0.5%;
 	border-width: 2px;
