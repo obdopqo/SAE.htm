@@ -427,7 +427,7 @@ function jumpto(spid,bloid,line){
 when("scroll",disp_search_scroll);
 
 function disp_search_scroll(){
-	id("disp_search").style("top",(document.body.scrollTop+100)/pageScale+"px");
+	id("disp_search").style("top",(document.body.scrollTop/pageScale+100)+"px");
 }
 
 id("disp_search_input").when("input",disp_search);
