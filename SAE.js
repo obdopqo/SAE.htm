@@ -18,6 +18,8 @@ function saveData(){
 
 id("nav").inner().is("a").classadd("click");
 
+var pageScale=1;
+
 function resizeDiv(){
 	var width = document.body.clientWidth;
 	var height = document.body.clientHeight;
@@ -26,6 +28,7 @@ function resizeDiv(){
 		targetwidth = width;
 	}
 	var scale = width/targetwidth;
+	pageScale=scale;
 
 	//按设备比例缩放div的比例
 	var scaleFunc = "scale("+scale+","+scale+")";
@@ -47,6 +50,8 @@ function resizeDiv(){
 
 		.style("-o-transform",scaleFunc)     /* Opera */
 		.style("-o-transform-origin","left top");
+
+	disp_search_scroll();
 }
 
 // 导航栏
@@ -392,6 +397,63 @@ function htmlescape(html){
 	return output;
 }
 
+function jumpto(spid,bloid,line){
+	var i;
+	for(i=0;i<disp.length;i++){
+		if(spid===disp[i][0]){
+			id("disp_spri").list[0].selectedIndex=i;
+			break;
+		}
+	}
+	disp_draw2();
+	var data=disp[i][2];
+	for(i=0;i<data.length;i++){
+		if(bloid===data[i][0]){
+			id("disp_block").list[0].selectedIndex=i;
+			break;
+		}
+	}
+	disp_draw3();
+	window.location.hash="#disp";
+	hashChange();
+	id("disp_content_pointer")
+		.style("display","block")
+		.style("top",11+17*line);
+	document.body.scrollTop=(id("disp_content_pointer").list[0].offsetTop)*pageScale-document.body.clientHeight/2;
+}
+
+when("scroll",disp_search_scroll);
+
+function disp_search_scroll(){
+	id("disp_search").style("top",(document.body.scrollTop+100)/pageScale+"px");
+}
+
+id("disp_search_input").when("input",disp_search);
+
+function disp_search(event){
+	var reshtml="";
+	var str=event.target.value;
+	var count=0;
+	if(str!==""){
+		for(var i=0;i<disp.length;i++){
+			for(var j=0;j<disp[i][2].length;j++){
+				for(var k=1;k<disp[i][2][j].length;k++){
+					if(disp[i][2][j][k].includes(str)&&count<200){
+						count++;
+						reshtml+="<li class=\"click\" onclick=\"jumpto("+
+							disp[i][0]+","+
+							disp[i][2][j][0]+","+
+							(k-1)+")\">"+
+							htmlescape(disp[i][2][j][k])+
+							"</li>";
+					}
+				}
+			}
+		}
+	}
+	id("disp_search_result").style("height",20*(count>20?20:count)+"px");
+	id("disp_search_result").set("innerHTML",reshtml);
+}
 
 //选项
 
