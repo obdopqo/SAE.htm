@@ -176,7 +176,7 @@ function File_load(x){
 			var proj = SAE.json.load(SAE.file.data(x));
 			SAE.options.graph = {};
 			//SAE.disp.proj(proj);
-			//SAE.check.proj(proj);
+			SAE.check.proj(proj);
 			SAE.stat.proj(proj);
 			SAE.graph.proj(proj);
 			//id('home_result').style("color","black");
@@ -221,6 +221,7 @@ function File_load(x){
 				stat_draw("stat_2",extencount,extenname,extencolor);
 			}
 			disp_load(proj);
+			check_load();
 			//SAE.check.debug();
 		}catch(e){
 			id('home_result').style("color","red");
@@ -489,6 +490,109 @@ function makeSVG(tag, attrs) {
 		}
 	}
 	return el;
+}
+
+//查错
+
+var check=[];
+
+function check_load(){
+	var checkdata = SAE.check.data;
+	var sprihtm="";
+	var spri=[];
+	var warnhtm="";
+	var warn=[];
+	for(var i=0;i<checkdata.length;i+=6){
+		if(!warn.includes(checkdata[i+0])){
+			warn.push(checkdata[i+0]);
+		}
+		if(!spri.includes(checkdata[i+4])){
+			spri.push(checkdata[i+4]);
+		}
+	}
+	warn=warn.sort();
+	spri=spri.sort();
+	for(var i=0;i<warn.length;i++){
+		warnhtm+="<option value=\""+warn[i]+"\">"+warn[i]+"</option>";
+	}
+	for(var i=0;i<spri.length;i++){
+		sprihtm+="<option value=\""+spri[i]+"\">"+htmlescape(SAE.data.tdata[SAE.data.tnode[spri[i]]])+"</option>";
+	}
+	id("check_spri").set("innerHTML",sprihtm).when("click",check_draw);
+	id("check_type").set("innerHTML",warnhtm).when("click",check_draw);
+	check_draw();
+}
+
+function check_draw(){
+	var checkdata = SAE.check.data;
+	var listhtm="";
+	var spri=getvalues(id("check_spri").list[0]);
+	var warn=getvalues(id("check_type").list[0]);
+	var limit=0;
+	for(var i=0;i<checkdata.length;i+=6){
+		if(
+			spri.includes(String(checkdata[i+4]))
+			&& warn.includes(String(checkdata[i+0]))
+		){
+			var cl=SAE.disp.block(checkdata[i+5],checkdata[i+2]);
+			var dispdata="";
+			if(cl===-1){
+				dispdata="无法显示预览";
+			}else{
+				if(limit<100){
+					limit++;
+					var j=cl;
+					if(j>SAE.disp.data.length-5){
+						j=SAE.disp.data.length-5;
+					}
+					if(j<4){j=4;}
+					for(var k=-4;k<5;k++){
+						if(j+k>=SAE.disp.data.length){
+							dispdata+="<br/>";
+						}else{
+							if(j+k===cl){
+								dispdata+="<span class=\"highlight\">"+htmlescape(SAE.disp.data[j+k])+"</span><br>";
+							}else{
+								dispdata+=htmlescape(SAE.disp.data[j+k])+"<br>";
+							}
+						}
+					}
+					listhtm += "<li class=\"spri"+checkdata[i+4]+
+						" warn"+checkdata[i+0]+"\" onclick=\"jumpto("+
+						checkdata[i+4]+","+
+						checkdata[i+5]+","+
+						cl+")\">"+
+						"<div><span class=\"checkid\">"+htmlescape(checkdata[i+0])+
+						"</span>"+
+						htmlescape(checkdata[i+1])+
+						"</div><div class=\"sccode\">"+
+						dispdata+
+						"</div></li>";
+				}
+			}
+		}
+	}
+	if(limit>=100){
+		listhtm += "<li>错误太多，只显示前100个</li>"
+	}
+
+	id("check_list").set("innerHTML",listhtm);
+	id("check_list").child().is("li").classadd("click");
+}
+
+function getvalues(select){
+	var options=select.selectedOptions;
+	var values=[];
+	for(var i=0;i<options.length;i++){
+		values.push(options[i].value);
+	}
+	if(values.length===0){
+		options=select.options;
+		for(var i=0;i<options.length;i++){
+			values.push(options[i].value);
+		}
+	}
+	return values;
 }
 
 // Uint8Array 编码转 utf-8

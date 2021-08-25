@@ -260,6 +260,13 @@ input,button,.box {
 	overflow:auto;
 }
 
+.checkid {
+	border: 1px solid black;
+	border-radius: 3px;
+	font-size: 15px;
+	margin: 0 5px;
+}
+
 .click {
 	transition: background-color 0.2s, border-color 0.2s;
 	border-color: black;
