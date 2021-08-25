@@ -33,7 +33,7 @@ function resizeDiv(){
 	//按设备比例缩放div的比例
 	var scaleFunc = "scale("+scale+","+scale+")";
 
-	id("nav").and(is(".content"))
+	id("nav").and(isbody().child().is(".content"))
 		.style("width",targetwidth)
 
 		.style("transform",scaleFunc) //缩放比例
@@ -82,7 +82,7 @@ function hashChange(){
 	}else{
 		id("navReturn").style("display","none");
 	}
-	is(".content").eval(function(x){
+	isbody().child().is(".content").eval(function(x){
 		if(x.getAttribute("label")===position[0]){
 			is(x).style("display","block");
 		}else{
@@ -105,7 +105,7 @@ function nav_each(object){
 }
 
 id("_loading").style("display","none");
-is("body").style("overflow","auto");
+isbody().style("overflow","auto");
 
 //文件
 
@@ -118,6 +118,7 @@ when("load",file_list);
 when("paste",console.log);
 
 function file_list(){
+	// TODO
 	id("filelist").child().remove();
 	for(var i=0;i<SAE.file.list.length;i++){
 		var fadd=create("li");
