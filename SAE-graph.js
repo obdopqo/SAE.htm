@@ -3,11 +3,14 @@
 "use strict";
 
 var tnode,tdata;
+var headlist;
 
 SAE.graph.lines = [];
 
 function graphinit(){
+	SAE.graph.complexity=0;
 	SAE.graph.lines=[];
+	headlist=[];
 }
 
 SAE.graph.proj = function graphproj(id){
@@ -35,6 +38,11 @@ function spri(id){
 function blocklist(spid,id){
 	for(var i=tnode[id];i<tnode[id+1];i++){
 		var j=ghead(spid,tdata[i]);
+		if(headlist.includes(j)){
+			SAE.graph.complexity++;
+		}else{
+			headlist.push(j);
+		}
 		if(SAE.options.graph.noBlockId){
 			if(j!==""){
 				block(spid,j,tdata[i]);

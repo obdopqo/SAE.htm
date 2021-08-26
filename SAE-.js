@@ -31,6 +31,7 @@ SAE.stat.proj(x);
 //SAE.stat.debug();
 SAE.graph.proj(x);
 //SAE.graph.debug();
+comsole.log("complexity",SAE.stat.complexity+SAE.graph.complexity);
 SAE.graph.debugnum();
 // console.log(require('util').inspect(Symbol,true,null,true));
 function include(x){

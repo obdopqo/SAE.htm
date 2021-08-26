@@ -39,6 +39,9 @@ var shadowblock=[
 function statinit(){
 	SAE.stat.typecount=[];
 	SAE.stat.typename = ["motion","looks","sound","event","control","sensing","operator","data","procedures"];
+	SAE.stat.blockcount=[];
+	SAE.stat.blockname = [];
+	SAE.stat.complexity = 0;
 	for(var i=0;i<SAE.stat.typename.length;i++){
 		SAE.stat.typecount.push(0);
 	}
@@ -88,6 +91,33 @@ function block(id){
 				SAE.stat.typecount.push(0);
 			}
 			SAE.stat.typecount[i]++;
+			var i=SAE.stat.blockname.indexOf(str);
+			if(i===-1){
+				i=SAE.stat.blockcount.length;
+				SAE.stat.blockname.push(str);
+				SAE.stat.blockcount.push(0);
+			}
+			SAE.stat.blockcount[i]++;
+			switch(blocktype){
+				case "control_if":
+				case "control_repeat":
+				case "control_repeat_until":
+				case "control_while":
+					if(tdata[tnode[id]+2]!==-1
+					&& tdata[tnode[id]+3]!==-1){
+						SAE.stat.complexity++;
+					}
+					break;
+				case "control_if_else":
+					if(tdata[tnode[id]+2]!==-1
+					&& (
+						 tdata[tnode[id]+3]!==-1
+					|| tdata[tnode[id]+4]!==-1
+					)){
+						SAE.stat.complexity++;
+					}
+					break;
+			}
 			i=tnode[id]+1;
 			j=tnode[id+1];
 			if(blocktype==="procedures_definition"){
