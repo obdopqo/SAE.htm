@@ -837,13 +837,8 @@ function block4xx(id){
 
 function checkblock(i,operator){
 	DEBUG("checkblock",i,operator);
-	if(tdata[i]!==-1){
-		var check=tnode[tdata[i]];
-		for(var j=tnode[tdata[i]]+1;j<tnode[tdata[i]+1];j++){
-			if(checkblock(j,operator)){
-				return true;
-			}
-		}
+	if(i!==-1){
+		var check=tnode[i];
 		switch(operator){
 			case 'spritevarlist':
 				switch(tdata[check]){
@@ -866,9 +861,22 @@ function checkblock(i,operator){
 				}
 				break;
 			case 'spriterefs':
-						if(block4xx_spriteref.includes(tdata[check])){
-							return true;
-						}
+				if(block4xx_spriteref.includes(tdata[check])){
+					return true;
+				}
+		}
+		if(blocktype[0] !== '['){
+			var j=0;
+			if(blocktype === 'procedures_definition' || blocktype === 'procedures_call'){
+				j=1;
+			}
+			if(!tdata[check][0]==='['){
+				for(var k=tnode[id]+2;k<tnode[id+1]-j;k++){
+					if(checkblock(tdata[k],operator)){
+						return true;
+					}
+				}
+			}
 		}
 	}
 	return false;
