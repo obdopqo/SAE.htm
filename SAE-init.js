@@ -6,6 +6,7 @@ SAE = {
 	check: {},
 	stat: {},
 	graph: {},
+	tools: {},
 	options: {},
 };
 
