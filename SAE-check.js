@@ -350,7 +350,7 @@ function blockstart(id){
 	fromhead = id;
 	warpmode = 0;
 	// TODO warpmode
-	warn(1,"blockstart",id);
+	//warn(1,"blockstart",id);
 	DEBUG("blockstart",id);
 
 	argslist=[];
@@ -413,7 +413,7 @@ function block(id){
 	DEBUG("block st",id);
 	var v=tnode[id],v1=tdata[v+1],v2=tdata[v+2];
 	blocktype=tdata[v];
-	warn(2,"block: " + blocktype,id);
+	//warn(2,"block: " + blocktype,id);
 
 	block1xx(id);
 	block2xx(id);
