@@ -220,6 +220,7 @@ function File_load(x){
 				id("stat_2").and(id("stat_2").prev()).style("display","block");
 				stat_draw("stat_2",extencount,extenname,extencolor);
 			}
+			id("stat_3").set("innerHTML",SAE.stat.complexity+SAE.graph.complexity);
 			disp_load(proj);
 			check_load();
 			//SAE.check.debug();
