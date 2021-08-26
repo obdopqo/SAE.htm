@@ -6,13 +6,11 @@ SAE.tools.removeext = function removeext(proj,ext){
 		var ib=targets[i].blocks;
 		for(var j in ib){
 			if(ib[j].opcode.slice(0,ext.length+1)===(ext+"_")){
-				var k=ib[j].parent;
-				if(!replaceblock(ib,k,j,ib[j].next)){
-					for(var k in ib){
-						replaceblock(ib,k,j,ib[j].next);
-					}
+				var repnext=ib[j].next;
+				deleteblock(ib,j);
+				for(var k in ib){
+					replaceblock(ib,k,j,repnext);
 				}
-				delete ib[j];
 			}
 		}
 	}
@@ -23,9 +21,53 @@ SAE.tools.removeext = function removeext(proj,ext){
 			delete monitors[i];
 		}
 	}
-	if(proj.extensions.include(ext)){
+	if(proj.extensions.includes(ext)){
 		proj.extensions.splice(proj.extensions.indexOf(ext),1);
 	}
+	return proj;
 };
+
+function replaceblock(blocks,id,old,New){
+	if(blocks[id].parent===old){
+		blocks[id].parent=New;
+	}
+	if(blocks[id].next===old){
+		blocks[id].next=New;
+	}
+	var inputs=blocks[id].inputs;
+	for(var i in inputs){
+		switch(inputs[i][0]){
+			case 3:
+				if(inputs[i][2]===old){
+					inputs[i][2]=New;
+				}
+				/* fall through */
+			case 1:
+			case 2:
+				if(inputs[i][1]===old){
+					inputs[i][1]=New;
+				}
+		}
+	}
+}
+
+function deleteblock(blocks,id){
+	var inputs=blocks[id].inputs;
+	for(var i in inputs){
+		switch(inputs[i][0]){
+			case 3:
+				if(typeof inputs[i][2]==="string"){
+					deleteblock(blocks,inputs[i][2]);
+				}
+				/* fall through */
+			case 1:
+			case 2:
+				if(typeof inputs[i][1]==="string"){
+					deleteblock(blocks,inputs[i][1]);
+				}
+		}
+	}
+	delete blocks[id];
+}
 
 })();
