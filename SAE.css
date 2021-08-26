@@ -265,6 +265,7 @@ input,button,.box {
 	border-radius: 3px;
 	font-size: 15px;
 	margin: 0 5px;
+	padding: 2px 5px;
 }
 
 .click {
