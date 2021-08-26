@@ -108,15 +108,12 @@ function gblock(spid,id){
 	var blocktype=tdata[tnode[id]];
 	switch(blocktype){
 		case "control_create_clone_of":
-			// TODO: 判断里边的内容
 			return expand("O","control_create_clone_of_menu",tdata[tnode[id]+2],tdata[tnode[spid]]);
 		case "looks_switchbackdropto":
 		case "looks_switchbackdroptoandwait":
-			// TODO: 判断里边的内容
 			return expand("D","looks_backdrops",tdata[tnode[id]+2],null);
 		case "event_broadcast":
 		case "event_broadcastandwait":
-			// TODO: 判断里边的内容
 			var check=tdata[tnode[id]+2];
 			if(check===-1||tdata[tnode[check]]!=="[文本]"){
 				return "";
@@ -170,14 +167,6 @@ SAE.graph.debug = function debug(){
 	};
 	for(var i=0;i<lines.length;i++){
 		gettagnamelist(lines[i]);
-		/*
-		if(tagname.includes(lines[i])){
-			tagline.push(tagname.indexOf(lines[i]));
-		}else{
-			tagline.push(tagname.length);
-			tagname.push(lines[i]);
-		}
-		*/
 	}
 	DEBUG("tagname",tagname);
 	for(var i=0;i<lines.length;i++){
