@@ -1,5 +1,8 @@
 SAE = {
-	init: {},
+	init: {
+		tnode:[],
+		tdata:[],
+	},
 	data: {},
 	json: {},
 	disp: {},
@@ -7,13 +10,20 @@ SAE = {
 	stat: {},
 	graph: {},
 	tools: {},
-	options: {},
+	options: {
+		graph:{
+			noBlockId: true
+		},
+		search:{
+			testcount: 1000,
+			count: 100
+		},
+		_OrigInputType: false
+	}
 };
 
 SAE.init = function(){
-	SAE.data = {
-		tnode:[],
-		tdata:[],
-	};
+	SAE.data.tnode=[];
+	SAE.data.tdata=[];
 }
 
