@@ -215,6 +215,7 @@ input,button,.box {
 }
 
 #disp_search_result {
+	position: relative;
 	margin:0;
 	padding:0;
 	transition: height 0.2s;
@@ -226,8 +227,9 @@ input,button,.box {
 
 #disp_search_result li {
 	font-size: 15px;
+	line-height: 17px;
 	width: 100%;
-	overflow-x: hidden;
+	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
@@ -245,6 +247,17 @@ input,button,.box {
 
 .highlight {
 	background-color: lightgrey;
+}
+
+.search_cover {
+	position: relative;
+	display: block;
+	background-color: lightgrey;
+	height:17px;
+	margin: 0;
+	padding: 0;
+	margin-bottom: -17px;
+	opacity: 0.5;
 }
 
 .sccode {

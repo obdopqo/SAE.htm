@@ -477,6 +477,7 @@ function disp_search(event){
 		}
 		reshtml+="<li class=\"click\" onclick=\"jumpto("+
 			res[i][1]+","+res[i][2]+","+res[i][3]+")\">"+
+			"<span class=\"search_cover\" style=\"width:"+res[i][0]*100+"%;background-color:hsl("+res[i][0]*120+",100%,40%);\"></span>"+
 			htmlescape(res[i][4])+
 			"</li>";
 	}
