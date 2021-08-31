@@ -611,21 +611,47 @@ function check_load(){
 	warn=warn.sort();
 	spri=spri.sort();
 	for(var i=0;i<warn.length;i++){
-		warnhtm+="<option value=\""+warn[i]+"\">"+warn[i]+"</option>";
+		warnhtm+="<input type=\"CHECKBOX\" name=\""+warn[i]+"\" /><label>"+warn[i]+"</label><br/>";
 	}
 	for(var i=0;i<spri.length;i++){
-		sprihtm+="<option value=\""+spri[i]+"\">"+htmlescape(SAE.data.tdata[SAE.data.tnode[spri[i]]])+"</option>";
+		sprihtm+="<input type=\"CHECKBOX\" name=\""+spri[i]+"\" /><label>"+htmlescape(SAE.data.tdata[SAE.data.tnode[spri[i]]])+"</label><br/>";
 	}
-	id("check_spri").set("innerHTML",sprihtm).when("click",check_draw);
-	id("check_type").set("innerHTML",warnhtm).when("click",check_draw);
+	id("check_spri").child().is("label").when("click",check_clear);
+	id("check_spri").child().is(".expand").set("innerHTML",sprihtm).when("click",check_draw);
+	id("check_warn").child().is("label").when("click",check_clear);
+	id("check_warn").child().is(".expand").set("innerHTML",warnhtm).when("click",check_draw);
+	check_draw();
+}
+
+function check_clear(event){
+	var checks=is(event.target).next().child().is("input");
+	var checkmode=true;
+	checks.eval(function(x){
+		if(x.checked){
+			checkmode=false;
+		}
+	});
+	checks.set("checked",checkmode);
 	check_draw();
 }
 
 function check_draw(){
 	var checkdata = SAE.check.data;
 	var listhtm="";
-	var spri=getvalues(id("check_spri").list[0]);
-	var warn=getvalues(id("check_type").list[0]);
+	var sprititle=[];
+	var spri=getvalues(id("check_spri").child().is(".expand").child().is("input"),sprititle);
+	var warntitle=[];
+	var warn=getvalues(id("check_warn").child().is(".expand").child().is("input"),warntitle);
+	if(sprititle.length===0){
+		id("check_spri").child().is("label").set("innerText","(所有角色)");
+	}else{
+		id("check_spri").child().is("label").set("innerText",sprititle.join(", "));
+	}
+	if(warntitle.length===0){
+		id("check_warn").child().is("label").set("innerText","(所有类型)");
+	}else{
+		id("check_warn").child().is("label").set("innerText",warntitle.join(", "));
+	}
 	var limit=0;
 	for(var i=0;i<checkdata.length;i+=6){
 		if(
@@ -678,17 +704,18 @@ function check_draw(){
 	id("check_list").child().is("li").classadd("click");
 }
 
-function getvalues(select){
-	var options=select.selectedOptions;
+function getvalues(expand,title){
 	var values=[];
-	for(var i=0;i<options.length;i++){
-		values.push(options[i].value);
-	}
-	if(values.length===0){
-		options=select.options;
-		for(var i=0;i<options.length;i++){
-			values.push(options[i].value);
+	expand.eval(function(x){
+		if(x.checked){
+			values.push(x.name);
+			title.push(is(x).next().list[0].innerText);
 		}
+	});
+	if(values.length===0){
+		expand.eval(function(x){
+			values.push(x.name);
+		});
 	}
 	return values;
 }
