@@ -683,8 +683,7 @@ function check_draw(){
 							}
 						}
 					}
-					listhtm += "<li class=\"spri"+checkdata[i+4]+
-						" warn"+checkdata[i+0]+"\" onclick=\"jumpto("+
+					listhtm += "<li onclick=\"jumpto("+
 						checkdata[i+4]+","+
 						checkdata[i+5]+","+
 						cl+")\">"+
