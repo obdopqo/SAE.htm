@@ -221,6 +221,8 @@ function File_load(x){
 				stat_draw("stat_2",extencount,extenname,extencolor);
 			}
 			id("stat_3").set("innerHTML",SAE.stat.complexity+SAE.graph.complexity);
+			id("stat_3_1").set("innerHTML",SAE.stat.complexity);
+			id("stat_3_2").set("innerHTML",SAE.graph.complexity);
 			disp_load(proj);
 			check_load();
 			//SAE.check.debug();
