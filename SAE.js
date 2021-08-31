@@ -722,6 +722,62 @@ function getvalues(expand,title){
 	return values;
 }
 
+//选项
+
+id("options").child().is("input").when("change",options_update);
+//id("options_load").when("click",options_load);
+//id("options_save").when("click",options_save);
+options_load();
+
+function options_update(){
+	id("options").child().is("input").eval(function(x){
+		switch(x.type.toLowerCase()){
+			case "number":
+				eval("SAE.options."+x.name+"=Number(x.value);");
+				break;
+			case "checkbox":
+				eval("SAE.options."+x.name+"=x.checked;");
+				break;
+			case "radio":
+				if(x.checked){
+					eval("SAE.options."+x.name+"=x.value;");
+				}
+				break;
+		}
+	});
+	options_save();
+}
+
+function options_draw(){
+	id("options").child().is("input").eval(function(x){
+		switch(x.type.toLowerCase()){
+			case "number":
+				eval("x.value=SAE.options."+x.name+";");
+				break;
+			case "checkbox":
+				eval("x.checked=SAE.options."+x.name+";");
+				break;
+			case "radio":
+					eval("x.checked=x.value==SAE.options."+x.name+";");
+				break;
+		}
+	});
+}
+
+function options_load(){
+	var t=localStorage.getItem("SAE.options");
+	if(t!==null){
+		SAE.options=JSON.parse(t);
+	}
+	options_draw();
+}
+
+function options_save(){
+	localStorage.setItem("SAE.options",JSON.stringify(SAE.options));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 // Uint8Array 编码转 utf-8
 // https://blog.csdn.net/weixin_42448623/article/details/107845783
 function Utf8ArrayToStr(array) {
