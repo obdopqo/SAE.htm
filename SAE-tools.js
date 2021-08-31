@@ -27,6 +27,31 @@ SAE.tools.removeexts = function removeexts(proj,exts){
 	return proj;
 };
 
+SAE.tools.removedisplay = function removedisplay(proj){
+	for(var i=0;i<monitors.length;i++){
+		var im=monitors[i];
+		if(!im.visible){
+			delete monitors[i];
+		}
+	}
+	return proj;
+};
+
+SAE.tools.removeinput = function removeinput(proj){
+	for(var i=0;i<targets.length;i++){
+		var ib=targets[i].blocks;
+		for(var j in ib){
+			var ji=ib[j].inputs;
+			for(var k in ji){
+				if(typeof ji[k]==="object" && ji[k][0]===3){
+					ji[k][2]=[4,0];
+				}
+			}
+		}
+	}
+	return proj;
+};
+
 function replaceblock(blocks,id,old,New){
 	if(blocks[id].parent===old){
 		blocks[id].parent=New;
