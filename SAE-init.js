@@ -16,7 +16,10 @@ SAE = {
 		},
 		search:{
 			testcount: 1000,
-			count: 100
+			count: 100,
+			relative: true,
+			ignorecase: true,
+			ignorewide: true
 		},
 		_OrigInputType: false
 	}

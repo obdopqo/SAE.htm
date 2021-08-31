@@ -431,18 +431,84 @@ function disp_search_scroll(){
 	id("disp_search").style("top",(document.body.scrollTop/pageScale+100)+"px");
 }
 
-id("disp_search_input").when("input",disp_search);
+id("disp_search_input").when("input",disp_search).when("click",disp_search);
+
+// https://blog.csdn.net/zhyaiqq123/article/details/81366620
+
+var deb_timer = null;
+function deb(method,delay){
+	return function(){
+		var context = this, args = arguments;
+		clearTimeout(deb_timer);
+		deb_timer = setTimeout(function(){
+			method.apply(context, args);
+		},delay);
+	}
+}
+
+// https://www.cnblogs.com/webenh/p/10237224.html
+// 转化为小写半角字符(如果忽略了大小写和宽字符)
+function toCaseShort(chr) {
+	if(SAE.options.search.ignorecase){
+		chr = chr.toLowerCase();
+	}
+	var ret="";
+	for(var i=0;i<chr.length;i++){
+		if (SAE.options.search.ignorewide && chr.charCodeAt(0) > 65248 && chr.charCodeAt(0) < 65375) {
+			ret+=String.fromCharCode(chr.charCodeAt(0) - 65248);
+		} else {
+			ret+=chr;
+		}
+	}
+	return ret;
+}
 
 function disp_search(event){
+	deb(disp_search_1,300)(event);
+}
+
+function disp_search_1(event){
+	var sym = function sym(x){
+		if(SAE.options.search.relative && !("search_table_loaded" in SAE)){
+			if("search_table" in SAE){
+				var tab = SAE.search_table;
+				var tabls={};
+				for(var i=0;i<tab.length;i++){
+					for(var j=1;j<tab[i].length;j++){
+						tabls[tab[i][j]]=tab[i][0];
+					}
+				}
+				SAE.search_table_loaded = tabls;
+			}else{
+				SAE.search_table_loaded = {};
+			}
+		}
+		if(SAE.options.search.relative){
+			var tabls=SAE.search_table_loaded;
+			var ret="";
+			for(var i=0;i<x.length;i++){
+				var ch=toCaseShort(x[i]);
+				if(SAE.options.search.relative && (ch in tabls)){
+					ret+=tabls[ch];
+				}else{
+					ret+=ch;
+				}
+			}
+			return ret;
+		}else{
+			return toCaseShort(x);
+		}
+	};
 	var reshtml="";
 	var str=event.target.value;
 	var res=[];
-	var word=[];
+	var word=[],wordsym=[];
 	var len=1;
 	if(str!==""){
 		while(word.length<SAE.options.search.testcount&&len<str.length){
 			for(var i=0;i<str.length-len+1;i++){
 				word.push(str.substr(i,len));
+				wordsym.push(sym(str.substr(i,len)));
 				if(word.length===SAE.options.search.testcount){
 					break;
 				}
@@ -453,17 +519,21 @@ function disp_search(event){
 			for(var j=0;j<disp[i][2].length;j++){
 				for(var k=1;k<disp[i][2][j].length;k++){
 					var test=disp[i][2][j][k];
+					var testsym=sym(test);
 					var point=0;
 					if(test.includes(str)){
-						point=word.length+1;
+						point=word.length+2;
 					}else{
 						for(var m=0;m<word.length;m++){
 							if(test.includes(word[m])){
 								point++;
+							}else if(testsym.includes(wordsym[m])){
+								point+=0.95;
 							}
 						}
 					}
-					res.push([point/(word.length+1),disp[i][0],disp[i][2][j][0],k-1,disp[i][2][j][k]]);
+					point+=str.length>test.length?test.length/str.length:str.length/test.length;
+					res.push([point/(word.length+2),disp[i][0],disp[i][2][j][0],k-1,disp[i][2][j][k]]);
 				}
 			}
 		}
