@@ -273,6 +273,34 @@ input,button,.box {
 	z-index: -1;
 }
 
+#graph {
+	
+}
+
+#graph_btn>li{
+	position:relative;
+	width:10px;
+	height:10px;
+	border-width:1px;
+	border-style:solid;
+	border-radius:100%;
+}
+
+#graph_btn>li>span {
+	transition: height 0.2s;
+	box-sizing: border-box;
+	position:absolute;
+	width:200px;
+	height:0px;
+	border-width:1px;
+	border-style:solid;
+	border-radius:3px;
+}
+
+#graph_btn>li>span:hover {
+	height:200px;
+}
+
 .highlight {
 	background-color: lightgrey;
 }

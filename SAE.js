@@ -721,6 +721,23 @@ function getvalues(expand,title){
 	return values;
 }
 
+// 流程图
+
+function graph_draw(){
+var graphtm="";
+var lines=SAE.graph.lines;
+var lineid=[],linelist=[],linepos=[];
+for(var i=0;i<lines.length;i++){
+	var tag=linelist.indexOf(lines[i]);
+	if(tag===-1){
+		linelist.push(line);
+	}else{
+		lineid.push(tag);
+	}
+}
+id("graph").set("innerHTML",graphtm);
+}
+
 //选项
 
 id("options").child().is("input").when("change",options_update);
