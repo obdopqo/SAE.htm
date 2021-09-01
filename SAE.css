@@ -273,32 +273,73 @@ input,button,.box {
 	z-index: -1;
 }
 
+#graph_btn {
+	position: relative;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.graph_center {
+	text-align: left;
+	position: relative;
+	display: block;
+	overflow: hidden;
+	width: 600px;
+	height: 600px;
+	border: 3px solid black;
+}
+
 #graph {
-	
+	position: absolute;
+	margin: 0;
+	padding: 0;
 }
 
 #graph_btn>li{
-	position:relative;
-	width:10px;
-	height:10px;
-	border-width:1px;
+	position:absolute;
+	box-sizing: border-box;
+	width:20px;
+	height:20px;
+	font-size: 12px;
+	font-family: "宋体";
+	border-width:2px;
 	border-style:solid;
 	border-radius:100%;
+	white-space: nowrap;
+	overflow: visible;
+}
+
+#graph_btn>li>label {
+	position: absolute;
+	left: 20px;
+	width: 180px;
+	overflow-x: hidden;
+	white-space: pre nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	z-index: -1;
 }
 
 #graph_btn>li>span {
-	transition: height 0.2s;
-	box-sizing: border-box;
 	position:absolute;
+	top:50%;
+	left:50%;
+	transition: height 0.2s, border-width 0.2s;
+	box-sizing: border-box;
 	width:200px;
 	height:0px;
-	border-width:1px;
+	border-width:0px;
 	border-style:solid;
 	border-radius:3px;
+	white-space: pre;
+	overflow: auto;
+	z-index: 1;
 }
 
-#graph_btn>li>span:hover {
+#graph_btn>li:hover>span {
 	height:200px;
+	border-width:1px;
 }
 
 .highlight {

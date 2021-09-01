@@ -169,12 +169,25 @@ function file_add(){
 	file.click();
 }
 
+var block_color=[
+	"#4c97ff",
+	"#9966ff",
+	"#cf63cf",
+	"#ffbf00",
+	"#ffab19",
+	"#5cb1d6",
+	"#59c059",
+	"#ff8c1a",
+	"#ff6680",
+	"#0fbd8c",
+	"#ff661a"
+];
+
 function File_load(x){
 	return function file_load(event){
 		try{
 			SAE.init();
 			var proj = SAE.json.load(SAE.file.data(x));
-			SAE.options.graph = {};
 			//SAE.disp.proj(proj);
 			SAE.check.proj(proj);
 			SAE.stat.proj(proj);
@@ -201,19 +214,7 @@ function File_load(x){
 				"变量",
 				"定义",
 				"拓展",
-			],[
-				"#4c97ff",
-				"#9966ff",
-				"#cf63cf",
-				"#ffbf00",
-				"#ffab19",
-				"#5cb1d6",
-				"#59c059",
-				"#ff8c1a",
-				"#ff6680",
-				"#0fbd8c",
-				//#ff661a
-			]);
+			],block_color);
 			if(extencount.length===0){
 				id("stat_2").and(id("stat_2").prev()).style("display","none");
 			}else{
@@ -223,8 +224,12 @@ function File_load(x){
 			id("stat_3").set("innerHTML",SAE.stat.complexity+SAE.graph.complexity);
 			id("stat_3_1").set("innerHTML",SAE.stat.complexity);
 			id("stat_3_2").set("innerHTML",SAE.graph.complexity);
+			id("stat_4").set("innerHTML",SAE.graph.complexity_1+SAE.graph.complexity_2);
+			id("stat_4_1").set("innerHTML",SAE.graph.complexity_1);
+			id("stat_4_2").set("innerHTML",SAE.graph.complexity_2);
 			disp_load(proj);
 			check_load();
+			graph_load();
 			//SAE.check.debug();
 		}catch(e){
 			id('home_result').style("color","red");
@@ -723,20 +728,284 @@ function getvalues(expand,title){
 
 // 流程图
 
-function graph_draw(){
-var graphtm="";
-var lines=SAE.graph.lines;
-var lineid=[],linelist=[],linepos=[];
-for(var i=0;i<lines.length;i++){
-	var tag=linelist.indexOf(lines[i]);
-	if(tag===-1){
-		linelist.push(line);
-	}else{
-		lineid.push(tag);
+var linelist=[],lineid=[],    linetype=[];
+var pointpos=[],pointspeed=[],pointtype=[];
+var linetab=[];
+var graphtime=null;
+var graphWx0,graphWy0,graphWk0;
+
+function graph_load(){
+	graphWx0=graphWy0=0;
+	graphWk0=1;
+	clearInterval(graphtime);
+	linelist=[];lineid=[];    linetype=[];
+	pointpos=[];pointspeed=[];pointtype=[];
+	linetab=[];
+	var lines=SAE.graph.lines;
+	var gettagnamelist = function gtagnamelist(name){
+		if(!linelist.includes(name)){
+			linelist.push(name);
+			for(var i=0;i<lines.length;i+=2){
+				if(lines[i]===name){
+					gettagnamelist(lines[i+1]);
+				}
+				if(lines[i+1]===name){
+					gettagnamelist(lines[i]);
+				}
+			}
+		}
+	};
+	for(var i=0;i<lines.length;i++){
+		gettagnamelist(lines[i]);
+		linetype.push(graph_color(lines[i]));
 	}
+	for(var i=0;i<linelist.length;i++){
+		pointpos.push(Math.random()*800);
+		pointpos.push(Math.random()*800);
+		pointspeed.push(0);
+		pointspeed.push(0);
+		pointtype.push(graph_color(linelist[i]));
+		var sw=[];
+		for(var j=0;j<linelist.length;j++){
+			sw.push(0);
+		}
+		linetab.push(sw);
+	}
+	for(var i=0;i<lines.length;i++){
+		if(linelist.includes(lines[i])){
+			lineid.push(linelist.indexOf(lines[i]));
+		}else{
+			lineid.push(-1);
+		}
+	}
+	for(var i=0;i<lineid.length;i+=2){
+		linetab[lineid[i+0]][lineid[i+1]]=1;
+		linetab[lineid[i+1]][lineid[i+0]]=1;
+	}
+	for(var i=2;i<linelist.length;i+=1){
+		var pointlist=[];
+		for(var j=0;j<linelist.length;j++){
+			if(linetab[i][j]===1){
+				pointlist.push(j);
+			}
+		}
+		for(var j=0;j<pointlist.length;j++){
+			for(var k=0;k<j;k++){
+				if(linetab[pointlist[j]][pointlist[k]]!==1){
+					linetab[pointlist[j]][pointlist[k]]=2;
+					linetab[pointlist[k]][pointlist[j]]=2;
+				}
+			}
+		}
+	}
+	var count=10;
+	graphtime=setInterval(function(){
+		count--;
+		if(count===0){
+			clearInterval(graphtime);
+		}
+		graph_draw(1,0.00001,5,true);
+	},100);
 }
-id("graph").set("innerHTML",graphtm);
+
+function graph_draw(A,B,C,fix){
+	var graphWx,graphWy,graphWk;
+	var x1=pointpos[0],x2=x1,y1=pointpos[1],y2=y1;
+	for(var i=1;i<linelist.length;i++){
+		var x=pointpos[i*2+0],y=pointpos[i*2+1];
+		if(x1>x)x1=x;
+		if(x2<x)x2=x;
+		if(y1>y)y1=y;
+		if(y2<y)y2=y;
+	}
+	if(y2-y1<x2-x1){
+		graphWk=600/(x2-x1);
+	}else{
+		graphWk=600/(y2-y1);
+	}
+	graphWx=(x1+x2)/2+graphWx0/graphWk;
+	graphWy=(y1+y2)/2+graphWy0/graphWk;
+	graphWk*=graphWk0;
+
+	var graphtm="";
+	var pointhtm="";
+	for(var i=0;i<linelist.length;i++){
+		var _=/"/g;
+		var _2=/\\/g;
+		pointhtm+="<li style=\"left:"+
+			(((pointpos[i*2+0]-graphWx)*graphWk+300)-10)+
+			"px;top:"+
+			(((pointpos[i*2+1]-graphWy)*graphWk+300)-10)+
+			"px;background-color:"+pointtype[i]+
+			";\"><label>"+htmlescape(getblock(linelist[i]))+
+			"</label><span style=\"background-color:"+
+			pointtype[i]+
+			";\">"+
+			htmlescape(getblock(linelist[i]))+
+			"<br/><button class=\"click\" onclick=\""+
+			"search(&quot;"+
+			htmlescape(getblock(linelist[i])
+			.replace(_2,"\\\\")
+			.replace(_,"\\&quot;"))+
+			"&quot;);"+
+			"\">查找这类积木</button>"+
+			"</span></li>";
+	}
+	for(var i=0;i<lineid.length;i+=2){
+		var p1=lineid[i+0],p2=lineid[i+1];
+		graphtm+="<line x1=\""+
+			((pointpos[p1*2+0]-graphWx)*graphWk+300)+
+			"\" y1=\""+
+			((pointpos[p1*2+1]-graphWy)*graphWk+300)+
+			"\" x2=\""+
+			((pointpos[p2*2+0]-graphWx)*graphWk+300)+
+			"\" y2=\""+
+			((pointpos[p2*2+1]-graphWy)*graphWk+300)+
+			"\" stroke=\""+linetype[i]+
+			"\" stroke-width=\"2px\"></line>";
+	}
+	if(fix){
+		for(var _=0;_<200;_++){
+			for(var i=0;i<linelist.length;i++){
+				for(var j=0;j<i;j++){
+					var px=pointpos[i*2+0]-pointpos[j*2+0];
+					var py=pointpos[i*2+1]-pointpos[j*2+1];
+					var pd=Math.sqrt(px*px+py*py);
+					var k;
+					switch(linetab[i][j]){
+						case 0:
+							k=A/(pd*pd);
+							break;
+						case 1:
+							k=-pd*B;
+							break;
+						case 2:
+							k=C/(pd*pd);
+							break;
+					}
+					pointspeed[i*2+0]+=k*px;
+					pointspeed[i*2+1]+=k*py;
+					pointspeed[j*2+0]-=k*px;
+					pointspeed[j*2+1]-=k*py;
+				}
+			}
+			for(var i=0;i<linelist.length*2;i++){
+				if(pointspeed[i]>1)pointspeed[i]=1;
+				if(pointspeed[i]<-1)pointspeed[i]=-1;
+				pointpos[i]+=pointspeed[i];
+				pointspeed[i]*=0.95;
+			}
+		}
+	}
+
+	id("graph").set("innerHTML",graphtm);
+	id("graph_btn").set("innerHTML",pointhtm);
 }
+
+var graphmove=false,graphmx,graphmy;
+
+id("graph")
+	.when("mousedown",graph_fix)
+	.when("mousemove",graph_fix)
+	.when("mouseup",graph_fix)
+	.when("mousewheel",graph_fix);
+
+function graph_fix(event){
+	switch(event.type){
+		case "mousedown":
+			graphmove=true;
+			graphmx=-event.offsetX/graphWk0-graphWx0;
+			graphmy=-event.offsetY/graphWk0-graphWy0;
+			break;
+		case "mouseup":
+			graphmove=false;
+			break;
+		case "mousemove":
+			if(graphmove){
+				graphWx0=-event.offsetX/graphWk0-graphmx;
+				graphWy0=-event.offsetY/graphWk0-graphmy;
+			}
+			break;
+		case "mousewheel":
+			if(event.deltaY>0){
+				graphWx0+=(event.offsetX-300)*(-0.2/graphWk0);
+				graphWy0+=(event.offsetY-300)*(-0.2/graphWk0);
+				graphWk0*=0.8;
+			}else{
+				graphWx0+=(event.offsetX-300)*(+0.2/graphWk0);
+				graphWy0+=(event.offsetY-300)*(+0.2/graphWk0);
+				graphWk0*=1.2;
+			}
+			break;
+		default:
+			console.log(event);
+			break;
+	}
+	graph_draw(0,0,0,false);
+	return false;
+}
+
+function search(str){
+	id("disp_search_input").set("value",str).call("click");
+	window.location.hash="#disp";
+}
+
+function graph_color(opcode){
+	var type;
+	switch(opcode[0]){
+		case "F":
+		case "S":
+		case "C":
+			type="event";
+			break;
+		case "O":
+			type="control";
+			break;
+		case "D":
+			type="looks";
+			break;
+		case "B":
+			type="event";
+			break;
+		case "P":
+			type="procedures";
+			break;
+		case "$":
+			type=SAE.data.tdata[SAE.data.tnode[opcode]].slice(1).split("_")[0];
+			break;
+	}
+	var i=SAE.stat.typename.indexOf(type);
+	return block_color[(i===-1||i>9)?9:i];
+}
+
+
+function getblock(opcode){
+	var type;
+	switch(opcode[0]){
+		case "F":
+			return "当 绿旗 被点击";
+		case "S":
+			return "当舞台被点击";
+		case "C":
+			return "当角色被点击:"+opcode.slice(1);
+		case "O":
+			return "克隆 ["+opcode.slice(1)+" v]";
+		case "D":
+			return "当背景切换为 ["+opcode.slice(1)+" v]";
+		case "B":
+			return "当接收到 ["+opcode.slice(1)+" v]";
+		case "P":
+			return "定义 "+opcode.split(":")[1];
+		case "$":
+			var ls=opcode.slice(1).split(":");
+			return "#"+ls[0]+","+ls[1];
+		case "#":
+			var ls=opcode.slice(1).split(":");
+			return "#"+ls[0]+","+ls[1];
+	}
+	return "";
+}
+
 
 //选项
 
