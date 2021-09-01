@@ -3,14 +3,17 @@
 "use strict";
 
 var tnode,tdata;
-var headlist;
+var headlist,taillist;
 
 SAE.graph.lines = [];
 
 function graphinit(){
 	SAE.graph.complexity=0;
+	SAE.graph.complexity_1=0;
+	SAE.graph.complexity_2=0;
 	SAE.graph.lines=[];
 	headlist=[];
+	taillist=[];
 }
 
 SAE.graph.proj = function graphproj(id){
@@ -70,6 +73,15 @@ function block(spid,head,id){
 			if(j!==""){
 				SAE.graph.lines.push(head);
 				SAE.graph.lines.push(j);
+				if(taillist.includes(j)){
+					if(j[0]==="P"){
+						SAE.graph.complexity_1++;
+					}else{
+						SAE.graph.complexity_2++;
+					}
+				}else{
+					taillist.push(j);
+				}
 			}
 			var i=tnode[id]+1;
 			j=tnode[id+1];
