@@ -155,9 +155,345 @@
 		</div>
 
 		<div class="content" label="about">
+			<div class="ptitle">功能建议和BUG反馈</div>
+			<div>
+				<p>关于SAE的问题，请发送邮件到邮箱</p>
+				SAE.sb3 （SC版）
+				<a href="mailto:obdopqo@163.com">obdopqo@163.com</a><br/>
+				SAE.htm （网页版）
+				<a href="mailto:wql570@yandex.com">wql570@yandex.com</a><br/>
+				<br/>
+			</div>
+			<div class="ptitle">为什么会有SAE</div>
+			<div>
+				<div class="ptitle">SC创作者的日常</div>
+				<code>
+					我觉得今天糟透了。<br/>
+					看看这可悲的一天吧。<br/>
+					晚上九点，我点开了scratch，想要给我的作品加一些功能。<br/>
+					加了一个，结果发现这功能不起作用。<br/>
+					于是我回去检查了半天。发现好像有两个地方有问题。修复完成。<br/>
+					好，我检查，修复了大约10分钟后，发现还是不行。<br/>
+					于是我又检查了一次，可能是大于号不对要改成小于，结果还是不行。一点反应都没有。<br/>
+					我疑惑再怎么不对也得有点反应啊，哪怕只是显示一堆乱七八糟也好。<br/>
+					于是我尝试使用列表调试法，就是放置大量的把xxx加入列表，如果有没运行到的地方就检查。<br/>
+					盯着列表对了半天后，我发现是3，5都被运行了，就4没被运行。为什么？<br/>
+					真是费解。<br/>
+					就在我即将使出大招——删掉重做——的时候，奇迹发生了——在我去掉调试用的积木时，我看到舞台里突然多了一块((i)+(1))积木<br/>
+					咦？<br/>
+					直到我右键撤销后我才意识到那个积木是我不小心从某个积木里拖出来的，一直没有发现！<br/>
+					于是我把那个积木拖了回去，yes，运行成功了<br/>
+					现在是晚上十点，也就是说，我计划要加的全部功能除了那个之外也就全部over了<br/>
+					scratch是真的难用。
+				</code>
+				<p>scratch是壮哉我大LLK开发的一个直观的互动媒体设计工具。</p>
+				<code>scratch不是编程语言，是创作工具。</code>
+				<p>它以直观，简单的操作以及友好的逻辑结构为未接触过一行亿error的代码编程的小朋友们提供了简单，方便的创作互动内容的机会。得益于官方的社区和国内外各种本土化的社区，大家得以在各路社区发布作品，分享创意，发现志同道合的小伙伴。</p>
+				<p>但是，scratch虽然有效避免了代码编程中的大多数问题，但是有一些问题不是把代码变成积木就能解决的，积木在规避拼写错误，符号不规范的同时，还带来了拖放位置不正确等问题。尤其是在设计中存在的逻辑缺陷，根本无法通过积木来避免。无视越界错误，自定义积木的参数可以随意拼接，积木可以跨角色复制，找不到角色/造型/声音时自动跳过等特性在方便创作的同时也给错误的查找带来了困难。</p>
+				<p>因此，我根据某人留下的scratch转编程猫工具的半成品制作出了SAE的一个javascript版本，它可以展现出项目中可能存在错误的地方，就像这样：<br/>
+				<code>
+					文件 1
+					<br/>角色 编辑器
+					<br/>4输入内容左/右端有空格
+					<br/> 0	定义 输出 〈x〉 长度 〈n〉
+					<br/> 1	将 「&lt;编辑器&gt;j」 设为 1
+					<br/> 2	将 「&lt;编辑器&gt;输出长度」 设为 〈n〉
+					<br/> 3	重复执行直到 「&lt;编辑器&gt;j」 &gt; (〈x〉)的字数 或 「&lt;编辑器&gt;输出长度」 &lt; 0
+					<br/>[4]	| 如果 &lt;〔0123456789abcdefghijklmnopqrstuvwxyz`-=[]\\;',./~!@#$%^&amp;*()_+{}|:\"&lt;&gt;? 〕 包含 (〈x〉 的第 「&lt;编辑器&gt;j」 个字符)?&gt; 那么
+					<br/> 5	| | 把 「&lt;编辑器&gt;输出长度」 增加 -1
+					<br/> 6	| 否则
+					<br/> 7	| | 把 「&lt;编辑器&gt;输出长度」 增加 -1.8
+					<br/> 8	| ＼————————
+					<br/> 9	| 如果 「&lt;编辑器&gt;输出长度」 &gt; -1 那么
+					<br/> 10	| | 输出 (〈x〉 的第 「&lt;编辑器&gt;j」 个字符)
+					<br/>
+					<br/>
+					<br/>文件 1
+					<br/>角色 编辑器
+					<br/>0未拼合的积木
+					<br/>[0]	输出 〔 ▇ 〕
+					<br/> 1	输出 〔 ┃ 〕
+				</code>
+				</p>
+				<p>但我的最终目的是希望能够在scratch上实现它。创作者们可以在少量的脚本的帮助下快速获得json并在SAE项目中粘贴，获得实时，直观的提示和详细的帮助，甚至在SAE无法主动发现错误的情况下，通过SAE的引导，找到错误所在。</p>
+				<p>这真的非常困难，但是这个项目一但实现，不仅会是一个值得永久纪念的作品，还将会是帮助更多创造者进步的实用工具。</p>
+				<p>scratch的世界很危险，希望SAE能够带你避开这些坑，让你在有限的时间里创造出更加丰富的内容。你的宝贵精力本不该被白白消耗在因为scratch的缺陷而产生的bug中。</p>
+				<p>HOPE IT WORK.</p>
+			</div>
+			<div class="ptitle">SAE会检查出什么问题？</div>
+			<div>
+				<div class="ptitle">1. 相同的积木</div>
+				当功能相同的积木被放在一起时<br/>
+				<div class="ptitle">2. 无意义的积木</div>
+				增加0，设定变量为自己<br/>
+				<div class="ptitle">3. 空白的数字</div>
+				当计算积木里的数字忘记填写的时候<br/>
+				<div class="ptitle">4. 空白的积木</div>
+				当六边形空格缺少积木，或者C形积木内空白的时候<br/>
+				<div class="ptitle">5. 未接上的积木</div>
+				当有积木没被正确和开头积木接上的时候<br/>
+				<div class="ptitle">6. 不合理的积木</div>
+				针对特效设定的值的范围。<br/>
+				<code>
+					大多数情况下画笔/声音特效的范围是0到100但是也有例外<br/>
+					颜色特效是0到200<br/>
+					亮度，左右平衡是-100到100<br/>
+					鱼眼和像素化和马赛克只要是非负数就行<br/>
+					貌似马赛克是10的整数倍<br/>
+				</code>
+				以及使用列表的第0项，或者第0个字符(scratch中项目数从1开始)<br/>
+				<div class="ptitle">7. 不存在的角色/造型/背景/声音/变量</div>
+				复制积木，删除造型，编辑自定义积木后，部分保留了原名称的积木将会失效<br/>
+				<div class="ptitle">8. 克隆时没有角色变量条件控制</div>
+				在广播，克隆启动时，如果克隆自己时没有角色变量条件加以控制，将会产生不受控制的克隆现象。<br/>
+				<div class="ptitle">9. 循环条件未在循环体中改变</div>
+				<div class="ptitle">10. 循环条件未在循环体中改变方向不正确</div>
+				这类错误会导致死循环的出现<br/>
+				<div class="ptitle">11. 删除克隆体积木后仍有可执行积木</div>
+				在本体执行这类积木时，删除此克隆体不会停止积木进行，下面的广播会被执行<br/>
+				<div class="ptitle">12. 停止当前积木所处的位置不正确</div>
+				停止当前积木应该在如果/否则里的积木之后，<br/>
+				在其他地方出现这类积木则可能是因为拖动时的错误导致<br/>
+				<div class="ptitle">13. 注意2000积木的时区问题</div>
+				正如这个积木所说，返回2000年起的天数，但是要注意，这里的2000年是指0°经线所在时区的2000年。<br/>
+				这个积木事实上会返回从2000年1月1日08:00:00(北京时间)起的天数。<br/>
+				<div class="ptitle">14. 注意星期数问题</div>
+				在这个积木中，1表示星期日，2表示星期一，3表示星期二，以此类推。<br/>
+				<code>
+					这么明显的BUG，scratch为什么不修复?<br/>
+					<br/>
+					在中国我们已经习惯了从'星期一'叫到'星期天'这样的叫法，我们第一感觉会认为星期一到星期天理所当然应该是1234567，但其实不是。按照惯例星期日是一周的第一天，因此星期日会返回1。<br/>
+					<br/>
+					可是这很明显会产生误解，严重影响创作者的使用!!!!!!!!!!!!!!!<br/>
+					<br/>
+					按照惯例，星期日确实是第一天，而且在英语里星期一到星期天并没有和数字相似，不会引发这类误会。scratch本身是一个国际性的软件，不太可能因为某一种语言的习惯来改变一个积木的运行方式。更何况这是一个只需要减去一就能解决的问题。<br/>
+				</code>
+				<div class="ptitle">15. 不合理的计算</div>
+				加零，减零，乘零，乘一……都会被认为是不合理的计算。<br/>
+				<div class="ptitle">16. 直接使用列表</div>
+				直接以变量方式使用列表会带来不确定的行为，带来创作困难<br/>
+				<code>
+					当你直接使用(列表)时，会得到列表的每一项用空格连接起来的文本，例如<br/>
+					1 2 3 4 5 10 12 19<br/>
+					但是当列表里全都是单个字符的文本时，空格就会被省略，而且这里的单个字符里还有一个很智能的判断：通过加减乘除等运算产生的一位数不是字符。但是通过连接或者取第几个字符产生的单个字符是字符。从外观上完全看不出来，就很坑人。<br/>
+					强烈不建议使用这样的方式使用列表，做一个功能明确的循环，可以避免很多相关的问题。<br/>
+				</code>
+				<div class="ptitle">17. 自定义积木参数没被使用</div>
+				在自定义积木的参数没被使用的时候。多半是因为你把它忘记了。<br/>
+				<div class="ptitle">18. 在一步执行(运行时不刷新屏幕)里使用造成等待的积木</div>
+				由于设计缺陷，这会导致运行卡顿。<br/>
+				<code>
+					这类积木包括<br/>
+					等待xxx<br/>
+					xxx并等待<br/>
+					说/思考xxx秒<br/>
+					xxxx x拍<br/>
+					load/save variable/list<br/>
+					发送JSON<br/>
+				</code>
+				<div class="ptitle">19. 建议使用一步执行</div>
+				在循环中没有改变画面的积木时建议使用一步执行(运行时不刷新屏幕)。这可以避免大部分变量冲突带来的影响。<br/>
+				<div class="ptitle">20. 并排如果变量冲突</div>
+				这是一个不那么容易发现的错误。如图。如果第一次询问时输入1并且第二次询问时输入2，那么最后一个如果也会被运行。<br/>
+				解决方法是使用如果/否则积木<br/>
+				<div class="ptitle">21. 输入内容左/右端有空格</div>
+				这很难被发现，但是可能会带来很大的麻烦。<br/>
+				<div class="ptitle">22. 等于号比较不区分大小写</div>
+				例如A=a是成立的<br/>
+				但是角色名，变量名，造型名，声音名是区分大小写的<br/>
+				例如`把造型切换为(A)`和`把造型切换为(a)`不同。<br/>
+				<code>可以利用造型名为字母的角色来区分大小写</code>
+			</div>
+			<div class="ptitle">SAE使用什么开源协议？</div>
+			<div>
+				<p>除了帮助内转载的内容外，这里的所有内容，都遵循</p>
+				<div class="ptitle">MIT开源协议。</div>
+				<code>
+					Copyright 2021 obdopqo<br>
+					<br>
+					Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br>
+					<br>
+					The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br>
+					<br>
+					THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.<br>
+				</code>
+				<p>
+				作为自由创作者的一部分，我们制作这类内容纯粹只是为了能够给其他的创作者们提供帮助。</br>
+					这里的所有项目，都是开放源代码，可以下载并且自由编辑的，没有任何为防止编辑和改造的限制，包括但不限于代码加密，文件校验，隐藏水印等阻止正常编辑的行为。</br>
+				如果你发现了这里的问题，或者想为其增加功能，甚至引用到你的网站中，你可以直接下载源代码并且改编，只要不是恶意的(如攻击性恶搞)，或者掩盖我们的贡献(如将其称为xx全自主开发)，我们都会欢迎。</br>
+				如果SAE真的能够帮助你们，无论是以什么方式，希望大家能够为SAE打点免费的广告，让更多的Scer们能够得到帮助。
+				</p>
+			</div>
+			<div class="ptitle">SAE为什么不闭源？</div>
+			<div>
+				<p>在开放的创作社区中，抄袭的确是创作者们会遇到的问题，但这个问题对于我们来说并不存在。SAE只是一个让Scer们能够更加高效地创作的作品，我们的目标是希望Scer们能够通过SAE节省宝贵的创作时间，在本就有限的时间里创造出更多的作品。再创作的人，无论是转载，改编，甚至是引入盈利网站中，都可以增加SAE的使用人数，让更多的人获益。而且我们相信只会抄袭的人除了吸引人流量和为我们打免费的广告之外无法获得多大好处，首先在大部分的创作社区，抄袭行为属于违规，可以举报，其次我们相信如果真的有网站抄袭了SAE，SAE帮助过的人，都会愿意为我们说话。</p>
+			</div>
+			<div class="ptitle">可以再创作然后闭源吗？</div>
+			<div>
+				<p>我们鼓励所有在创作的人保持开源，但如果将根据SAE源代码二次创作的作品设定为闭源甚至付费使用，我们也不会阻止。饮水请思源，请不要删除指向这里的链接，甚至加入类似"某站全自主制作"这类字样。</p>
+			</div>
+			<div class="ptitle">是否会使用对比功能进行反抄袭？</div>
+			<div>
+				<p>SAE的对比功能不是为了反抄袭而开发，这类功能本意是方便多人协作。<br/>
+				例如A在社区发布了一个作品，B发现有BUG，进行了修改，发给了A。但是A在接收到B发来的作品时可能进行了更新，这样A需要找到B到底修改了哪里，这个时候就可以用对比功能发现修改之处。<br/>
+				使用SAE的源代码制作查重工具也是可以的，我们鼓励对SAE合理的二次创作。</p>
+				<code>我们也会关注某社区的反抄袭相关问题，关于作品自动检查脚本和批量查重工具，请通过邮箱联系obdopqo@163.com。</code>
+			</div>
+			<div class="ptitle">是否会制作作品加密或者源码保护功能？</div>
+			<div>
+				<p>我们不会制作这类功能。我认为这不是SAE应该做的事情。SAE应该是一个帮助更多的人创作更好的作品的项目，而不是阻止正常的作品分享和技术交流的工具。对于我们来说，开发一个能够让创作者更好地创作的功能，远远比做一个所谓的"反抄袭"好得多。</br>
+				可能可以在其他地方看到类似的工具，但请注意，发布被这类工具修改过的作品可能会违反部分社区的规定。</p>
+				<code>拂柳：当创作者们的精力从追求作品质量到追求所谓加密，打包，工作室，qq群，建站的时候，这些创作者们的创造力就到头了。</code>
+			</div>
+			<div class="ptitle">一些奇奇怪怪的问题</div>
+			<div>
+				<div class="ptitle">有没有QQ/微信？</div>
+				<div>
+					<p>没有。我们只有邮箱。</p>
+				</div>
+				<div class="ptitle">为什么不做一个浏览器插件直接在sc编辑器里工作？</div>
+				<div>
+					<p>研究一个新事物的工作原理需要很长时间。关于这类插件，你也许会喜欢griffpatch的<a href="https://github.com/griffpatch/Scratch-Dev-Tools/">Scratch-Dev-Tools</a></p>
+				</div>
+				<div class="ptitle">最近好像有很多人在制作有类似功能的项目，对此怎么看？</div>
+				<div>
+					<p>挺好的，你可以需要那个用哪个。</p>
+					<p>据目前所知的情况，孤言在更新SDT，主要是分析积木组成和反抄袭，zengyl在制作json修改器，主要是增加水印，而我们做的主要是查找漏洞和辅助创作。</p>
+				</div>
+				<div class="ptitle">就不用个bootstrap或者react或者jquery吗？</div>
+				<div>
+					<p>还是喜欢自己手打css，把所有东西放在一个文件中，加载一次到位。保存也是一个ctrl+s搞定，就200K不到，gitee不限制下载，机房网速就算是10kpbs也可以半分钟内加载完成。要是一个框架下去大小直接上几M</p>
+					<p>不过这也苦了各位改编者，习惯的什么btn-primary,ReactDom.rander(xxx),$("xxx.yyy")都不能用，搜索功能要用起来咯。</p>
+				</div>
+				<div class="ptitle">这奇怪的图标是谁设计的？</div>
+				<div>
+					<p>额，当时我们讨论是否要加个图标，然后就画了一些图标，有的是把SAE三个字母重组，有的是机械化的字母S，还有一个是sc猫上面加了个头盔……最后ob说要有一个亲和力的图标，我觉得有点尴尬这，就给他发了个微笑表情。</p>
+					<p>于是ob就画了个白底黑线的微笑，还试了各种各样的人头和五官比例，最后感觉普通的微笑表情加两条"辫子"比较。我给它多加了下面的两条线(不然一个头浮在天上很怪)，把眼睛变成了小点，间距拉大，嘴巴间距变小，就是现在这样。紧接着我就把整个网站的风格搞成了这个神奇的样子</p>
+					<code>obdopqo:可能在你的想象中类似这样的项目应该要有一个很正经的图标。但我们不希望它是这样。很多人一看到分析器这类工具的输出就会想到一堆晦涩难懂的外星文字，可能会下意识觉得这个会很难懂，很难用。而这个有点出戏的图标意图就是希望能够打消大家的那种顾虑。SAE不是一个满嘴"专业术语"，只有"大佬"才能用的专业工具，无论sc技术处于什么等级，都能友好相待。</code>
+				</div>
+			</div>
 		</div>
 
 		<div class="content" label="more">
+			<div class="ptitle">创作社区</div>
+			<a class="link-card" href="https://aerfaying.com">
+				阿儿法营
+				<div class="desc">多样的社区体系</div>
+			</a>
+			<a class="link-card" href="https://gitblock.cn">
+				稽木世界
+				<div class="desc">阿儿法营另一域名</div>
+			</a>
+			<a class="link-card" href="https://kada.163.com">
+				有道卡搭
+				<div class="desc">网易的Sc社区</div>
+			</a>
+			<a class="link-card" href="https://x.xiguacity.cn">
+				X创意空间
+				<div class="desc">各种各样的创作活动</div>
+			</a>
+			<a class="link-card" href="https://world.xiaomawang.com">
+				小码王
+				<div class="desc">魔力测评，发现优秀作品</div>
+			</a>
+			<a class="link-card" href="https://mblock.makeblock.com">
+				慧编程
+				<div class="desc">硬件拓展多</div>
+			</a>
+			<a class="link-card" href="https://youngmaker.com">
+				少年创客
+				<div class="desc">只支持Sc 2.0</div>
+			</a>
+			<a class="link-card" href="https://steamcollection.com">
+				蒸汽工坊
+				<div class="desc">也是一个创作社区</div>
+			</a>
+			<a class="link-card" href="https://codelab.club">
+				codelab
+				<div class="desc">拓展多</div>
+			</a>
+			<a class="link-card" href="https://scratch-cn.cn">
+				scratch中国
+				<div class="desc">中国版scratch社区</div>
+			</a>
+			<a class="link-card" href="https://sccode.52msr.cn">
+				sccode
+				<div class="desc">一个人撑起一片新天地</div>
+			</a>
+			<div class="line"></div>
+			<code>以下平台不是Scratch社区，但是也是类似的创作社区</code>
+			<a class="link-card" href="https://codemao.cn">
+				编程猫
+				<div class="desc">像sc，但明显不是</div>
+			</a>
+			<a class="link-card" href="https://coding.xueersi.com">
+				学而思编程网
+				<div class="desc">包含sc，但不是主体</div>
+			</a>
+			<a class="link-card" href="https://66rpg.cn">
+				橙光
+				<div class="desc">以剧情和绘画为主的AVG社区</div>
+			</a>
+			<div class="ptitle">编辑器</div>
+			<a class="link-card" href="https://kada.163.com/project/create/v3.htm">
+				有道卡搭
+				<div class="desc">可以开放使用的编辑器</div>
+			</a>
+			<a class="link-card" href="https://x.xiguacity.cn/create">
+				X创意空间
+				<div class="desc">自带griffpatch的SDT插件</div>
+			</a>
+			<a class="link-card" href="https://turbowarp.org/editor">
+				TurboWarp
+				<div class="desc">速度快插件多</div>
+			</a>
+			<a class="link-card" href="https://ide.makeblock.cn">
+				慧编程
+				<div class="desc">不一样的风格</div>
+			</a>
+			<div class="ptitle">作品分析</div>
+			<a class="link-card" href="https://aerfaying.com">
+				SJA分析器
+				<div class="desc">孤言制作的Scratch JSON分析器</div>
+			</a>
+			<div class="ptitle">其它网站和工具</div>
+			<code>工具大部分是转载的</code>
+			<a class="link-card" href="https://anycodes.cn">
+				anycodes
+				<div class="desc">在线运行大部分程序语言(邮箱注册)</div>
+			</a>
+			<a class="link-card" href="http://web.chacuo.net">
+				查错工具网
+				<div class="desc">在线代码格式化等功能</div>
+			</a>
+			<a class="link-card" href="https://jshint.org">
+				jshint
+				<div class="desc">检查javascript的潜在问题</div>
+			</a>
+			<a class="link-card" href="https://debuggex.com">
+				debuggex
+				<div class="desc">可视化正则表达式</div>
+			</a>
+			<a class="link-card" href="https://windows93.net">
+				windows93
+				<div class="desc">一个模仿早期windows风格的网站</div>
+			</a>
+			<a class="link-card" href="https://www.runoob.cn">
+				菜鸟教程
+				<div class="desc">真的就是适合菜鸟的教程，可在线运行html</div>
+			</a>
+			<a class="link-card" href="https://mail.yandex.com">
+				yandex邮箱
+				<div class="desc">画面清奇的邮箱网站</div>
+			</a>
+			<a class="link-card" href="https://thiswaifudoesnotexist.net">
+				thiswaifudoesnotexist
+				<div class="desc">随机绘画头像展览网站</div>
+			</a>
+			<a class="link-card" href="https://linkmoji.jp">
+				linkmoji
+				<div class="desc">生成emoji短链接</div>
+			</a>
 		</div>
 
 		<div class="content" label="file">
