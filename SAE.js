@@ -227,11 +227,10 @@ function File_load(x){
 			graph_load();
 			//SAE.check.debug();
 		}catch(e){
-			id('home_result').style("color","red");
-			id('home_result').set("innerText",e);
+			alert(e);
 			throw(e);
 		}finally{
-			window.location.hash="#home";
+			window.location.hash="#stat";
 		}
 	}
 }
