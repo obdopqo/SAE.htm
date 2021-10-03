@@ -641,5 +641,13 @@ SAE.disp.table = [
 	//小红板
 	"#redBoard_magicNumber",		"(魔法数值)",				99,
 
+	//语法糖
+	"CCWSugar_exponentiation",		"(%1 的 %2 次幂)",			99,
+	"CCWSugar_equalOrLess",			"(%1 <= %2)",				4,
+	"CCWSugar_equalOrGreater",		"(%1 >= %2)",				4,
+	"CCWSugar_ifElse",			"(如果 %1 那么 %2 否则 %3)",		99,
+	"CCWSugar_subString",			"(取得字符串 %1 中的第 %2 个到第 %3 个字符)",99,
+	"CCWSugar_when",			"当 %1 时",				0,
+	
 	/*}}}*/
 ];

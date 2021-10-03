@@ -35,7 +35,8 @@ blockspecs=[
 	"#operator_or",		"12",
 	"#operator_and",	"12",
 	"#operator_not",	"D",
-	"#puzzle_setResolved",	"e", // TODO
+	"#puzzle_setResolved",	"E", // TODO
+	"#CCWsugar_ifElse",	"!ABC", // TODO
 ];
 
 SAE.json.load = function sb3load(str){
@@ -394,8 +395,16 @@ function blockinput(json){
 		blockspec=blockspecs[i+1];
 		DEBUG("blockspec",blocktype,blockspec);
 		//预先为输入保留空间
-		for(j=0;j<blockspec.length;j++){
-			tdata.push(-1);
+		if(blockspec[0]==="!"){
+			blockspecmode=1;
+		}else{
+			blockspecmode=0;
+		}
+		//预先为输入保留空间
+		for(j=blockspecmode;j<blockspec.length;j++){
+			for(j=0;j<blockspec.length;j++){
+				tdata.push(-1);
+			}
 		}
 	}else{
 		blockspec="";
@@ -404,7 +413,12 @@ function blockinput(json){
 	//处理input输入
 	for(var x in json.inputs){
 		//获得顺序标记(其实就是参数名的最后一个字母)
-		var blockspecc=x.slice(-1);
+		var blockspecc;
+		if(blockspecmode===0){
+			blockspecc=x.slice(-1);
+		}else{
+			blockspecc=x.slice(0,1);
+		}
 		// !!! 防止误判
 		// -6: TODO ???
 		var jix=json.inputs[x];
@@ -418,13 +432,13 @@ function blockinput(json){
 				if(i!==99999999){
 					//判断是不是特殊顺序积木
 					if(blockspec!==""){
-						j=0;
+						j=blockspecmode;
 						while(j<blockspec.length&&blockspec[j]!==blockspecc){
 							j++;
 						}
 						DEBUG("blockspec",blocktype,blockspecc,blockspec,j);
 						if(j!==blockspec.length){
-							j=tdata.length-blockspec.length+j;
+							j=tdata.length-blockspec.length+j-blockspecmode;
 							tdata[j]=i;
 							if(isblockid===1){
 								DEBUG("blockidp2",j);
