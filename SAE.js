@@ -68,22 +68,17 @@ function hashChange(){
 	hashCorrect = false;
 
 	if(window.location.hash!==""){
-		position = window.location.hash.slice(1).split('/');
+		position = window.location.hash.slice(1);
 	}else{
-		position = [];
+		position = "";
 	}
 
 	navButton.eval(nav_each);
 	if(!hashCorrect){
 		window.location.hash = "#home";
-	}else if(position.length>1){
-		id("navReturn").style("display","inline");
-		id("navReturn").attr("href",'#'+position.slice(0,-1).join('/'));
-	}else{
-		id("navReturn").style("display","none");
 	}
 	isbody().child().is(".content").eval(function(x){
-		if(x.getAttribute("label")===position[0]){
+		if(x.getAttribute("label")===position){
 			is(x).style("display","block");
 		}else{
 			is(x).style("display","none");
@@ -96,7 +91,7 @@ function nav_click(event){
 }
 
 function nav_each(object){
-	if(/#(.*)/.exec(object.href)[1] === position[0]){
+	if(/#(.*)/.exec(object.href)[1] === position){
 		hashCorrect = true;
 		is(object).classadd("selected");
 	}else{
@@ -341,7 +336,7 @@ function disp_load(tid){
 		disp.push([
 			tdata[i],
 			i===tnode[tid]?"舞台":"角色:"+tdata[tnode[tdata[i]]],
-			disp_load_spri(tdata[tnode[tdata[i]]+6])
+			disp_load_spri(tdata[i])
 		]);
 	}
 	tnode.pop();
