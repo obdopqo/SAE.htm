@@ -63,13 +63,20 @@ SAE.disp.table = [
 	"#looks_backdropnumbername",		"(背景 &1)",				99,
 	"#looks_size",				"(大小)",				99,
 
+	"&looks_seteffectto#2:COLOR",		"颜色",
+	"&looks_seteffectto#2:FISHEYE",		"鱼眼",
+	"&looks_seteffectto#2:WHIRL",		"漩涡",
+	"&looks_seteffectto#2:PIXELATE",	"像素化",
+	"&looks_seteffectto#2:MOSAIC",		"马赛克",
+	"&looks_seteffectto#2:BRIGHTNESS",	"亮度",
+	"&looks_seteffectto#2:GHOST",		"虚像",
 	"&looks_changeeffectby#2:COLOR",	"颜色",
 	"&looks_changeeffectby#2:FISHEYE",	"鱼眼",
 	"&looks_changeeffectby#2:WHIRL",	"漩涡",
 	"&looks_changeeffectby#2:PIXELATE",	"像素化",
 	"&looks_changeeffectby#2:MOSAIC",	"马赛克",
 	"&looks_changeeffectby#2:BRIGHTNESS",	"亮度",
-	"&looks_seteffectto#2:GHOST",		"虚像",
+	"&looks_changeeffectby#2:GHOST",	"虚像",
 	"&looks_gotofrontback#1:front",		"前面",
 	"&looks_gotofrontback#1:back",		"后面",
 	"&looks_goforwardbackwardlayers#2:forward","前移",
@@ -634,5 +641,13 @@ SAE.disp.table = [
 	//小红板
 	"#redBoard_magicNumber",		"(魔法数值)",				99,
 
+	//语法糖
+	"CCWSugar_exponentiation",		"(%1 的 %2 次幂)",			99,
+	"CCWSugar_equalOrLess",			"(%1 <= %2)",				4,
+	"CCWSugar_equalOrGreater",		"(%1 >= %2)",				4,
+	"CCWSugar_ifElse",			"(如果 %1 那么 %2 否则 %3)",		99,
+	"CCWSugar_subString",			"(取得字符串 %1 中的第 %2 个到第 %3 个字符)",99,
+	"CCWSugar_when",			"当 %1 时",				0,
+	
 	/*}}}*/
 ];

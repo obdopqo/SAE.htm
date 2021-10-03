@@ -18,9 +18,6 @@ include("SAE-graph.js");
 include("SAE-tools.js");
 
 SAE.init();
-//SAE.options._OrigInputType = true;
-SAE.options.graph = {};
-SAE.options.graph.noBlockId = true;
 var json=fs.readFileSync(process.argv.length>2?process.argv[2]:"project.json").toString();
 var x=SAE.json.load(json);
 //SAE.json.debug(x,"");
