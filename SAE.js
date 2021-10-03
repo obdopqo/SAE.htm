@@ -344,12 +344,35 @@ function disp_load(tid){
 }
 
 function disp_load_spri(tid){
-	var data=[];
+	var data=[],datav;
 	var tnode=SAE.data.tnode;
 	var tdata=SAE.data.tdata;
-	for(var i=tnode[tid];i<tnode[tid+1];i++){
+	var costid=tdata[tnode[tid]+1];
+	var sondid=tdata[tnode[tid]+2];
+	var variid=tdata[tnode[tid]+3];
+	var listid=tdata[tnode[tid]+4];
+	var blockid=tdata[tnode[tid]+6];
+	datav=["造型/声音列表"];
+	for(var i=tnode[costid];i<tnode[costid+1];i+=2){
+		datav.push("造型:"+tdata[i]);
+		datav.push("  "+tdata[i+1]);
+	}
+	for(var i=tnode[sondid];i<tnode[sondid+1];i+=2){
+		datav.push("声音:"+tdata[i]);
+		datav.push("  "+tdata[i+1]);
+	}
+	data.push(datav);
+	datav=["变量/列表列表"];
+	for(var i=tnode[variid];i<tnode[variid+1];i++){
+		datav.push("变量:"+tdata[i]);
+	}
+	for(var i=tnode[listid];i<tnode[listid+1];i++){
+		datav.push("列表:"+tdata[i]);
+	}
+	data.push(datav);
+	for(var i=tnode[blockid];i<tnode[blockid+1];i++){
 		SAE.disp.block(tdata[i]);
-		var datav=[tdata[i]].concat(SAE.disp.data);
+		datav=[tdata[i]].concat(SAE.disp.data);
 		data.push(datav);
 	}
 	return data;
@@ -369,12 +392,8 @@ id("disp_spri").when("change",disp_draw2);
 function disp_draw2(){
 	var blocklist="";
 	var data=disp[id("disp_spri").list[0].selectedIndex][2];
-	if(data.length===0){
-		blocklist="<option value=\"-1\">(没有积木)</option>";
-	}else{
-		for(var i=0;i<data.length;i++){
-			blocklist+="<option value=\""+data[i][0]+"\">"+htmlescape(data[i][1])+"</option>";
-		}
+	for(var i=0;i<data.length;i++){
+		blocklist+="<option value=\""+data[i][0]+"\">"+htmlescape(data[i][1])+"</option>";
 	}
 	id("disp_block").set("innerHTML",blocklist);
 	disp_draw3();
@@ -384,12 +403,8 @@ id("disp_block").when("change",disp_draw3);
 
 function disp_draw3(){
 	var data=disp[id("disp_spri").list[0].selectedIndex][2];
-	if(data.length===0){
-		id('disp_content').set("innerText","(没有积木)");
-	}else{
-		var datav=data[id("disp_block").list[0].selectedIndex].slice(1);
-		id('disp_content').set("innerText",datav.join('\n'));
-	}
+	var datav=data[id("disp_block").list[0].selectedIndex].slice(1);
+	id('disp_content').set("innerText",datav.join('\n'));
 	id("disp_content_pointer").style("display","none");
 }
 
@@ -1099,4 +1114,3 @@ function Utf8ArrayToStr(array) {
 	}
 	return out;
 }
-
