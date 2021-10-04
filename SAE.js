@@ -405,12 +405,6 @@ function jumpto(spid,bloid,line){
 	document.body.scrollTop=(id("disp_content_pointer").list[0].offsetTop)*pageScale-document.body.clientHeight/2;
 }
 
-when("scroll",disp_search_scroll);
-
-function disp_search_scroll(){
-	id("disp_search").style("top",(document.body.scrollTop/pageScale+100)+"px");
-}
-
 id("disp_search_input").when("input",disp_search).when("click",disp_search);
 
 // https://blog.csdn.net/zhyaiqq123/article/details/81366620
