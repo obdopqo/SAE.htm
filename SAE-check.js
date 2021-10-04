@@ -779,17 +779,21 @@ function block3xx(id){
 			for(var j=0;j<blockstack.length;j++){
 				if(tdata[tnode[blockstack[j]]+1]!==-1){
 					warn(311,"删除克隆体积木后仍有可执行积木",id);
-					warn(931,"在这里:",tdata[tnode[blockstack[j]]+1]);
+					warn(311,"在这里:",tdata[tnode[blockstack[j]]+1]);
 				}
 			}
 			/* fall through */
 		case 'control_stop':
+			if(tdata[tnode[v2]]==="other scripts in sprite"){
+				break;
+			}
 			if(blockstack.length===0){
 				warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
 			}else{
 				var j=blockstack[blockstack.length-1];
-				if(tdata[tnode[j]]==='control_if'
-					|| tdata[tnode[j]]==='control_if_else'){
+				console.log("w312",j,tdata[tnode[j]]);
+				if(!(tdata[tnode[j]]==='control_if'
+					|| tdata[tnode[j]]==='control_if_else')){
 					warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
 				}
 			}
