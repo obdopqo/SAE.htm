@@ -338,6 +338,14 @@ function load2(id,data2){
 }
 
 function blocklist(id){
+	var warpmodes=[];
+	for(var i=0;i<defslist;i++){
+		wrapmodes.push(0.1);
+	}
+	for(var i=tnode[id];i<tnode[id+1];i++){
+		DEBUG("checkwarp",i,tdata[i]);
+		checkwarp(tdata[i]);
+	}
 	for(var i=tnode[id];i<tnode[id+1];i++){
 		DEBUG("blocklist",i,tdata[i]);
 		blockstart(tdata[i]);
@@ -349,7 +357,6 @@ function blockstart(id){
 	// 有一个例外，就是追踪引用的时候可能会跳转到积木定义中，这是积木定义就会变成头积木
 	fromhead = id;
 	warpmode = 0;
-	// TODO warpmode
 	//warn(1,"blockstart",id);
 	DEBUG("blockstart",id);
 
@@ -381,6 +388,7 @@ function blockstart(id){
 			}
 			break;
 		default:
+			warpmode = 0;
 			//判断是不是开头积木
 			if(blocktype == "control_start_as_clone" ||
 				blocktype.includes("_when")){
@@ -1020,6 +1028,6 @@ function zeroarray(n){
 }
 
 function DEBUG(...args){
-	//console.log.apply(console,arguments);
+	console.log.apply(console,arguments);
 }
 })();
