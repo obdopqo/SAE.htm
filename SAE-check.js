@@ -9,7 +9,7 @@ var sprilist,     costlist,soundlist,     varilist,     listlist,defslist,argsli
 var          stagecostlist,          stagevarilist,stagelistlist,defswarp,argblist;
 var               costfile,soundfile,     variused,     listused,defsused,argsused;
 var                                  stagevariused,stagelistused,defsposi,argbused;
-var blocktype,blockstack,warpmode;
+var blocktype,blockstack;
 
 var spriblocklist = [
 	"motion_goto_menu",
@@ -348,8 +348,6 @@ function blockstart(id){
 	// 这里的fromhead是全局变量，意味着接下来的调用中fromhead就是积木id的头积木。
 	// 有一个例外，就是追踪引用的时候可能会跳转到积木定义中，这是积木定义就会变成头积木
 	fromhead = id;
-	warpmode = 0;
-	// TODO warpmode
 	//warn(1,"blockstart",id);
 	DEBUG("blockstart",id);
 
@@ -418,7 +416,6 @@ function block(id){
 	block1xx(id);
 	block2xx(id);
 	block3xx(id);
-	block4xx(id);
 
 	DEBUG("bl",id);
 	DEBUG("block",id,blocktype[0]);
@@ -748,12 +745,6 @@ function block3xx(id){
 				}
 			}
 		}
-
-		if(block3xx_waitblock.includes(blocktype)){
-			if(warpmode>-1){
-				warn(340,"在运行时不刷新屏幕的积木里使用这个积木",id);
-			}
-		}
 	}
 
 	switch(blocktype){
@@ -826,28 +817,6 @@ function block3xx(id){
 				warn(331,"比较大写字母",id);
 			}
 			break;
-	}
-}
-
-function block4xx(id){
-	switch(blocktype){
-		case "control_repeat_until":
-		case "control_while":
-			// (检查是否有内部变量改变的可能)
-			// (可能一步执行的积木：只允许内部变量)
-			// (？？？)
-			// TODO: 反向提醒
-			if(warpmode>-1){
-				if(!checkblock(tdata[tnode[id]+2],"spritevarlist")
-					&& !checkblock(tdata[tnode[id]+2],"spriterefs")){
-					warn(400,"逻辑跳出判定不变",id);
-				}
-			}
-			break;
-		case "wait":
-			if(warpmode>-1){
-				warn(411,"等待跳出判定在运行时不刷新屏幕中",id);
-			}
 	}
 }
 
