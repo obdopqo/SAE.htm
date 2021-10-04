@@ -41,60 +41,39 @@ input,button,.box {
 	text-align:center;
 }
 
-#nav {
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	padding: 0px;
-	margin: 0px;
-	z-index: 100;
-}
-
-#nav div {
-	font-size: 20px;
-	padding: 10px;
-	background-color: white;
-	border-bottom: solid 2px black;
-}
-
-#nav ul {
-	display: inline;
+.nav {
 	list-style-type: none;
-	padding: 0;
-	margin: 0;
+	top:0px;
+	border: 2px solid black;
+	padding: 5px;
 }
 
-#nav li {
-	text-align: center;
-	display: inline-block;
-}
-
-#nav a {
-	padding: 10px;
+.nav a {
+	font-size: 20px;
 	text-decoration: none;
 	color: black;
 }
 
-#nav a.selected {
-	background-color:black;
-	color:white;
-}
-
-#navReturn {
-	border-right: 2px solid black;
+#navLeft {
+	position:fixed;
+	left:0px;
+	text-align:left;
+	float:left;
 }
 
 #navRight {
+	position:fixed;
+	right:0px;
+	text-align:right;
 	float:right;
 }
 
 .noscript {
-	padding-top: 50px;
+	padding: 10px 50px;
 }
 
 .content {
-	padding-top: 50px;
+	padding: 10px 60px;
 	display: none;
 }
 

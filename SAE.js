@@ -13,7 +13,7 @@ function saveData(){
 	localStorage.setItem("SAE.file.list",JSON.stringify(SAE.file.list));
 }
 
-id("nav").inner().is("a").classadd("click");
+is(".nav").inner().is("a").classadd("click");
 
 var pageScale=1;
 
@@ -21,7 +21,8 @@ var pageScale=1;
 
 var position;
 var hashCorrect;
-var navButton = id("nav").inner().is("li").child().is("a");
+var navButton = is(".nav").inner().is("a");
+
 navButton.when("click",nav_click);
 
 when("load",hashChange);
