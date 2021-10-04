@@ -91,10 +91,10 @@ function block(id){
 				SAE.stat.typecount.push(0);
 			}
 			SAE.stat.typecount[i]++;
-			var i=SAE.stat.blockname.indexOf(str);
+			var i=SAE.stat.blockname.indexOf(blocktype);
 			if(i===-1){
 				i=SAE.stat.blockcount.length;
-				SAE.stat.blockname.push(str);
+				SAE.stat.blockname.push(blocktype);
 				SAE.stat.blockcount.push(0);
 			}
 			SAE.stat.blockcount[i]++;
@@ -140,9 +140,33 @@ function block(id){
 	}
 }
 
+SAE.stat.graph = function graph(x0,y0,x,y,r){
+	var gdata = SAE.stat.graphdata = [];
+	var table=SAE.stat.table;
+	for(var i=0;i<SAE.stat.blockname.length;i++){
+		var blocktype=SAE.stat.blockname[i];
+		console.log("blocktype",blocktype);
+		var id=table.indexOf("#"+blocktype);
+		if(id>0){
+			gdata.push(x0+x*table[id+1]);
+			gdata.push(y0+y*table[id+2]);
+			gdata.push(r*Math.log(SAE.stat.blockcount[i]+1));
+			var j=0,str="";
+			while(j<blocktype.length&&blocktype[j]!=='_'){
+				str+=blocktype[j];
+				j++;
+			}
+			gdata.push(SAE.stat.typename.indexOf(str));
+		}
+	}
+}
+
 SAE.stat.debug = function debug(){
 	for(var i=0;i<SAE.stat.typename.length;i++){
 		console.log(SAE.stat.typename[i],SAE.stat.typecount[i]);
+	}
+	for(var i=0;i<SAE.stat.blockname.length;i++){
+		console.log(SAE.stat.blockname[i],SAE.stat.blockcount[i]);
 	}
 }
 

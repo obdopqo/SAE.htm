@@ -9,7 +9,7 @@ var sprilist,     costlist,soundlist,     varilist,     listlist,defslist,argsli
 var          stagecostlist,          stagevarilist,stagelistlist,defswarp,argblist;
 var               costfile,soundfile,     variused,     listused,defsused,argsused;
 var                                  stagevariused,stagelistused,defsposi,argbused;
-var blocktype,blockstack,warpmode;
+var blocktype,blockstack;
 
 var spriblocklist = [
 	"motion_goto_menu",
@@ -348,8 +348,6 @@ function blockstart(id){
 	// 这里的fromhead是全局变量，意味着接下来的调用中fromhead就是积木id的头积木。
 	// 有一个例外，就是追踪引用的时候可能会跳转到积木定义中，这是积木定义就会变成头积木
 	fromhead = id;
-	warpmode = 0;
-	// TODO warpmode
 	//warn(1,"blockstart",id);
 	DEBUG("blockstart",id);
 
@@ -418,7 +416,6 @@ function block(id){
 	block1xx(id);
 	block2xx(id);
 	block3xx(id);
-	block4xx(id);
 
 	DEBUG("bl",id);
 	DEBUG("block",id,blocktype[0]);
@@ -654,10 +651,6 @@ function block2xx(id){
 			|| checkvalue(v+3,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
-			if(block3xx_textblock.includes(tdata[tnode[tdata[v+2]]])
-			|| block3xx_textblock.includes(tdata[tnode[tdata[v+3]]])){
-				warn(332,"和文本积木比较大小",id);
-			}
 			break;
 	}
 
@@ -752,25 +745,30 @@ function block3xx(id){
 				}
 			}
 		}
-
-		if(block3xx_waitblock.includes(blocktype)){
-			if(warpmode>-1){
-				warn(340,"在运行时不刷新屏幕的积木里使用这个积木",id);
-			}
-		}
 	}
 
 	switch(blocktype){
 		case 'control_create_clone_of_menu':
+			DEBUG("w310p",tdata[v+2]);
 			if(checkvalue(v+2,"_myself_",'===')){
+				DEBUG("w310",tdata[tnode[fromhead]]);
 				if(tdata[tnode[fromhead]]==='control_start_as_clone'){
 					//这里要检测if
+					var check=0;
 					for(var j=0;j<blockstack.length;j++){
-						if(tdata[tnode[blockstack[j]]]==='control_if'
-							|| tdata[tnode[blockstack[j]]]==='control_if_else')
-							if(!checkblock(tdata[tnode[blockstack[j]]+2],"spritevarlist")){
-								warn(310,"克隆时没有角色变量条件控制",id);
+						DEBUG("w310if",tdata[tnode[blockstack[j]]]);
+						if(
+							tdata[tnode[blockstack[j]]]==='control_if'
+							|| tdata[tnode[blockstack[j]]]==='control_if_else'
+						){
+							DEBUG("w310ch",tdata[tnode[blockstack[j]]+2]);
+							if(checkblock(tdata[tnode[blockstack[j]]+2],"spritevarlist")){
+								check=1;
 							}
+						}
+					}
+					if(check===0){
+						warn(310,"克隆时没有角色变量条件控制",id);
 					}
 				}
 			}
@@ -779,17 +777,25 @@ function block3xx(id){
 			for(var j=0;j<blockstack.length;j++){
 				if(tdata[tnode[blockstack[j]]+1]!==-1){
 					warn(311,"删除克隆体积木后仍有可执行积木",id);
-					warn(931,"在这里:",tdata[tnode[blockstack[j]]+1]);
+					warn(311,"在这里:",tdata[tnode[blockstack[j]]+1]);
 				}
 			}
 			/* fall through */
 		case 'control_stop':
+			if(tdata[tnode[v2]]==="other scripts in sprite"){
+				break;
+			}
 			if(blockstack.length===0){
 				warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
 			}else{
 				var j=blockstack[blockstack.length-1];
-				if(tdata[tnode[j]]==='control_if'
-					|| tdata[tnode[j]]==='control_if_else'){
+				DEBUG("w312",j,tdata[tnode[j]]);
+				if(
+					!(
+						tdata[tnode[j]]==='control_if'
+						|| tdata[tnode[j]]==='control_if_else'
+					)
+				){
 					warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
 				}
 			}
@@ -810,28 +816,7 @@ function block3xx(id){
 			|| checkvalue(tnode[id]+3,0,'capital')){
 				warn(331,"比较大写字母",id);
 			}
-	}
-}
-
-function block4xx(id){
-	switch(blocktype){
-		case "control_repeat_until":
-		case "control_while":
-			// (检查是否有内部变量改变的可能)
-			// (可能一步执行的积木：只允许内部变量)
-			// (？？？)
-			// TODO: 反向提醒
-			if(warpmode>-1){
-				if(!checkblock(tdata[tnode[id]+2],"spritevarlist")
-					&& !checkblock(tdata[tnode[id]+2],"spriterefs")){
-					warn(400,"逻辑跳出判定不变",id);
-				}
-			}
 			break;
-		case "wait":
-			if(warpmode>-1){
-				warn(411,"等待跳出判定在运行时不刷新屏幕中",id);
-			}
 	}
 }
 
@@ -841,20 +826,25 @@ function checkblock(i,operator){
 		var check=tnode[i];
 		switch(operator){
 			case 'spritevarlist':
+				DEBUG("checktype",tdata[check]);
 				switch(tdata[check]){
 					case '[变量]':
+						DEBUG("checkblockvar",tdata[check+1],varilist);
 						if(varilist.includes(tdata[check+1])){
 							return true;
 						}
 						break;
 					case '[列表]':
+						DEBUG("checkblocklist",tdata[check+1],listlist);
 						if(listlist.includes(tdata[check+1])){
 							return true;
 						}
 						break;
 					default:
+						DEBUG("checkblockref",tdata[check]);
 						if(block1xx_listref.includes(tdata[check])){
-							if(listlist.includes(tdata[check+2])){
+							DEBUG("checkblockref",tnode[tdata[check+3]],tdata[tnode[tdata[check+3]]+1],listlist);
+							if(listlist.includes(tdata[tnode[tdata[check+3]]+1])){
 								return true;
 							}
 						}
@@ -864,17 +854,19 @@ function checkblock(i,operator){
 				if(block4xx_spriteref.includes(tdata[check])){
 					return true;
 				}
+				break;
+			default:
+				throw new Error("无效的操作 "+operator);
 		}
-		if(blocktype[0] !== '['){
+		if(tdata[check][0] !== '['){
 			var j=0;
-			if(blocktype === 'procedures_definition' || blocktype === 'procedures_call'){
+			if(tdata[check] === 'procedures_definition' || tdata[check] === 'procedures_call'){
 				j=1;
 			}
-			if(!tdata[check][0]==='['){
-				for(var k=tnode[id]+2;k<tnode[id+1]-j;k++){
-					if(checkblock(tdata[k],operator)){
-						return true;
-					}
+			DEBUG("checkblockSub",check+1,tnode[i+1]-j);
+			for(var k=check+1;k<tnode[i+1]-j;k++){
+				if(checkblock(tdata[k],operator)){
+					return true;
 				}
 			}
 		}
@@ -887,7 +879,7 @@ function checkvalue(i,value,operator){
 	if(tdata[i]!==-1){
 		var check=tnode[tdata[i]];
 		DEBUG("check1",check,tdata[check]);
-		if(tdata[check]==="[文本]"){
+		if(tdata[check]==="[文本]"||tdata[check]==="[选项]"){
 			DEBUG("check",tdata[check+1]);
 			if(String(tdata[check+1])===""){
 				//考虑Number("")===0的特殊情况
@@ -920,8 +912,10 @@ function checkvalue(i,value,operator){
 						}
 						break;
 					case 'float':
-						if(String(Math.floor(Number(tdata[check+1])))===tdata[check+1]){
-							return true;
+						if(String(Number(tdata[check+1]))===tdata[check+1]){
+							if(String(Math.floor(Number(tdata[check+1])))!==tdata[check+1]){
+								return true;
+							}
 						}
 					case 'capital':
 						var str=tdata[check+1];
