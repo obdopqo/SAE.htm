@@ -394,3 +394,23 @@ input,button,.box {
 .click:active {
 	background-color: grey;
 }
+
+/*                                                               */
+
+.ptitle{
+	display:block;
+	margin:0px 5px;
+	padding:5px;
+	border-bottom:2px solid black;
+}
+
+.link-card{
+	display:inline-block;
+	margin:5px;
+	padding:5px;
+	font-size:24px;
+	border:1px black solid;
+	border-radius:5px;
+	text-decoration:none;
+	text-align:center;
+}
