@@ -943,8 +943,10 @@ function checkvalue(i,value,operator){
 						}
 						break;
 					case 'float':
-						if(String(Math.floor(Number(tdata[check+1])))===tdata[check+1]){
-							return true;
+						if(String(Number(tdata[check+1]))===tdata[check+1]){
+							if(String(Math.floor(Number(tdata[check+1])))!==tdata[check+1]){
+								return true;
+							}
 						}
 					case 'capital':
 						var str=tdata[check+1];
