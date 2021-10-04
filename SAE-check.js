@@ -654,10 +654,6 @@ function block2xx(id){
 			|| checkvalue(v+3,0,'nonumber')){
 				warn(217,"使用非数字比较大小",id);
 			}
-			if(block3xx_textblock.includes(tdata[tnode[tdata[v+2]]])
-			|| block3xx_textblock.includes(tdata[tnode[tdata[v+3]]])){
-				warn(332,"和文本积木比较大小",id);
-			}
 			break;
 	}
 
@@ -829,6 +825,7 @@ function block3xx(id){
 			|| checkvalue(tnode[id]+3,0,'capital')){
 				warn(331,"比较大写字母",id);
 			}
+			break;
 	}
 }
 
