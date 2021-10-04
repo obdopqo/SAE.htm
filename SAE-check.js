@@ -845,20 +845,25 @@ function checkblock(i,operator){
 		var check=tnode[i];
 		switch(operator){
 			case 'spritevarlist':
+				DEBUG("checktype",tdata[check]);
 				switch(tdata[check]){
 					case '[变量]':
+						DEBUG("checkblockvar",tdata[check+1],varilist);
 						if(varilist.includes(tdata[check+1])){
 							return true;
 						}
 						break;
 					case '[列表]':
+						DEBUG("checkblocklist",tdata[check+1],listlist);
 						if(listlist.includes(tdata[check+1])){
 							return true;
 						}
 						break;
 					default:
+						DEBUG("checkblockref",tdata[check]);
 						if(block1xx_listref.includes(tdata[check])){
-							if(listlist.includes(tdata[check+2])){
+							DEBUG("checkblockref",tnode[tdata[check+3]],tdata[tnode[tdata[check+3]]+1],listlist);
+							if(listlist.includes(tdata[tnode[tdata[check+3]]+1])){
 								return true;
 							}
 						}
@@ -868,17 +873,19 @@ function checkblock(i,operator){
 				if(block4xx_spriteref.includes(tdata[check])){
 					return true;
 				}
+				break;
+			default:
+				throw new Error("无效的操作 "+operator);
 		}
-		if(blocktype[0] !== '['){
+		if(tdata[check][0] !== '['){
 			var j=0;
-			if(blocktype === 'procedures_definition' || blocktype === 'procedures_call'){
+			if(tdata[check] === 'procedures_definition' || tdata[check] === 'procedures_call'){
 				j=1;
 			}
-			if(!tdata[check][0]==='['){
-				for(var k=tnode[id]+2;k<tnode[id+1]-j;k++){
-					if(checkblock(tdata[k],operator)){
-						return true;
-					}
+			DEBUG("checkblockSub",check+1,tnode[i+1]-j);
+			for(var k=check+1;k<tnode[i+1]-j;k++){
+				if(checkblock(tdata[k],operator)){
+					return true;
 				}
 			}
 		}
@@ -891,7 +898,7 @@ function checkvalue(i,value,operator){
 	if(tdata[i]!==-1){
 		var check=tnode[tdata[i]];
 		DEBUG("check1",check,tdata[check]);
-		if(tdata[check]==="[文本]"){
+		if(tdata[check]==="[文本]"||tdata[check]==="[选项]"){
 			DEBUG("check",tdata[check+1]);
 			if(String(tdata[check+1])===""){
 				//考虑Number("")===0的特殊情况
