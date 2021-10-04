@@ -517,10 +517,14 @@ SAE.disp.table = [
 	"#community_isLiked",			"<已点赞?>",				99,
 	"#community_redirect",			"跳转到 https://x.xiguacity.cn/ %1",	0,
 	"#community_captureStageAsAvatar",	"从舞台截取头像",			0,
+	"#community_getUserValue",		"(CCW %1)",				99,
+	"#community_menu_userValues",		"(&1)",					99,
+	"&community_menu_userValues#1:1",	"用户名",
+	"&community_menu_userValues#1:2",	"用户 ID",
 
 	//音乐懒加载
 	"#lazyMusic_loadMusic",			"加载 %1",				0,
-	"#lazyMusic_playMusicFromSeconds",	"从 %1 秒开始播放 %2 . &3",		0,
+	"#lazyMusic_playMusicFromSeconds",	"从 %1 秒开始播放 %2 , &3",		0,
 	"#lazyMusic_setMusicPlayRate",		"设置 %1 的播放速度为 %2 ^%",		0,
 	"#lazyMusic_stopPlayMusic",		"停止播放 %1",				0,
 
@@ -642,12 +646,13 @@ SAE.disp.table = [
 	"#redBoard_magicNumber",		"(魔法数值)",				99,
 
 	//语法糖
-	"CCWSugar_exponentiation",		"(%1 的 %2 次幂)",			99,
-	"CCWSugar_equalOrLess",			"(%1 <= %2)",				4,
-	"CCWSugar_equalOrGreater",		"(%1 >= %2)",				4,
-	"CCWSugar_ifElse",			"(如果 %1 那么 %2 否则 %3)",		99,
-	"CCWSugar_subString",			"(取得字符串 %1 中的第 %2 个到第 %3 个字符)",99,
-	"CCWSugar_when",			"当 %1 时",				0,
+	"#CCWSugar_exponentiation",		"(%1 的 %2 次幂)",			99,
+	"#CCWSugar_equalOrLess",		"(%1 <= %2)",				4,
+	"#CCWSugar_equalOrGreater",		"(%1 >= %2)",				4,
+	"#CCWSugar_ifElse",			"(如果 %1 那么 %2 否则 %3)",		99,
+	"#CCWSugar_subString",			"(取得字符串 %1 中的第 %2 个到第 %3 个字符)",99,
+	"#CCWSugar_when",			"当 %1 时",				0,
+	"#CCWSugar_splitString",		"(以 %1 切割字符串 %2 ,取得第 %3 项)",	99,
 	
 	/*}}}*/
 ];

@@ -35,8 +35,9 @@ blockspecs=[
 	"#operator_or",		"12",
 	"#operator_and",	"12",
 	"#operator_not",	"D",
-	"#puzzle_setResolved",	"E", // TODO
-	"#CCWsugar_ifElse",	"!ABC", // TODO
+	"#puzzle_setResolved",	"E",
+	"#CCWSugar_ifElse",	"!ABC",
+	"#CCWSugar_when",	"N"
 ];
 
 SAE.json.load = function sb3load(str){
