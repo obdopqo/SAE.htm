@@ -389,14 +389,15 @@ function blockval(json,i){
 
 function blockinput(json){
 	//检查特殊积木输入值顺序
-	var blockspec;
+	var blockspec,blockspecmode;
 	i=blockspecs.indexOf("#"+blocktype);
+	DEBUG("blockspecs",blocktype,i);
 	if(i>-1){
 		blockspec=blockspecs[i+1];
 		DEBUG("blockspec",blocktype,blockspec);
 		//预先为输入保留空间
 		if(blockspec[0]==="!"){
-			blockspecmode=1;
+			blockspecmode=1;//使用第一个字母作为顺序标记
 		}else{
 			blockspecmode=0;
 		}
@@ -407,12 +408,13 @@ function blockinput(json){
 			}
 		}
 	}else{
+		blockspecmode=0;
 		blockspec="";
 	}
 
 	//处理input输入
 	for(var x in json.inputs){
-		//获得顺序标记(其实就是参数名的最后一个字母)
+		//获得顺序标记(参数名的第一个(blockspecmode=1)或者最后一个字母(0))
 		var blockspecc;
 		if(blockspecmode===0){
 			blockspecc=x.slice(-1);
