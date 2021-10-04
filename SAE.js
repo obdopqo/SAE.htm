@@ -38,7 +38,7 @@ function hashChange(){
 
 	navButton.eval(nav_each);
 	if(!hashCorrect){
-		window.location.hash = "#home";
+		position = "home";
 	}
 	isbody().child().is(".content").eval(function(x){
 		if(x.getAttribute("label")===position){
