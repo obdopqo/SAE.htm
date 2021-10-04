@@ -762,15 +762,26 @@ function block3xx(id){
 
 	switch(blocktype){
 		case 'control_create_clone_of_menu':
+			DEBUG("w310p",tdata[v+2]);
 			if(checkvalue(v+2,"_myself_",'===')){
+				DEBUG("w310",tdata[tnode[fromhead]]);
 				if(tdata[tnode[fromhead]]==='control_start_as_clone'){
 					//这里要检测if
+					var check=0;
 					for(var j=0;j<blockstack.length;j++){
-						if(tdata[tnode[blockstack[j]]]==='control_if'
-							|| tdata[tnode[blockstack[j]]]==='control_if_else')
-							if(!checkblock(tdata[tnode[blockstack[j]]+2],"spritevarlist")){
-								warn(310,"克隆时没有角色变量条件控制",id);
+						DEBUG("w310if",tdata[tnode[blockstack[j]]]);
+						if(
+							tdata[tnode[blockstack[j]]]==='control_if'
+							|| tdata[tnode[blockstack[j]]]==='control_if_else'
+						){
+							DEBUG("w310ch",tdata[tnode[blockstack[j]]+2]);
+							if(checkblock(tdata[tnode[blockstack[j]]+2],"spritevarlist")){
+								check=1;
 							}
+						}
+					}
+					if(check===0){
+						warn(310,"克隆时没有角色变量条件控制",id);
 					}
 				}
 			}
@@ -791,9 +802,13 @@ function block3xx(id){
 				warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
 			}else{
 				var j=blockstack[blockstack.length-1];
-				console.log("w312",j,tdata[tnode[j]]);
-				if(!(tdata[tnode[j]]==='control_if'
-					|| tdata[tnode[j]]==='control_if_else')){
+				DEBUG("w312",j,tdata[tnode[j]]);
+				if(
+					!(
+						tdata[tnode[j]]==='control_if'
+						|| tdata[tnode[j]]==='control_if_else'
+					)
+				){
 					warn(312,"停止当前积木/删除此克隆体所处的位置不正确",id);
 				}
 			}
