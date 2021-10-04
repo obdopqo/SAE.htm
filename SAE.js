@@ -267,7 +267,7 @@ function stat_draw(statid,data,list,color){
 	var j=-3.1415926/2;
 	for(var i=0;i<data.length;i++){
 		var k=j+data[i]/count*2*3.1415926;
-		svghtml+=stat_drawsvg(j,k,140,color[i]);
+		svghtml+=stat_drawsvg(j,k,70,color[i]);
 		listhtml+="<li style=\"color:"+color[i]+";\">"+list[i]+"\t"+data[i]+"\t"+Math.round(data[i]/count*100)+"%";
 		listhtml+="<span style=\"opacity:0.2;background-color:"+color[i]+";width:100%\"></span>"
 		listhtml+="<span style=\"position:relative;margin-top:-2px;background-color:"+color[i]+";width:"+(data[i]/count*100)+"%\"></span></li>"

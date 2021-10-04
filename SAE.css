@@ -77,6 +77,18 @@ input,button,.box {
 	display: none;
 }
 
+.packed {
+	text-align:center;
+}
+
+.packed>span {
+	display: inline-block;
+	border: 2px black solid;
+	border-radius: 5px;
+	padding: 5px;
+	text-align: center;
+}
+
 #home_test {
 	text-align:center;
 }
@@ -136,7 +148,8 @@ input,button,.box {
 
 .stat_list {
 	list-style-type: square;
-	width: 200px;
+	width: 150px;
+	font-size: 10px;
 }
 
 .stat_list li {
