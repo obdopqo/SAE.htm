@@ -875,19 +875,31 @@ id("graph")
 	.when("mousedown",graph_fix)
 	.when("mousemove",graph_fix)
 	.when("mouseup",graph_fix)
-	.when("mousewheel",graph_fix);
+	.when("mousewheel",graph_fix)
+	.when("touchstart",rfalse)
+	.when("touchend"  ,rfalse)
+	.when("touchmove" ,rfalse);
+
+function rfalse(event){
+	event.preventDefault();
+	return false;
+}
 
 function graph_fix(event){
+	console.log(event)
 	switch(event.type){
 		case "mousedown":
+		//case "touchstart":
 			graphmove=true;
 			graphmx=-event.offsetX/graphWk0-graphWx0;
 			graphmy=-event.offsetY/graphWk0-graphWy0;
 			break;
 		case "mouseup":
+		//case "touchend":
 			graphmove=false;
 			break;
 		case "mousemove":
+		//case "touchmove":
 			if(graphmove){
 				graphWx0=-event.offsetX/graphWk0-graphmx;
 				graphWy0=-event.offsetY/graphWk0-graphmy;
