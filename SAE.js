@@ -151,6 +151,7 @@ function File_load(x){
 			SAE.check.proj(proj);
 			SAE.stat.proj(proj);
 			SAE.graph.proj(proj);
+			SAE.stat.graph(20,20,260,160,0.5);
 			//id('home_result').style("color","black");
 			//id('home_result').set("innerText",SAE.disp.data.join('\n'));
 			var typecount=SAE.stat.typecount.slice(0,9);
@@ -186,6 +187,7 @@ function File_load(x){
 			id("stat_4").set("innerHTML",SAE.graph.complexity_1+SAE.graph.complexity_2);
 			id("stat_4_1").set("innerHTML",SAE.graph.complexity_1);
 			id("stat_4_2").set("innerHTML",SAE.graph.complexity_2);
+			stat_graph_draw("stat_5",SAE.stat.graphdata,block_color);
 			disp_load(proj);
 			check_load();
 			graph_load();
@@ -255,6 +257,18 @@ function Loadsb3_call(file,func,err){
 }
 
 //统计
+
+function stat_graph_draw(statid,data,color){
+	var html="";
+	for(var i=0;i<data.length;i+=4){
+		html+="<circle cx=\""+data[i+0]+
+			"\" cy=\""+data[i+1]+
+			"\" r=\""+data[i+2]+
+			"\" fill=\""+color[data[i+3]]+
+			"\" opacity=\"0.5\"/>";
+	}
+	id(statid).child().set("innerHTML",html);
+}
 
 function stat_draw(statid,data,list,color){
 	var svghtml="";
