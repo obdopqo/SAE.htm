@@ -46,6 +46,7 @@ input,button,.box {
 	top:0px;
 	border: 2px solid black;
 	padding: 5px;
+	z-index:999;
 }
 
 .nav a {
@@ -168,7 +169,8 @@ input,button,.box {
 /*                                                               */
 
 .fliter {
-	position:relative;
+	position:sticky;
+	top: 10px;
 	text-align:center;
 }
 
@@ -182,6 +184,7 @@ input,button,.box {
 	margin: 5px 0.5%;
 	border: 1px solid black;
 	font-size: 20px;
+	background-color:white;
 }
 
 .fliter>span>label{
