@@ -329,7 +329,7 @@ function disp_load_spri(tid){
 	var variid=tdata[tnode[tid]+3];
 	var listid=tdata[tnode[tid]+4];
 	var blockid=tdata[tnode[tid]+6];
-	datav=["造型/声音列表"];
+	datav=[-1,"造型/声音列表"];
 	for(var i=tnode[costid];i<tnode[costid+1];i+=2){
 		datav.push("造型:"+tdata[i]);
 		datav.push("  "+tdata[i+1]);
@@ -339,7 +339,7 @@ function disp_load_spri(tid){
 		datav.push("  "+tdata[i+1]);
 	}
 	data.push(datav);
-	datav=["变量/列表列表"];
+	datav=[-2,"变量/列表列表"];
 	for(var i=tnode[variid];i<tnode[variid+1];i++){
 		datav.push("变量:"+tdata[i]);
 	}
