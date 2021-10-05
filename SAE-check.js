@@ -55,10 +55,10 @@ var block2xx_number = [
 	//"operator_and",
 	//"operator_or",
 	//"operator_not",
-	"operator_join",
-	"operator_letter_of",
-	"operator_length",
-	"operator_contains",
+	//"operator_join",
+	//"operator_letter_of",
+	//"operator_length",
+	//"operator_contains",
 	"operator_mod",
 	"operator_round",
 	"operator_mathop",
@@ -729,8 +729,9 @@ function block3xx(id){
 		if(block3xx_same1.includes(blocktype)){
 			var id2=tnode[v1];
 			if(tdata[id2]===blocktype){
-				if(tdata[tnode[tdata[id2]]+1]
-					===tdata[tnode[tdata[id]]+1]){
+				DEBUG("w301",tdata[tnode[tdata[id2+2]]+1],tdata[tnode[v2]+1]);
+				if(tdata[tnode[tdata[id2+2]]+1]
+					===tdata[tnode[tdata[v+2]]+1]){
 					warn(301,"重复的积木",id);
 				}
 			}
@@ -739,8 +740,8 @@ function block3xx(id){
 		if(block3xx_same2.includes(blocktype)){
 			var id2=tnode[v1];
 			if(tdata[id2]===blocktype){
-				if(tdata[tnode[tdata[id2]]+2]
-					===tdata[tnode[tdata[id]]+2]){
+				if(tdata[tnode[tdata[id2+3]]+1]
+					===tdata[tnode[tdata[v+3]]+1]){
 					warn(302,"重复的积木",id);
 				}
 			}
