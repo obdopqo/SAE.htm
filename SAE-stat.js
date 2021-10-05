@@ -145,12 +145,12 @@ SAE.stat.graph = function graph(x0,y0,x,y,r){
 	var table=SAE.stat.table;
 	for(var i=0;i<SAE.stat.blockname.length;i++){
 		var blocktype=SAE.stat.blockname[i];
-		console.log("blocktype",blocktype);
+		DEBUG("blocktype",blocktype);
 		var id=table.indexOf("#"+blocktype);
 		if(id>0){
 			gdata.push(x0+x*table[id+1]);
 			gdata.push(y0+y*table[id+2]);
-			gdata.push(r*Math.log(SAE.stat.blockcount[i]+1));
+			gdata.push(r*SAE.stat.blockcount[i]);
 			var j=0,str="";
 			while(j<blocktype.length&&blocktype[j]!=='_'){
 				str+=blocktype[j];
